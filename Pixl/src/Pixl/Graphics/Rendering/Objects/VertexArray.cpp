@@ -24,7 +24,7 @@ namespace Pixl {
 
     void VertexArray::AddVertexBuffer(const Ref<VertexBuffer> &vertexBuffer) {
         glBindVertexArray(m_RendererID);
-        vertexBuffer->Bind();
+        vertexBuffer->bind();
 
         const auto &layout = vertexBuffer->GetLayout();
         for (const auto &element: layout) {

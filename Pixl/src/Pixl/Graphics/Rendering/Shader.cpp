@@ -79,6 +79,41 @@ namespace Pixl {
         glUniform1i(location, value);
     }
 
+    void Shader::setInt2(const std::string& name, const glm::ivec2& value) {
+        GLint location = getUniformLocation(name);
+        glUniform2i(location, value.x, value.y);
+    }
+
+    void Shader::setInt3(const std::string& name, const glm::ivec3& value) {
+        GLint location = getUniformLocation(name);
+        glUniform3i(location, value.x, value.y, value.z);
+    }
+
+    void Shader::setInt4(const std::string& name, const glm::ivec4& value) {
+        GLint location = getUniformLocation(name);
+        glUniform4i(location, value.x, value.y, value.z, value.w);
+    }
+
+    void Shader::setUInt(const std::string& name, uint32_t value) {
+        GLint location = getUniformLocation(name);
+        glUniform1ui(location, value);
+    }
+
+    void Shader::setUInt2(const std::string& name, const glm::uvec2& value) {
+        GLint location = getUniformLocation(name);
+        glUniform2ui(location, value.x, value.y);
+    }
+
+    void Shader::setUInt3(const std::string& name, const glm::uvec3& value) {
+        GLint location = getUniformLocation(name);
+        glUniform3ui(location, value.x, value.y, value.z);
+    }
+
+    void Shader::setUInt4(const std::string& name, const glm::uvec4& value) {
+        GLint location = getUniformLocation(name);
+        glUniform4ui(location, value.x, value.y, value.z, value.w);
+    }
+
     void Shader::setIntArray(const std::string& name, int* values, uint32_t count) {
         GLint location = getUniformLocation(name);
         glUniform1iv(location, static_cast<GLsizei>(count), values);

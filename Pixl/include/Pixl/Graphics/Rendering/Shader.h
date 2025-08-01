@@ -5,11 +5,12 @@
 #ifndef PIXLENGINE_SHADER_H
 #define PIXLENGINE_SHADER_H
 
+#include "Pixl/Core/Base.h"
+
 #include <unordered_map>
 #include <string>
 #include <glm/glm.hpp>
-#include "glad/glad.h"
-#include "Pixl/Core/Base.h"
+#include <glad/glad.h>
 
 namespace Pixl {
 
@@ -22,7 +23,15 @@ namespace Pixl {
         void unbind() const;
 
         void setInt(const std::string& name, int value);
+        void setInt2(const std::string &name, const glm::ivec2 &value);
+        void setInt3(const std::string &name, const glm::ivec3 &value);
+        void setInt4(const std::string &name, const glm::ivec4 &value);
         void setIntArray(const std::string &name, int *values, uint32_t count);
+
+        void setUInt(const std::string &name, uint32_t value);
+        void setUInt2(const std::string &name, const glm::uvec2 &value);
+        void setUInt3(const std::string &name, const glm::uvec3 &value);
+        void setUInt4(const std::string &name, const glm::uvec4 &value);
 
         void setFloat(const std::string& name, float value);
         void setFloat2(const std::string& name, const glm::vec2& value);

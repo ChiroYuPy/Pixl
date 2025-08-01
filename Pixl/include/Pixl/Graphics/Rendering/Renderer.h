@@ -6,8 +6,9 @@
 #define PIXLENGINE_RENDERER_H
 
 #include "Pixl/Core/Base.h"
-#include "Shader.h"
+#include "Pixl/Graphics/Rendering/Shader.h"
 #include "Pixl/Graphics/Rendering/Objects/VertexArray.h"
+#include "Pixl/Graphics/Rendering/Camera/ICamera.h"
 
 #include <cstdint>
 
@@ -20,17 +21,18 @@ namespace Pixl {
 
         static void OnWindowResize(uint32_t width, uint32_t height);
 
-        // static void Begin(Camera& camera);
-        static void EndScene();
+        static void beginFrame(ICamera& camera);
+        static void endFrame();
 
         static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f));
 
     private:
         struct SceneData {
-            glm::mat4 ViewProjectionMatrix;
+            glm::mat4 viewProjMatrix;
+            float aspectRatio;
         };
 
-        static Scope<SceneData> s_SceneData;
+        static Scope<SceneData> s_sceneData;
     };
 
 }

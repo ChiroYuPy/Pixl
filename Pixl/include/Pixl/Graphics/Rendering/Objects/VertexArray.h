@@ -5,11 +5,11 @@
 #ifndef PIXLENGINE_VERTEXARRAY_H
 #define PIXLENGINE_VERTEXARRAY_H
 
-#include <vector>
-#include "glad/glad.h"
-
-#include "Buffer.h"
 #include "Pixl/Core/Base.h"
+#include "Pixl/Graphics/Rendering/Objects/Buffer.h"
+
+#include <vector>
+#include <glad/glad.h>
 
 namespace Pixl {
 

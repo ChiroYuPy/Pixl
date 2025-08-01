@@ -2,9 +2,10 @@
 // Created by ChiroYuki on 26/07/2025.
 //
 
-#include "Pixl/Core/Application.h"
-#include "Pixl/Core/Window.h"
 #include "Pixl/Core/Base.h"
+#include "Pixl/Graphics/Rendering/Renderer.h"
+#include "Pixl/Core/Window.h"
+#include "Pixl/Core/Application.h"
 
 #include <filesystem>
 #include <utility>
@@ -43,6 +44,7 @@ namespace Pixl {
     void Application::Run() {
         while (m_Running)
         {
+            OnUpdate();
             m_Window->OnUpdate();
         }
     }
@@ -58,7 +60,7 @@ namespace Pixl {
             return false;
         }
 
-        // Graphics::OnWindowResize(e.GetWidth(), e.GetHeight());
+        Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
 
         return false;
     }

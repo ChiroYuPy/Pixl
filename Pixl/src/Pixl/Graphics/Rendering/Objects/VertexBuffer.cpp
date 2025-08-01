@@ -25,7 +25,7 @@ namespace Pixl {
         glDeleteBuffers(1, &ID);
     }
 
-    void VertexBuffer::Bind() const
+    void VertexBuffer::bind() const
     {
         glBindBuffer(GL_ARRAY_BUFFER, ID);
     }

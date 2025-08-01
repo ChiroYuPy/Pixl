@@ -6,10 +6,9 @@
 #define PIXL_APPLICATION_H
 
 #include "Pixl/Core/Base.h"
-
-#include "Pixl/Core/Window.h"
-#include "Pixl/Events/Event.h"
 #include "Pixl/Events/ApplicationEvent.h"
+#include "Pixl/Events/Event.h"
+#include "Pixl/Core/Window.h"
 
 #include <memory>
 
@@ -37,6 +36,8 @@ namespace Pixl {
         const ApplicationSpecification& GetSpecification() const { return m_Specification; }
 
         void Run();
+
+        virtual void OnUpdate() {}
 
     private:
         bool OnWindowClose(WindowCloseEvent& e);

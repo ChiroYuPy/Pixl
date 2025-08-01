@@ -113,7 +113,7 @@ namespace Pixl {
         VertexBuffer(float* vertices, uint32_t size);
         virtual ~VertexBuffer();
 
-        void Bind() const;
+        void bind() const;
         void Unbind() const;
 
         void SetData(const void* data, uint32_t size);

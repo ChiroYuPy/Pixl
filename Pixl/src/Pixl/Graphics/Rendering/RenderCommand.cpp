@@ -5,7 +5,6 @@
 #include <iostream>
 #include "Pixl/Graphics/Rendering/RenderCommand.h"
 
-
 namespace Pixl {
 
     static GLenum DrawModeToGL(DrawMode mode) {

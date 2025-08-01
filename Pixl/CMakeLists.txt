@@ -20,7 +20,7 @@ set(SOURCES
         src/Pixl/Graphics/Rendering/Objects/VertexBuffer.cpp
         src/Pixl/Graphics/Rendering/Objects/VertexArray.cpp
         src/Pixl/Graphics/Rendering/RenderCommand.cpp
-        include/Pixl/Graphics/Rendering/RenderCommand.h
+        src/Pixl/Graphics/Rendering/Camera/PerspectiveCamera.cpp
 )
 
 add_library(Pixl STATIC ${SOURCES})
