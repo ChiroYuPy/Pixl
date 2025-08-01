@@ -1,0 +1,38 @@
+//
+// Created by ChiroYuki on 01/08/2025.
+//
+
+#ifndef PIXLENGINE_RENDERER_H
+#define PIXLENGINE_RENDERER_H
+
+#include "Pixl/Core/Base.h"
+#include "Shader.h"
+#include "Pixl/Graphics/Rendering/Objects/VertexArray.h"
+
+#include <cstdint>
+
+namespace Pixl {
+
+    class Renderer {
+    public:
+        static void Init();
+        static void Shutdown();
+
+        static void OnWindowResize(uint32_t width, uint32_t height);
+
+        // static void Begin(Camera& camera);
+        static void EndScene();
+
+        static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f));
+
+    private:
+        struct SceneData {
+            glm::mat4 ViewProjectionMatrix;
+        };
+
+        static Scope<SceneData> s_SceneData;
+    };
+
+}
+
+#endif //PIXLENGINE_RENDERER_H
