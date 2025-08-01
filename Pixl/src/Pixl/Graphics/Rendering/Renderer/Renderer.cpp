@@ -2,7 +2,7 @@
 // Created by ChiroYuki on 01/08/2025.
 //
 
-#include "Pixl/Graphics/Rendering/Renderer.h"
+#include "Pixl/Graphics/Rendering/Renderer/Renderer.h"
 #include "Pixl/Graphics/Rendering/Objects/VertexArray.h"
 #include "Pixl/Graphics/Rendering/RenderCommand.h"
 #include "Pixl/Graphics/Rendering/Camera/ICamera.h"

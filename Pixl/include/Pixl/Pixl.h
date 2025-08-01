@@ -6,7 +6,7 @@
 #define PIXL_PIXL_H
 
 #include "Pixl/Graphics/Rendering/RenderCommand.h"
-#include "Pixl/Graphics/Rendering/Renderer.h"
+#include "Pixl/Graphics/Rendering/Renderer/Renderer.h"
 #include "Pixl/Graphics/Rendering/Shader.h"
 
 #include "Pixl/Graphics/Rendering/Objects/VertexArray.h"
