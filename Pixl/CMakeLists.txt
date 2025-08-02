@@ -16,7 +16,7 @@ set(SOURCES
         src/Pixl/Core/Input.cpp
         src/Pixl/Rendering/GraphicsContext.cpp
         src/Pixl/Rendering/Renderer/Renderer.cpp
-        src/Pixl/Rendering/Shader.cpp
+        src/Pixl/Rendering/Objects/Shader.cpp
         src/Pixl/Rendering/Objects/VertexBuffer.cpp
         src/Pixl/Rendering/Objects/VertexArray.cpp
         src/Pixl/Rendering/RenderCommand.cpp

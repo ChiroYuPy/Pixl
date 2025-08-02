@@ -7,7 +7,7 @@
 
 #include "Pixl/Rendering/RenderCommand.h"
 #include "Pixl/Rendering/Renderer/Renderer.h"
-#include "Pixl/Rendering/Shader.h"
+#include "Pixl/Rendering/Objects/Shader.h"
 
 #include "Pixl/Rendering/Objects/VertexArray.h"
 #include "Pixl/Rendering/Objects/Buffer.h"

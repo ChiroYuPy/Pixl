@@ -2,7 +2,7 @@
 // Created by ChiroYuki on 01/08/2025.
 //
 
-#include "Pixl/Rendering/Shader.h"
+#include "Pixl/Rendering/Objects/Shader.h"
 
 #include <fstream>
 #include <sstream>

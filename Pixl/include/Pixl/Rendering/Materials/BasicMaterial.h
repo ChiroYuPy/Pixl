@@ -5,7 +5,7 @@
 #ifndef PIXLENGINE_BASICMATERIAL_H
 #define PIXLENGINE_BASICMATERIAL_H
 
-#include "Pixl/Rendering/Shader.h"
+#include "Pixl/Rendering/Objects/Shader.h"
 #include "IMaterial.h"
 
 namespace Pixl {
