@@ -14,38 +14,61 @@ namespace Pixl {
 
     class PerspectiveCamera : public ICamera {
     public:
-        PerspectiveCamera(float fovY, float aspect, float nearPlane, float farPlane);
+        explicit PerspectiveCamera(float fovY = 70.0f, float aspect = 1.f,
+                          float nearPlane = 0.1f, float farPlane = 1000.0f);
 
+        // Setters pour les paramètres de projection
+        void setFovY(float fov);
         void setAspectRatio(float aspect) override;
+        void setNearFarPlanes(float near, float far);
 
-        void setPosition(const glm::vec3 &pos) override;
+        // Setters pour la transformation de vue
+        void setPosition(const glm::vec3& pos) override;
+        void setDirection(const glm::vec3& dir) override;
+        void setUp(const glm::vec3& upVector);
 
-        void setDirection(const glm::vec3 &dir) override;
+        // Getters pour les matrices
+        const glm::mat4& getViewMatrix() override;
+        const glm::mat4& getProjectionMatrix() override;
+        glm::mat4 getViewProjectionMatrix();
 
-        const glm::mat4 &getViewMatrix() override;
-        const glm::mat4 &getProjectionMatrix() override;
+        // Getters pour les paramètres
+        const glm::vec3& getPosition() const override;
+        const glm::vec3& getDirection() const;
+        const glm::vec3& getUp() const;
+        float getFovY() const;
+        float getAspectRatio() const;
+        float getNearPlane() const;
+        float getFarPlane() const;
 
-        const glm::vec3 &getPosition() const override;
+        // Méthodes utilitaires
+        void lookAt(const glm::vec3& target);
+        void move(const glm::vec3& offset);
+        void rotate(float yaw, float pitch);
 
     private:
-        void updateViewMatrix();
+        // Paramètres de projection
+        float fovY;
+        float aspectRatio;
+        float nearPlane;
+        float farPlane;
 
-        void updateProjectionMatrix();
-
-        float fovY = 70.0f;
-        float aspectRatio = 1.0f;
-        float nearPlane = 0.1f;
-        float farPlane = 1000.0f;
-
+        // Paramètres de vue
         glm::vec3 position;
         glm::vec3 direction;
-        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+        glm::vec3 up;
 
+        // Matrices
         glm::mat4 viewMatrix;
         glm::mat4 projectionMatrix;
 
-        bool viewDirty = true;
-        bool projDirty = true;
+        // Flags de mise à jour
+        bool viewDirty;
+        bool projDirty;
+
+        // Méthodes privées de mise à jour
+        void updateViewMatrix();
+        void updateProjectionMatrix();
     };
 
 }

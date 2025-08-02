@@ -21,6 +21,8 @@ public:
         camera = Pixl::MakeScope<Pixl::PerspectiveCamera>(
                 90.f, GetWindow().GetAspectRatio(), 0.1f, 1000.0f
         );
+        camera->setPosition({0, -16, 0});
+        camera->lookAt({0, 0, 0});
 
         Pixl::Ref<Pixl::CubeGeometry> cubeGeometry = Pixl::MakeRef<Pixl::CubeGeometry>();
         auto red = glm::vec4(1, 0, 0, 0);
