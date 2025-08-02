@@ -6,15 +6,14 @@
 
 #include "Pixl/Pixl.h"
 #include "Pixl/Core/EntryPoint.h"
-#include "Pixl/Rendering/Camera/OrthographicCamera.h"
 
 class SandboxApp : public Pixl::Application {
 private:
     Pixl::Ref<Pixl::Shader> testShader;
-    Pixl::Scope<Pixl::OrthographicCamera> camera;
-
     Pixl::Ref<Pixl::VertexArray> VAO;
     Pixl::Ref<Pixl::VertexBuffer> VBO;
+
+    Pixl::Scope<Pixl::OrthographicCamera> camera;
 
 public:
     explicit SandboxApp(const Pixl::ApplicationSpecification& specification)

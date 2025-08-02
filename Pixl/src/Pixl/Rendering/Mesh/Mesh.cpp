@@ -9,9 +9,12 @@ namespace Pixl {
     Mesh::Mesh(Ref<Geometry> geom, Ref<Material> mat)
             : m_geometry(std::move(geom)), m_material(std::move(mat)), m_drawMode(DrawMode::Triangles) {}
 
-    void Mesh::render() const {
+    void Mesh::render(glm::mat4 transform) const {
         m_material->bind(); // shader bind
         m_geometry->bind(); // vao bind
+
+        m_material->getShader().setMat4("u_viewProjection", glm::mat4(1.0f));
+        m_material->getShader().setMat4("u_transform", transform);
 
         uint32_t indexCount = m_geometry->getIndexCount();
         RenderCommand::DrawIndexed(m_drawMode, indexCount);

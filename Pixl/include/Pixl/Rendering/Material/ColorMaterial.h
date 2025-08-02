@@ -23,6 +23,8 @@ namespace Pixl {
         void unbind() const override;
 
         void setColor(const glm::vec4& col);
+
+        const Shader& getShader() const override;
     };
 
 }

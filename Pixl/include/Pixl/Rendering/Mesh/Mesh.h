@@ -23,7 +23,7 @@ namespace Pixl {
     public:
         Mesh(Ref<Geometry> geom, Ref<Material> mat);
 
-        void render() const;
+        void render(glm::mat4 transform) const;
 
         void setDrawMode(DrawMode mode);
         [[nodiscard]] DrawMode getDrawMode() const;

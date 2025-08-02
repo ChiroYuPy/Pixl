@@ -6,20 +6,50 @@
 
 namespace Pixl {
 
-    Pixl::ColorMaterial::ColorMaterial(const glm::vec4 &col)
-            : shader("color.vertex.glsl", "color.fragment.glsl"), color(col) {}
+    const char* vertexSrc = R"(
+            #version 330 core
 
-    void Pixl::ColorMaterial::bind() const {
+            layout(location = 0) in vec3 a_position;
+
+            uniform mat4 u_viewProjection;
+            uniform mat4 u_transform;
+
+            void main() {
+                gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);
+            }
+        )";
+
+    // Fragment Shader Source
+    const char* fragmentSrc = R"(
+            #version 330 core
+
+            uniform vec4 u_color;
+            out vec4 frag_color;
+
+            void main() {
+                frag_color = u_color;
+            }
+
+        )";
+
+    ColorMaterial::ColorMaterial(const glm::vec4 &col)
+            : shader(vertexSrc, fragmentSrc), color(col) {}
+
+    void ColorMaterial::bind() const {
         shader.bind();
-        // shader.setFloat4("u_Color", color);
+        shader.setFloat4("u_color", color);
     }
 
-    void Pixl::ColorMaterial::unbind() const {
+    void ColorMaterial::unbind() const {
         shader.unbind();
     }
 
-    void Pixl::ColorMaterial::setColor(const glm::vec4 &col) {
+    void ColorMaterial::setColor(const glm::vec4 &col) {
         color = col;
+    }
+
+    const Shader &ColorMaterial::getShader() const {
+        return shader;
     }
 
 }
