@@ -135,7 +135,7 @@ public:
 Pixl::Application* Pixl::CreateApplication() {
     ApplicationSpecification spec;
     spec.Name = "SandboxApp";
-    spec.WorkingDirectory = R"(C:\Users\ChiroYuki\CLionProjects\Pixl\SandBox\resources)";
+    spec.WorkingDirectory = R"(C:\Users\ChiroYuki\CLionProjects\Pixl\SandBox\resources)"; // set your resources folder
 
     return new SandboxApp(spec);
 }
