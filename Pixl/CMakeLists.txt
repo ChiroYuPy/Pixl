@@ -17,7 +17,7 @@ set(SOURCES
         src/Pixl/Rendering/GraphicsContext.cpp
         src/Pixl/Rendering/Renderer/Renderer.cpp
         src/Pixl/Rendering/Objects/Shader.cpp
-        src/Pixl/Rendering/Objects/VertexBuffer.cpp
+        src/Pixl/Rendering/Objects/Buffer.cpp
         src/Pixl/Rendering/Objects/VertexArray.cpp
         src/Pixl/Rendering/RenderCommand.cpp
         src/Pixl/Rendering/Camera/PerspectiveCamera.cpp
