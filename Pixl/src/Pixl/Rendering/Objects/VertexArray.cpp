@@ -18,7 +18,7 @@ namespace Pixl {
         glBindVertexArray(m_RendererID);
     }
 
-    void VertexArray::Unbind() const {
+    void VertexArray::unbind() const {
         glBindVertexArray(0);
     }
 

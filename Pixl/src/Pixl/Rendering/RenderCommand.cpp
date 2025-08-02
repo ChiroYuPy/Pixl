@@ -87,14 +87,11 @@ namespace Pixl {
         glClear(ClearMaskToGL(mask));
     }
 
-    void RenderCommand::DrawIndexed(const Ref<VertexArray>& vertexArray, DrawMode mode, uint32_t indexCount) {
-        vertexArray->bind();
-        uint32_t count = indexCount ? indexCount : vertexArray->GetIndexBuffer()->GetCount();
-        glDrawElements(DrawModeToGL(mode), static_cast<GLsizei>(count), GL_UNSIGNED_INT, nullptr);
+    void RenderCommand::DrawIndexed(DrawMode mode, uint32_t indexCount) {
+        glDrawElements(DrawModeToGL(mode), static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT, nullptr);
     }
 
-    void RenderCommand::DrawArrays(const Ref<VertexArray>& vertexArray, DrawMode mode, uint32_t vertexCount) {
-        vertexArray->bind();
+    void RenderCommand::DrawArrays(DrawMode mode, uint32_t vertexCount) {
         glDrawArrays(DrawModeToGL(mode), 0, static_cast<GLsizei>(vertexCount));
     }
 

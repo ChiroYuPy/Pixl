@@ -21,9 +21,11 @@ set(SOURCES
         src/Pixl/Rendering/Objects/VertexArray.cpp
         src/Pixl/Rendering/RenderCommand.cpp
         src/Pixl/Rendering/Camera/PerspectiveCamera.cpp
-        include/Pixl/Rendering/Materials/IMaterial.h
-        src/Pixl/Rendering/Materials/BasicMaterial.cpp
-        include/Pixl/Rendering/Materials/BasicMaterial.h
+        src/Pixl/Rendering/Material/ColorMaterial.cpp
+        src/Pixl/Rendering/Mesh/Mesh.cpp
+        src/Pixl/Rendering/Geometry/CubeGeometry.cpp
+        include/Pixl/Rendering/Camera/OrthographicCamera.h
+        src/Pixl/Rendering/Camera/OrthographicCamera.cpp
 )
 
 add_library(Pixl STATIC ${SOURCES})

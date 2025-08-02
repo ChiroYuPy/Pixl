@@ -53,8 +53,8 @@ namespace Pixl {
 
         static void Clear(ClearBufferMask mask = ClearBufferMask::Color | ClearBufferMask::Depth);
 
-        static void DrawIndexed(const Ref<VertexArray>& vertexArray, DrawMode mode, uint32_t indexCount = 0);
-        static void DrawArrays(const Ref<VertexArray>& vertexArray, DrawMode mode, uint32_t vertexCount);
+        static void DrawIndexed(DrawMode mode, uint32_t indexCount);
+        static void DrawArrays(DrawMode mode, uint32_t vertexCount);
 
         static void EnableDepthTest(bool enabled);
         static void EnableBlend(bool enabled);

@@ -42,11 +42,11 @@ namespace Pixl {
         shader->setMat4("u_transform", transform);
 
         vertexArray->bind();
-        RenderCommand::DrawArrays(vertexArray, DrawMode::Triangles, 3);
+        RenderCommand::DrawArrays(DrawMode::Triangles, 3);
     }
 }
 
-//TODO: mesh = geometry + material
+//TODO: mesh = m_geometry + m_material
 //
 //
 //

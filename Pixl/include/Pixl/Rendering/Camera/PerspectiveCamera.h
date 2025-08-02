@@ -32,10 +32,10 @@ namespace Pixl {
 
         void updateProjectionMatrix();
 
-        float fovY;
-        float aspectRatio;
-        float nearPlane;
-        float farPlane;
+        float fovY = 70.0f;
+        float aspectRatio = 1.0f;
+        float nearPlane = 0.1f;
+        float farPlane = 1000.0f;
 
         glm::vec3 position;
         glm::vec3 direction;

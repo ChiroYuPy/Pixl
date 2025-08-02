@@ -41,7 +41,7 @@ namespace Pixl {
 
         virtual void bind() const;
 
-        virtual void Unbind() const;
+        virtual void unbind() const;
 
         virtual void AddVertexBuffer(const Ref<VertexBuffer> &vertexBuffer);
 
