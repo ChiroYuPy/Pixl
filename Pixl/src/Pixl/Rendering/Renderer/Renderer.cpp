@@ -2,10 +2,10 @@
 // Created by ChiroYuki on 01/08/2025.
 //
 
-#include "Pixl/Graphics/Rendering/Renderer/Renderer.h"
-#include "Pixl/Graphics/Rendering/Objects/VertexArray.h"
-#include "Pixl/Graphics/Rendering/RenderCommand.h"
-#include "Pixl/Graphics/Rendering/Camera/ICamera.h"
+#include "Pixl/Rendering/Renderer/Renderer.h"
+#include "Pixl/Rendering/Objects/VertexArray.h"
+#include "Pixl/Rendering/RenderCommand.h"
+#include "Pixl/Rendering/Camera/ICamera.h"
 
 namespace Pixl {
 
@@ -45,3 +45,10 @@ namespace Pixl {
         RenderCommand::DrawArrays(vertexArray, DrawMode::Triangles, 3);
     }
 }
+
+//TODO: mesh = geometry + material
+//
+//
+//
+//
+// https://chatgpt.com/share/688d564a-87bc-8006-96e3-ab1adee6ad8a

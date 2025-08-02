@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <glm/glm.hpp>
 
-#include "Pixl/Graphics/Rendering/Objects/VertexArray.h"
+#include "Pixl/Rendering/Objects/VertexArray.h"
 
 namespace Pixl {
 

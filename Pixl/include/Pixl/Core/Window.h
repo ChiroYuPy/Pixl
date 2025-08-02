@@ -7,7 +7,7 @@
 
 #include "Pixl/Core/Base.h"
 #include "Pixl/Events/Event.h"
-#include "Pixl/Graphics/Rendering/GraphicsContext.h"
+#include "Pixl/Rendering/GraphicsContext.h"
 
 #include <functional>
 #include <string>

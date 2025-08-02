@@ -14,13 +14,16 @@ set(SOURCES
         src/Pixl/Core/Window.cpp
 
         src/Pixl/Core/Input.cpp
-        src/Pixl/Graphics/Rendering/GraphicsContext.cpp
-        src/Pixl/Graphics/Rendering/Renderer/Renderer.cpp
-        src/Pixl/Graphics/Rendering/Shader.cpp
-        src/Pixl/Graphics/Rendering/Objects/VertexBuffer.cpp
-        src/Pixl/Graphics/Rendering/Objects/VertexArray.cpp
-        src/Pixl/Graphics/Rendering/RenderCommand.cpp
-        src/Pixl/Graphics/Rendering/Camera/PerspectiveCamera.cpp
+        src/Pixl/Rendering/GraphicsContext.cpp
+        src/Pixl/Rendering/Renderer/Renderer.cpp
+        src/Pixl/Rendering/Shader.cpp
+        src/Pixl/Rendering/Objects/VertexBuffer.cpp
+        src/Pixl/Rendering/Objects/VertexArray.cpp
+        src/Pixl/Rendering/RenderCommand.cpp
+        src/Pixl/Rendering/Camera/PerspectiveCamera.cpp
+        include/Pixl/Rendering/Materials/IMaterial.h
+        src/Pixl/Rendering/Materials/BasicMaterial.cpp
+        include/Pixl/Rendering/Materials/BasicMaterial.h
 )
 
 add_library(Pixl STATIC ${SOURCES})

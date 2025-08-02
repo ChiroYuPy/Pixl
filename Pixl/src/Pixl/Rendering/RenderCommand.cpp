@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "Pixl/Graphics/Rendering/RenderCommand.h"
+#include "Pixl/Rendering/RenderCommand.h"
 
 namespace Pixl {
 

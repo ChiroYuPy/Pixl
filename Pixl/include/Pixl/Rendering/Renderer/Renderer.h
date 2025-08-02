@@ -6,9 +6,9 @@
 #define PIXLENGINE_RENDERER_H
 
 #include "Pixl/Core/Base.h"
-#include "Pixl/Graphics/Rendering/Shader.h"
-#include "Pixl/Graphics/Rendering/Objects/VertexArray.h"
-#include "Pixl/Graphics/Rendering/Camera/ICamera.h"
+#include "Pixl/Rendering/Shader.h"
+#include "Pixl/Rendering/Objects/VertexArray.h"
+#include "Pixl/Rendering/Camera/ICamera.h"
 
 #include <cstdint>
 

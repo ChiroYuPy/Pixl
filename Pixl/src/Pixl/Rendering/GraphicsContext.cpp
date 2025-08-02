@@ -2,9 +2,9 @@
 // Created by ChiroYuki on 26/07/2025.
 //
 
-#include "Pixl/Graphics/Rendering/GraphicsContext.h"
+#include "Pixl/Rendering/GraphicsContext.h"
 
-#include <glad/glad.h>
+#include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
 namespace Pixl {

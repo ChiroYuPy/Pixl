@@ -3,7 +3,7 @@
 //
 
 #include "Pixl/Core/Base.h"
-#include "Pixl/Graphics/Rendering/Renderer/Renderer.h"
+#include "Pixl/Rendering/Renderer/Renderer.h"
 #include "Pixl/Core/Window.h"
 #include "Pixl/Core/Application.h"
 
