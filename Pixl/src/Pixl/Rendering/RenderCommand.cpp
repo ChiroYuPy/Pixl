@@ -136,21 +136,149 @@ namespace Pixl {
         glClear(ClearMaskToGL(mask));
     }
 
-    // Drawing commands
-    void RenderCommand::DrawIndexed(DrawMode mode, uint32_t indexCount) {
-        glDrawElements(DrawModeToGL(mode), static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT, nullptr);
+    /**
+     * @brief Renders primitives from vertex array data without using indices
+     *
+     * This is the simplest draw call, reading vertices sequentially from the
+     * currently bound vertex buffers. Best for simple geometry or when vertex
+     * reuse is minimal.
+     *
+     * @param mode The primitive type to render (triangles, lines, points, etc.)
+     * @param first Starting vertex index in the vertex arrays
+     * @param count Number of vertices to render
+     *
+     * @note Requires vertex buffers to be bound to the current VAO
+     * @note No index buffer is used - vertices are processed in sequential order
+     *
+     * Example:
+     * @code
+     * // Render a triangle using vertices 0, 1, 2
+     * RenderCommand::DrawArrays(DrawMode::Triangles, 0, 3);
+     *
+     * // Render second triangle using vertices 3, 4, 5
+     * RenderCommand::DrawArrays(DrawMode::Triangles, 3, 3);
+     * @endcode
+     */
+    void RenderCommand::DrawArrays(DrawMode mode, uint32_t first, uint32_t count) {
+        glDrawArrays(DrawModeToGL(mode), static_cast<GLint>(first), static_cast<GLsizei>(count));
     }
 
-    void RenderCommand::DrawArrays(DrawMode mode, uint32_t vertexCount) {
-        glDrawArrays(DrawModeToGL(mode), 0, static_cast<GLsizei>(vertexCount));
+    /**
+     * @brief Renders primitives using an index buffer for vertex reuse
+     *
+     * Most efficient method for rendering complex geometry where vertices are
+     * shared between multiple primitives. Uses indices to reference vertices,
+     * allowing significant memory savings and better cache performance.
+     *
+     * @param mode The primitive type to render (triangles, lines, points, etc.)
+     * @param indexCount Number of indices to process from the index buffer
+     * @param indexOffset Starting position in the index buffer (in indices, not bytes)
+     * @param baseVertex Value added to each index before vertex lookup (for multi-object buffers)
+     *
+     * @note Requires both vertex buffers and an index buffer bound to current VAO
+     * @note Index buffer must contain uint32_t indices
+     * @note When baseVertex > 0, uses glDrawElementsBaseVertex for better performance
+     *
+     * Example:
+     * @code
+     * // Render a quad using indices [0,1,2, 2,1,3] starting from index 0
+     * RenderCommand::DrawIndexed(DrawMode::Triangles, 6, 0, 0);
+     *
+     * // Render second object stored at vertices 100+ using same index pattern
+     * RenderCommand::DrawIndexed(DrawMode::Triangles, 6, 0, 100);
+     *
+     * // Render using indices starting at position 12 in index buffer
+     * RenderCommand::DrawIndexed(DrawMode::Triangles, 6, 12, 0);
+     * @endcode
+     */
+    void RenderCommand::DrawIndexed(DrawMode mode, uint32_t indexCount, uint32_t indexOffset, uint32_t baseVertex) {
+        if (baseVertex > 0) {
+            glDrawElementsBaseVertex(DrawModeToGL(mode), static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT,
+                                     (const void*)(uintptr_t)(indexOffset * sizeof(uint32_t)),
+                                     static_cast<GLint>(baseVertex));
+        } else {
+            glDrawElements(DrawModeToGL(mode), static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT,
+                           (const void*)(uintptr_t)(indexOffset * sizeof(uint32_t)));
+        }
     }
 
-    void RenderCommand::DrawIndexedInstanced(DrawMode mode, uint32_t indexCount, uint32_t instanceCount) {
-        glDrawElementsInstanced(DrawModeToGL(mode), static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT, nullptr, static_cast<GLsizei>(instanceCount));
+    /**
+     * @brief Renders multiple instances of the same geometry in a single draw call
+     *
+     * Highly efficient method for rendering many copies of identical geometry
+     * (trees, particles, grass, etc.). Each instance can have different properties
+     * via instance attributes or gl_InstanceID in shaders.
+     *
+     * @param mode The primitive type to render (triangles, lines, points, etc.)
+     * @param first Starting vertex index in the vertex arrays
+     * @param count Number of vertices per instance
+     * @param instanceCount Number of instances to render
+     *
+     * @note Vertex shader receives gl_InstanceID built-in variable
+     * @note Instance-specific data should be provided via instanced vertex attributes
+     * @note All instances share the same vertex data but can have different transforms/colors
+     *
+     * Example:
+     * @code
+     * // Render 1000 copies of a triangle (vertices 0,1,2)
+     * RenderCommand::DrawArraysInstanced(DrawMode::Triangles, 0, 3, 1000);
+     *
+     * // Vertex shader can use gl_InstanceID to differentiate instances:
+     * // vec3 position = basePosition + instanceOffsets[gl_InstanceID];
+     * @endcode
+     */
+    void RenderCommand::DrawArraysInstanced(DrawMode mode, uint32_t first, uint32_t count, uint32_t instanceCount) {
+        glDrawArraysInstanced(DrawModeToGL(mode), static_cast<GLint>(first),
+                              static_cast<GLsizei>(count), static_cast<GLsizei>(instanceCount));
     }
 
-    void RenderCommand::DrawArraysInstanced(DrawMode mode, uint32_t vertexCount, uint32_t instanceCount) {
-        glDrawArraysInstanced(DrawModeToGL(mode), 0, static_cast<GLsizei>(vertexCount), static_cast<GLsizei>(instanceCount));
+    /**
+     * @brief Renders multiple instances of indexed geometry in a single draw call
+     *
+     * Combines the benefits of indexed rendering (vertex reuse) with instancing
+     * (multiple copies). Most efficient method for rendering many complex objects
+     * that share the same topology but have different properties.
+     *
+     * @param mode The primitive type to render (triangles, lines, points, etc.)
+     * @param indexCount Number of indices to process per instance
+     * @param indexOffset Starting position in the index buffer (in indices, not bytes)
+     * @param baseVertex Value added to each index before vertex lookup
+     * @param instanceCount Number of instances to render
+     *
+     * @note Combines all benefits of DrawIndexed and DrawArraysInstanced
+     * @note Perfect for rendering multiple complex meshes (buildings, vehicles, etc.)
+     * @note Each instance can have different transforms via instance attributes
+     *
+     * Example:
+     * @code
+     * // Render 500 copies of a complex mesh using indices 0-299
+     * RenderCommand::DrawIndexedInstanced(DrawMode::Triangles, 300, 0, 0, 500);
+     *
+     * // Render multiple objects from a batch, each with 150 indices
+     * // Object 1: vertices 0-99,   indices 0-149
+     * // Object 2: vertices 100-199, indices 0-149 (reused pattern)
+     * RenderCommand::DrawIndexedInstanced(DrawMode::Triangles, 150, 0, 0, 1);    // Object 1
+     * RenderCommand::DrawIndexedInstanced(DrawMode::Triangles, 150, 0, 100, 1);  // Object 2
+     * @endcode
+     */
+    void RenderCommand::DrawIndexedInstanced(DrawMode mode, uint32_t indexCount, uint32_t indexOffset, uint32_t baseVertex, uint32_t instanceCount) {
+        if (baseVertex > 0) {
+            glDrawElementsInstancedBaseVertex(DrawModeToGL(mode), static_cast<GLsizei>(indexCount),
+                                              GL_UNSIGNED_INT, (const void*)(uintptr_t)(indexOffset * sizeof(uint32_t)),
+                                              static_cast<GLsizei>(instanceCount), static_cast<GLint>(baseVertex));
+        } else {
+            glDrawElementsInstanced(DrawModeToGL(mode), static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT,
+                                    (const void*)(uintptr_t)(indexOffset * sizeof(uint32_t)),
+                                    static_cast<GLsizei>(instanceCount));
+        }
+    }
+
+    void RenderCommand::DrawIndirect(DrawMode mode, const void* indirect) {
+        glDrawArraysIndirect(DrawModeToGL(mode), indirect);
+    }
+
+    void RenderCommand::DrawIndexedIndirect(DrawMode mode, const void* indirect) {
+        glDrawElementsIndirect(DrawModeToGL(mode), GL_UNSIGNED_INT, indirect);
     }
 
     // Depth testing

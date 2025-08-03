@@ -42,7 +42,7 @@ namespace Pixl {
         shader->setMat4("u_transform", transform);
 
         vertexArray->bind();
-        RenderCommand::DrawArrays(DrawMode::Triangles, 3);
+        RenderCommand::DrawArrays(DrawMode::Triangles, 0, 3);
     }
 }
 

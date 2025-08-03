@@ -145,10 +145,12 @@ namespace Pixl {
         static void Clear(ClearBufferMask mask = ClearBufferMask::Color | ClearBufferMask::Depth);
 
         // Drawing commands
-        static void DrawIndexed(DrawMode mode, uint32_t indexCount);
-        static void DrawArrays(DrawMode mode, uint32_t vertexCount);
-        static void DrawIndexedInstanced(DrawMode mode, uint32_t indexCount, uint32_t instanceCount);
-        static void DrawArraysInstanced(DrawMode mode, uint32_t vertexCount, uint32_t instanceCount);
+        static void DrawArrays(DrawMode mode, uint32_t first, uint32_t count);
+        static void DrawIndexed(DrawMode mode, uint32_t indexCount, uint32_t indexOffset, uint32_t baseVertex = 0);
+        static void DrawArraysInstanced(DrawMode mode, uint32_t first, uint32_t count, uint32_t instanceCount);
+        static void DrawIndexedInstanced(DrawMode mode, uint32_t indexCount, uint32_t indexOffset, uint32_t baseVertex, uint32_t instanceCount);
+        static void DrawIndirect(DrawMode mode, const void *indirect);
+        static void DrawIndexedIndirect(DrawMode mode, const void *indirect);
 
         // Depth testing
         static void EnableDepthTest(bool enabled);
