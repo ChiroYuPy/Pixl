@@ -14,10 +14,10 @@ namespace Pixl {
         WindowResizeEvent(unsigned int width, unsigned int height)
                 : m_Width(width), m_Height(height) {}
 
-        unsigned int GetWidth() const { return m_Width; }
-        unsigned int GetHeight() const { return m_Height; }
+        unsigned int getWidth() const { return m_Width; }
+        unsigned int getHeight() const { return m_Height; }
 
-        std::string ToString() const override
+        std::string toString() const override
         {
             std::stringstream ss;
             ss << "WindowResizeEvent: " << m_Width << ", " << m_Height;

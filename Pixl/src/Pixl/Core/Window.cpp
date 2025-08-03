@@ -16,14 +16,14 @@ namespace Pixl {
     }
 
     Window::Window(const WindowSettings& props) : m_Window() {
-        Init(props);
+        init(props);
     }
 
     Window::~Window() {
-        Shutdown();
+        shutdown();
     }
 
-    void Window::Init(const WindowSettings& props) {
+    void Window::init(const WindowSettings& props) {
         m_Data.Title = props.Title;
         m_Data.Width = props.Width;
         m_Data.Height = props.Height;
@@ -39,11 +39,11 @@ namespace Pixl {
             ++s_GLFWWindowCount;
         }
 
-        m_Context = MakeScope<GraphicsContext>(m_Window);
+        m_Context = makeScope<GraphicsContext>(m_Window);
         m_Context->Init();
 
         glfwSetWindowUserPointer(m_Window, &m_Data);
-        SetVSync(true);
+        setVSync(true);
 
         // Set GLFW callbacks
         glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
@@ -136,7 +136,7 @@ namespace Pixl {
         });
     }
 
-    void Window::Shutdown() {
+    void Window::shutdown() {
         glfwDestroyWindow(m_Window);
         --s_GLFWWindowCount;
 
@@ -146,12 +146,12 @@ namespace Pixl {
         }
     }
 
-    void Window::OnUpdate() {
+    void Window::onUpdate() {
         glfwPollEvents();
         m_Context->SwapBuffers();
     }
 
-    void Window::SetVSync(bool enabled) {
+    void Window::setVSync(bool enabled) {
         if (enabled)
             glfwSwapInterval(1);
         else
@@ -160,7 +160,7 @@ namespace Pixl {
         m_Data.VSync = enabled;
     }
 
-    bool Window::IsVSync() const {
+    bool Window::isVSync() const {
         return m_Data.VSync;
     }
 }

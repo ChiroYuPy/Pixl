@@ -16,10 +16,10 @@ namespace Pixl {
         MouseMovedEvent(const float x, const float y)
                 : m_MouseX(x), m_MouseY(y) {}
 
-        float GetX() const { return m_MouseX; }
-        float GetY() const { return m_MouseY; }
+        float getX() const { return m_MouseX; }
+        float getY() const { return m_MouseY; }
 
-        std::string ToString() const override
+        std::string toString() const override
         {
             std::stringstream ss;
             ss << "MouseMovedEvent: " << m_MouseX << ", " << m_MouseY;
@@ -38,13 +38,13 @@ namespace Pixl {
         MouseScrolledEvent(const float xOffset, const float yOffset)
                 : m_XOffset(xOffset), m_YOffset(yOffset) {}
 
-        float GetXOffset() const { return m_XOffset; }
-        float GetYOffset() const { return m_YOffset; }
+        float getXOffset() const { return m_XOffset; }
+        float getYOffset() const { return m_YOffset; }
 
-        std::string ToString() const override
+        std::string toString() const override
         {
             std::stringstream ss;
-            ss << "MouseScrolledEvent: " << GetXOffset() << ", " << GetYOffset();
+            ss << "MouseScrolledEvent: " << getXOffset() << ", " << getYOffset();
             return ss.str();
         }
 
@@ -73,7 +73,7 @@ namespace Pixl {
         MouseButtonPressedEvent(const MouseCode button)
                 : MouseButtonEvent(button) {}
 
-        std::string ToString() const override
+        std::string toString() const override
         {
             std::stringstream ss;
             ss << "MouseButtonPressedEvent: " << m_Button;
@@ -89,7 +89,7 @@ namespace Pixl {
         MouseButtonReleasedEvent(const MouseCode button)
                 : MouseButtonEvent(button) {}
 
-        std::string ToString() const override
+        std::string toString() const override
         {
             std::stringstream ss;
             ss << "MouseButtonReleasedEvent: " << m_Button;

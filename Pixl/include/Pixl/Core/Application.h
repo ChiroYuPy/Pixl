@@ -25,23 +25,23 @@ namespace Pixl {
         Application(ApplicationSpecification  specification);
         virtual ~Application();
 
-        void OnEvent(Event& e);
+        void onEvent(Event& e);
 
-        Window& GetWindow() { return *m_Window; }
+        Window& getWindow() { return *m_Window; }
 
-        void Close();
+        void close();
 
-        static Application& Get() { return *s_Instance; }
+        static Application& get() { return *s_Instance; }
 
-        const ApplicationSpecification& GetSpecification() const { return m_Specification; }
+        const ApplicationSpecification& getSpecification() const { return m_Specification; }
 
-        void Run();
+        void run();
 
-        virtual void OnUpdate() {}
+        virtual void onUpdate() {}
 
     private:
-        bool OnWindowClose(WindowCloseEvent& e);
-        bool OnWindowResize(WindowResizeEvent& e);
+        bool onWindowClose(WindowCloseEvent& e);
+        bool onWindowResize(WindowResizeEvent& e);
 
     private:
         ApplicationSpecification m_Specification;
@@ -52,7 +52,7 @@ namespace Pixl {
         static Application* s_Instance;
     };
 
-    Application* CreateApplication();
+    Application* createApplication();
 }
 
 #endif //PIXL_APPLICATION_H

@@ -22,8 +22,8 @@ namespace Pixl {
         if (!m_Specification.WorkingDirectory.empty())
             std::filesystem::current_path(m_Specification.WorkingDirectory);
 
-        m_Window = MakeScope<Window>(WindowSettings(m_Specification.Name));
-        m_Window->SetEventCallback(makeMemberCallback(this, &Application::OnEvent));
+        m_Window = makeScope<Window>(WindowSettings(m_Specification.Name));
+        m_Window->setEventCallback(makeMemberCallback(this, &Application::onEvent));
 
     }
 
@@ -31,40 +31,40 @@ namespace Pixl {
 
     }
 
-    void Application::Close() {
+    void Application::close() {
         m_Running = false;
     }
 
-    void Application::OnEvent(Event& e) {
+    void Application::onEvent(Event& e) {
         EventDispatcher dispatcher(e);
-        dispatcher.Dispatch<WindowCloseEvent>(makeMemberCallback(this, &Application::OnWindowClose));
-        dispatcher.Dispatch<WindowResizeEvent>(makeMemberCallback(this, &Application::OnWindowResize));
+        dispatcher.dispatch<WindowCloseEvent>(makeMemberCallback(this, &Application::onWindowClose));
+        dispatcher.dispatch<WindowResizeEvent>(makeMemberCallback(this, &Application::onWindowResize));
     }
 
-    void Application::Run() {
+    void Application::run() {
         while (m_Running)
         {
-            OnUpdate();
-            m_Window->OnUpdate();
+            onUpdate();
+            m_Window->onUpdate();
         }
     }
 
-    bool Application::OnWindowClose(WindowCloseEvent& e) {
+    bool Application::onWindowClose(WindowCloseEvent& e) {
         m_Running = false;
         return true;
     }
 
-    bool Application::OnWindowResize(WindowResizeEvent& e) {
-        if (e.GetWidth() == 0 || e.GetHeight() == 0)
+    bool Application::onWindowResize(WindowResizeEvent& e) {
+        if (e.getWidth() == 0 || e.getHeight() == 0)
         {
             return false;
         }
 
-        Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+        Renderer::OnWindowResize(e.getWidth(), e.getHeight());
 
         return false;
     }
 
 }
 
-extern Pixl::Application* Pixl::CreateApplication();
+extern Pixl::Application* Pixl::createApplication();

@@ -86,7 +86,7 @@ public:
         );
     }
 
-    void OnUpdate() override {
+    void onUpdate() override {
         Pixl::RenderCommand::Clear();
 
         Pixl::Renderer::beginFrame(*camera);
@@ -149,7 +149,7 @@ public:
     ~SandboxApp() override = default;
 };
 
-Pixl::Application* Pixl::CreateApplication() {
+Pixl::Application* Pixl::createApplication() {
     ApplicationSpecification spec;
     spec.Name = "SandboxApp";
     spec.WorkingDirectory = R"(C:\Users\ChiroYuki\CLionProjects\Pixl\SandBox\resources)"; // set your resources folder

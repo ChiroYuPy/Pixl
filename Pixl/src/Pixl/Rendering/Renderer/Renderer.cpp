@@ -9,15 +9,15 @@
 
 namespace Pixl {
 
-    Scope<Renderer::SceneData> Renderer::s_sceneData = MakeScope<SceneData>();
+    Scope<Renderer::SceneData> Renderer::s_sceneData = makeScope<SceneData>();
 
     void Renderer::Init() {
         RenderCommand::Init();
-        // Renderer2D::Init();
+        // Renderer2D::init();
     }
 
     void Renderer::Shutdown() {
-        // Renderer2D::Shutdown();
+        // Renderer2D::shutdown();
     }
 
     void Renderer::OnWindowResize(uint32_t width, uint32_t height) {

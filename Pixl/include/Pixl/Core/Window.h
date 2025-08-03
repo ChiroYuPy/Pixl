@@ -36,20 +36,20 @@ namespace Pixl {
         Window(const WindowSettings& props);
         ~Window();
 
-        void OnUpdate();
+        void onUpdate();
 
-        unsigned int GetWidth() const { return m_Data.Width; }
-        unsigned int GetHeight() const { return m_Data.Height; }
-        float GetAspectRatio() const { return static_cast<float>(m_Data.Width) / static_cast<float>(m_Data.Height); }
+        unsigned int getWidth() const { return m_Data.Width; }
+        unsigned int getHeight() const { return m_Data.Height; }
+        float getAspectRatio() const { return static_cast<float>(m_Data.Width) / static_cast<float>(m_Data.Height); }
 
-        void SetEventCallback(const EventCallbackFunction& callback) { m_Data.EventCallback = callback; }
-        void SetVSync(bool enabled);
-        bool IsVSync() const;
+        void setEventCallback(const EventCallbackFunction& callback) { m_Data.EventCallback = callback; }
+        void setVSync(bool enabled);
+        bool isVSync() const;
 
-        void* GetNativeWindow() const { return m_Window; }
+        void* getNativeWindow() const { return m_Window; }
     private:
-        void Init(const WindowSettings& props);
-        void Shutdown();
+        void init(const WindowSettings& props);
+        void shutdown();
 
     private:
         GLFWwindow* m_Window;

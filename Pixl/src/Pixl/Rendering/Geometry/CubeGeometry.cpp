@@ -10,13 +10,13 @@ namespace Pixl {
     {
         m_indexCount = static_cast<uint32_t>(sizeof(s_Indices) / sizeof(uint32_t));
 
-        m_VBO = MakeRef<VertexBuffer>(
-                const_cast<float*>(s_Vertices),
+        m_VBO = makeRef<VertexBuffer>(
+                const_cast<float *>(s_Vertices),
                 static_cast<uint32_t>(sizeof(s_Vertices))
         );
 
-        m_EBO = MakeRef<IndexBuffer>(
-                const_cast<uint32_t*>(s_Indices),
+        m_EBO = makeRef<IndexBuffer>(
+                const_cast<uint32_t *>(s_Indices),
                 m_indexCount
         );
 

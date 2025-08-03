@@ -7,12 +7,12 @@
 
 #include "Application.h"
 
-extern Pixl::Application* Pixl::CreateApplication();
+extern Pixl::Application* Pixl::createApplication();
 
 int main()
 {
-    auto app = Pixl::CreateApplication();
-    app->Run();
+    auto app = Pixl::createApplication();
+    app->run();
     delete app;
 }
 
