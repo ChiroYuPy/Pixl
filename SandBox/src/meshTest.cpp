@@ -44,6 +44,9 @@ public:
         glm::mat4 viewProj = projMatrix * viewMatrix;
 
         auto cubeTransform = glm::mat4(1.0f);
+
+        cubeTransform = glm::translate(cubeTransform, glm::vec3(0.0f, 0.0f, -1.0f));
+
         cubeMesh->render(cubeTransform, viewProj);
 
         Pixl::Renderer::endFrame();

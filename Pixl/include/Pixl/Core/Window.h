@@ -40,7 +40,7 @@ namespace Pixl {
 
         unsigned int GetWidth() const { return m_Data.Width; }
         unsigned int GetHeight() const { return m_Data.Height; }
-        float GetAspectRatio() const { return m_Data.Width / m_Data.Height; }
+        float GetAspectRatio() const { return static_cast<float>(m_Data.Width) / static_cast<float>(m_Data.Height); }
 
         void SetEventCallback(const EventCallbackFunction& callback) { m_Data.EventCallback = callback; }
         void SetVSync(bool enabled);
