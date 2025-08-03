@@ -46,9 +46,4 @@ namespace Pixl {
     }
 }
 
-//TODO: mesh = m_geometry + m_material
-//
-//
-//
-//
 // https://chatgpt.com/share/688d564a-87bc-8006-96e3-ab1adee6ad8a

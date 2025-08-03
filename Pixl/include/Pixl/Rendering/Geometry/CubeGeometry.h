@@ -37,50 +37,15 @@ namespace Pixl {
         };
 
     public:
-        CubeGeometry()
-                : m_VBO(nullptr, 0), m_EBO(nullptr, 0)
-        {
-            // Taille des données
-            m_indexCount = static_cast<uint32_t>(sizeof(s_Indices) / sizeof(uint32_t));
+        CubeGeometry();
 
-            // Création des buffers
-            m_VBO = VertexBuffer(
-                    const_cast<float*>(s_Vertices),
-                    static_cast<uint32_t>(sizeof(s_Vertices))
-            );
+        void bind() const override;
 
-            m_EBO = IndexBuffer(
-                    const_cast<uint32_t*>(s_Indices),
-                    m_indexCount
-            );
+        void unbind() const override;
 
-            // Définition du layout des attributs
-            BufferLayout layout = {
-                    { ShaderDataType::Float3, "a_Position" }
-            };
-            m_VBO.SetLayout(layout);
-
-            // Configuration du VAO
-            m_VAO.bind();
-            m_VAO.AddVertexBuffer(std::make_shared<VertexBuffer>(m_VBO));
-            m_VAO.SetIndexBuffer(std::make_shared<IndexBuffer>(m_EBO));
-            m_VAO.unbind();
-        }
-
-        void bind() const override {
-            m_VAO.bind();
-        }
-
-        void unbind() const override {
-            m_VAO.unbind();
-        }
-
-        uint32_t getIndexCount() const override {
-            return m_indexCount;
-        }
+        uint32_t getIndexCount() const override;
     };
 
-    // Définition des tableaux statiques (nécessaire pour les constexpr dans headers avec MSVC/gcc)
     constexpr float CubeGeometry::s_Vertices[];
     constexpr uint32_t CubeGeometry::s_Indices[];
 

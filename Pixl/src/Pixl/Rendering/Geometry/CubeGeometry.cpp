@@ -3,3 +3,45 @@
 //
 
 #include "Pixl/Rendering/Geometry/CubeGeometry.h"
+
+namespace Pixl {
+
+    CubeGeometry::CubeGeometry()
+            : m_VBO(nullptr, 0), m_EBO(nullptr, 0)
+    {
+        m_indexCount = static_cast<uint32_t>(sizeof(s_Indices) / sizeof(uint32_t));
+
+        m_VBO = VertexBuffer(
+                const_cast<float*>(s_Vertices),
+                static_cast<uint32_t>(sizeof(s_Vertices))
+        );
+
+        m_EBO = IndexBuffer(
+                const_cast<uint32_t*>(s_Indices),
+                m_indexCount
+        );
+
+        BufferLayout layout = {
+                { ShaderDataType::Float3, "a_Position" }
+        };
+        m_VBO.SetLayout(layout);
+
+        m_VAO.bind();
+        m_VAO.AddVertexBuffer(std::make_shared<VertexBuffer>(m_VBO));
+        m_VAO.SetIndexBuffer(std::make_shared<IndexBuffer>(m_EBO));
+        m_VAO.unbind();
+    }
+
+    void CubeGeometry::bind() const {
+        m_VAO.bind();
+    }
+
+    void CubeGeometry::unbind() const {
+        m_VAO.unbind();
+    }
+
+    uint32_t CubeGeometry::getIndexCount() const {
+        return m_indexCount;
+    }
+
+}
