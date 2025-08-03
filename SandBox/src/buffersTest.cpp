@@ -12,22 +12,38 @@ private:
     Pixl::Ref<Pixl::Shader> testShader;
     Pixl::Ref<Pixl::VertexArray> VAO;
     Pixl::Ref<Pixl::VertexBuffer> VBO;
+    Pixl::Ref<Pixl::IndexBuffer> IBO;
 
-    Pixl::Scope<Pixl::OrthographicCamera> camera;
+    Pixl::Scope<Pixl::PerspectiveCamera> camera;
 
 public:
     explicit SandboxApp(const Pixl::ApplicationSpecification& specification)
-            : Pixl::Application(specification) {
+    : Pixl::Application(specification) {
         Pixl::RenderCommand::SetClearColor({0, 1, 0, 1});
 
         float vertices[] = {
-                0.0f,  0.5f, 0.0f,  // top
-                -0.5f, -0.5f, 0.0f,  // left
-                0.5f, -0.5f, 0.0f   // right
+                -0.5f, -0.5f, -0.5f,  // 0
+                0.5f, -0.5f, -0.5f,  // 1
+                0.5f,  0.5f, -0.5f,  // 2
+                -0.5f,  0.5f, -0.5f,  // 3
+                -0.5f, -0.5f,  0.5f,  // 4
+                0.5f, -0.5f,  0.5f,  // 5
+                0.5f,  0.5f,  0.5f,  // 6
+                -0.5f,  0.5f,  0.5f   // 7
+        };
+
+        uint32_t Indices[] = {
+                0, 1, 2, 2, 3, 0,     // back
+                4, 5, 6, 6, 7, 4,     // front
+                4, 5, 1, 1, 0, 4,     // bottom
+                7, 6, 2, 2, 3, 7,     // top
+                4, 0, 3, 3, 7, 4,     // left
+                5, 1, 2, 2, 6, 5      // right
         };
 
         VAO = Pixl::MakeRef<Pixl::VertexArray>();
         VBO = Pixl::MakeRef<Pixl::VertexBuffer>(vertices, sizeof(vertices));
+        IBO = Pixl::MakeRef<Pixl::IndexBuffer>(Indices, sizeof(Indices));
 
         Pixl::BufferLayout layout = {
                 { Pixl::ShaderDataType::Float3, "a_position" }
@@ -35,12 +51,14 @@ public:
 
         VBO->SetLayout(layout);
         VAO->AddVertexBuffer(VBO);
+        VAO->SetIndexBuffer(IBO);
 
         // Caméra orthographique avec zoom correct pour voir le triangle (-0.5 à 0.5)
-        camera = Pixl::MakeScope<Pixl::OrthographicCamera>(
-                GetWindow().GetAspectRatio(),
-                1.0f  // zoom = 1.0f donne une zone de -aspectRatio à +aspectRatio en X, -1 à +1 en Y
+        camera = Pixl::MakeScope<Pixl::PerspectiveCamera>(
+                90.f, GetWindow().GetAspectRatio(), 0.1f, 10000.0f
         );
+        camera->setPosition({3.0f, 3.0f, 3.0f});
+        camera->lookAt({0.0f, 0.0f, 0.0f});
 
         // DEBUG : Afficher les valeurs de la caméra
         std::cout << "Aspect Ratio: " << GetWindow().GetAspectRatio() << std::endl;
@@ -121,7 +139,7 @@ public:
         testShader->setMat4("u_transform", transform);
 
         VAO->bind();
-        Pixl::RenderCommand::DrawArrays(Pixl::DrawMode::Triangles, 3);
+        Pixl::RenderCommand::DrawIndexed(Pixl::DrawMode::Triangles, 24);
         VAO->unbind();
         testShader->unbind();
 

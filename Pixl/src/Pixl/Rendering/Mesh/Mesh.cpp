@@ -7,11 +7,11 @@
 namespace Pixl {
 
     Mesh::Mesh(Ref<Geometry> geom, Ref<Material> mat)
-            : m_geometry(std::move(geom)), m_material(std::move(mat)), m_drawMode(DrawMode::Triangles) {}
+    : m_geometry(std::move(geom)), m_material(std::move(mat)), m_drawMode(DrawMode::Triangles) {}
 
-    void Mesh::render(glm::mat4 transform) const {
+    void Mesh::render(glm::mat4 transform, const glm::mat4& viewProjection) const {
         m_material->bind(); // shader bind
-        m_material->getShader().setMat4("u_viewProjection", glm::mat4(1.0f));
+        m_material->getShader().setMat4("u_viewProjection", viewProjection);
         m_material->getShader().setMat4("u_transform", transform);
 
         m_geometry->bind(); // vao bind

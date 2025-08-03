@@ -7,16 +7,15 @@
 namespace Pixl {
 
     CubeGeometry::CubeGeometry()
-            : m_VBO(nullptr, 0), m_EBO(nullptr, 0)
     {
         m_indexCount = static_cast<uint32_t>(sizeof(s_Indices) / sizeof(uint32_t));
 
-        m_VBO = VertexBuffer(
+        m_VBO = MakeRef<VertexBuffer>(
                 const_cast<float*>(s_Vertices),
                 static_cast<uint32_t>(sizeof(s_Vertices))
         );
 
-        m_EBO = IndexBuffer(
+        m_EBO = MakeRef<IndexBuffer>(
                 const_cast<uint32_t*>(s_Indices),
                 m_indexCount
         );
@@ -24,11 +23,12 @@ namespace Pixl {
         BufferLayout layout = {
                 { ShaderDataType::Float3, "a_Position" }
         };
-        m_VBO.SetLayout(layout);
+        m_VBO->SetLayout(layout);
 
+        // Configuration du VAO
         m_VAO.bind();
-        m_VAO.AddVertexBuffer(std::make_shared<VertexBuffer>(m_VBO));
-        m_VAO.SetIndexBuffer(std::make_shared<IndexBuffer>(m_EBO));
+        m_VAO.AddVertexBuffer(m_VBO);
+        m_VAO.SetIndexBuffer(m_EBO);
         m_VAO.unbind();
     }
 
