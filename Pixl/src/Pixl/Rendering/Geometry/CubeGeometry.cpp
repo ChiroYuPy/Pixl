@@ -20,14 +20,10 @@ namespace Pixl {
                 m_indexCount
         );
 
-        BufferLayout layout = {
-                { ShaderDataType::Float3, "a_Position" }
-        };
-        m_VBO->SetLayout(layout);
+        const auto& vertexDeclaration = VertexDeclaration::Get(VertexLayout::Position);
 
-        // Configuration du VAO
         m_VAO.bind();
-        m_VAO.AddVertexBuffer(m_VBO);
+        m_VAO.AddVertexBuffer(m_VBO, vertexDeclaration);
         m_VAO.SetIndexBuffer(m_EBO);
         m_VAO.unbind();
     }

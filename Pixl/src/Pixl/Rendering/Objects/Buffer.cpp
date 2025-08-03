@@ -30,12 +30,12 @@ namespace Pixl {
         glBindBuffer(GL_ARRAY_BUFFER, ID);
     }
 
-    void VertexBuffer::Unbind() const
+    void VertexBuffer::unbind() const
     {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    void VertexBuffer::SetData(const void* data, uint32_t size)
+    void VertexBuffer::setData(const void* data, uint32_t size)
     {
         glBindBuffer(GL_ARRAY_BUFFER, ID);
         glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
@@ -61,5 +61,4 @@ namespace Pixl {
     void IndexBuffer::unbind() const {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
-
 }

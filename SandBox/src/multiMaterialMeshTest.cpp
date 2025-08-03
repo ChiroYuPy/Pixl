@@ -10,7 +10,7 @@
 class SandboxApp : public Pixl::Application {
 private:
     Pixl::Scope<Pixl::PerspectiveCamera> camera;
-    Pixl::Scope<Pixl::Mesh> cubeMesh;
+    Pixl::Scope<Pixl::MultiMaterialMesh> cubeMesh;
 
 public:
     explicit SandboxApp(const Pixl::ApplicationSpecification& specification)
@@ -27,10 +27,14 @@ public:
 
         Pixl::Ref<Pixl::CubeGeometry> cubeGeometry = Pixl::makeRef<Pixl::CubeGeometry>();
 
-        auto red = glm::vec4(0.5f, 0.1f, 1.0f, 1.0f); // alpha à 1.0f sinon transparent
-        Pixl::Ref<Pixl::ColorMaterial> colorMaterial = Pixl::makeRef<Pixl::ColorMaterial>(red);
+        Pixl::Ref<Pixl::ColorMaterial> redMaterial = Pixl::makeRef<Pixl::ColorMaterial>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+        Pixl::Ref<Pixl::ColorMaterial> greenMaterial = Pixl::makeRef<Pixl::ColorMaterial>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+        Pixl::Ref<Pixl::ColorMaterial> blueMaterial = Pixl::makeRef<Pixl::ColorMaterial>(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
-        cubeMesh = Pixl::makeScope<Pixl::Mesh>(cubeGeometry, colorMaterial);
+        cubeMesh = Pixl::makeScope<Pixl::MultiMaterialMesh>(cubeGeometry);
+        cubeMesh->addSubMesh(redMaterial, 0, 12);
+        cubeMesh->addSubMesh(greenMaterial, 12, 12);
+        cubeMesh->addSubMesh(blueMaterial, 24, 12);
     }
 
     void onUpdate() override {
@@ -45,7 +49,7 @@ public:
 
         auto cubeTransform = glm::mat4(1.0f);
 
-        cubeTransform = glm::translate(cubeTransform, glm::vec3(0.0f, 0.0f, -1.0f));
+        cubeTransform = glm::translate(cubeTransform, glm::vec3(0.0f, 0.0f, 0.0f));
 
         cubeMesh->render(cubeTransform, viewProj);
 

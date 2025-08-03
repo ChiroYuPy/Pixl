@@ -6,14 +6,14 @@
 **
 ** Permission is hereby granted, free of charge, to any person obtaining a
 ** copy of this software and/or associated documentation files (the
-** "Material"), to deal in the Material without restriction, including
+** "IMaterial"), to deal in the IMaterial without restriction, including
 ** without limitation the rights to use, copy, modify, merge, publish,
-** distribute, sublicense, and/or sell copies of the Material, and to
-** permit persons to whom the Material are furnished to do so, subject to
+** distribute, sublicense, and/or sell copies of the IMaterial, and to
+** permit persons to whom the IMaterial are furnished to do so, subject to
 ** the following conditions:
 **
 ** The above copyright notice and this permission notice shall be included
-** in all copies or substantial portions of the Material.
+** in all copies or substantial portions of the IMaterial.
 **
 ** THE MATERIALS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 ** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF

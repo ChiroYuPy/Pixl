@@ -22,52 +22,57 @@ namespace Pixl {
         glBindVertexArray(0);
     }
 
-    void VertexArray::AddVertexBuffer(const Ref<VertexBuffer> &vertexBuffer) {
+    void VertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer, const VertexDeclaration& declaration) {
         glBindVertexArray(m_RendererID);
         vertexBuffer->bind();
 
-        const auto &layout = vertexBuffer->GetLayout();
-        for (const auto &element: layout) {
-            switch (element.Type) {
-                case ShaderDataType::Float:
-                case ShaderDataType::Float2:
-                case ShaderDataType::Float3:
-                case ShaderDataType::Float4: {
+        const auto& components = declaration.GetComponents();
+        uint32_t stride = CalculateStride(components);
+        size_t offset = 0;
+
+        for (const auto& component : components) {
+            uint32_t componentSize = ShaderDataTypeSize(component.type);
+
+            switch (component.type) {
+                case ComponentType::Float:
+                case ComponentType::Float2:
+                case ComponentType::Float3:
+                case ComponentType::Float4: {
                     glEnableVertexAttribArray(m_VertexBufferIndex);
                     glVertexAttribPointer(m_VertexBufferIndex,
-                                          element.GetComponentCount(),
-                                          ShaderDataTypeToOpenGLBaseType(element.Type),
-                                          element.Normalized ? GL_TRUE : GL_FALSE,
-                                          layout.GetStride(),
-                                          (const void *) element.Offset);
+                                          GetComponentCount(component.type),
+                                          ShaderDataTypeToOpenGLBaseType(component.type),
+                                          GL_FALSE, // normalized
+                                          stride,
+                                          reinterpret_cast<const void*>(offset));
                     m_VertexBufferIndex++;
                     break;
                 }
-                case ShaderDataType::Int:
-                case ShaderDataType::Int2:
-                case ShaderDataType::Int3:
-                case ShaderDataType::Int4:
-                case ShaderDataType::Bool: {
+                case ComponentType::Int:
+                case ComponentType::Int2:
+                case ComponentType::Int3:
+                case ComponentType::Int4:
+                case ComponentType::Bool: {
                     glEnableVertexAttribArray(m_VertexBufferIndex);
                     glVertexAttribIPointer(m_VertexBufferIndex,
-                                           element.GetComponentCount(),
-                                           ShaderDataTypeToOpenGLBaseType(element.Type),
-                                           layout.GetStride(),
-                                           (const void *) element.Offset);
+                                           GetComponentCount(component.type),
+                                           ShaderDataTypeToOpenGLBaseType(component.type),
+                                           stride,
+                                           reinterpret_cast<const void*>(offset));
                     m_VertexBufferIndex++;
                     break;
                 }
-                case ShaderDataType::Mat3:
-                case ShaderDataType::Mat4: {
-                    uint8_t count = element.GetComponentCount();
+                case ComponentType::Mat3:
+                case ComponentType::Mat4: {
+                    uint8_t count = GetComponentCount(component.type);
                     for (uint8_t i = 0; i < count; i++) {
                         glEnableVertexAttribArray(m_VertexBufferIndex);
                         glVertexAttribPointer(m_VertexBufferIndex,
                                               count,
-                                              ShaderDataTypeToOpenGLBaseType(element.Type),
-                                              element.Normalized ? GL_TRUE : GL_FALSE,
-                                              layout.GetStride(),
-                                              (const void *) (element.Offset + sizeof(float) * count * i));
+                                              ShaderDataTypeToOpenGLBaseType(component.type),
+                                              GL_FALSE,
+                                              stride,
+                                              reinterpret_cast<const void*>(offset + sizeof(float) * count * i));
                         glVertexAttribDivisor(m_VertexBufferIndex, 1);
                         m_VertexBufferIndex++;
                     }
@@ -76,16 +81,64 @@ namespace Pixl {
                 default:
                     break;
             }
+
+            offset += componentSize;
         }
 
         m_VertexBuffers.push_back(vertexBuffer);
     }
 
-    void VertexArray::SetIndexBuffer(const Ref<IndexBuffer> &indexBuffer) {
+    void VertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer) {
         glBindVertexArray(m_RendererID);
         indexBuffer->bind();
 
         m_IndexBuffer = indexBuffer;
+    }
+
+    uint32_t VertexArray::CalculateStride(const std::vector<VertexDeclarationComponent>& components) {
+        uint32_t stride = 0;
+        for (const auto& component : components) {
+            stride += ShaderDataTypeSize(component.type);
+        }
+        return stride;
+    }
+
+    uint32_t VertexArray::GetComponentCount(ComponentType type) {
+        switch (type) {
+            case ComponentType::Float:    return 1;
+            case ComponentType::Float2:   return 2;
+            case ComponentType::Float3:   return 3;
+            case ComponentType::Float4:   return 4;
+            case ComponentType::Mat3:     return 3; // 3x3 matrix
+            case ComponentType::Mat4:     return 4; // 4x4 matrix
+            case ComponentType::Int:      return 1;
+            case ComponentType::Int2:     return 2;
+            case ComponentType::Int3:     return 3;
+            case ComponentType::Int4:     return 4;
+            case ComponentType::Bool:     return 1;
+            default:                      return 0;
+        }
+    }
+
+    GLenum VertexArray::ShaderDataTypeToOpenGLBaseType(ComponentType type) {
+        switch (type) {
+            case ComponentType::Float:
+            case ComponentType::Float2:
+            case ComponentType::Float3:
+            case ComponentType::Float4:
+            case ComponentType::Mat3:
+            case ComponentType::Mat4:
+                return GL_FLOAT;
+            case ComponentType::Int:
+            case ComponentType::Int2:
+            case ComponentType::Int3:
+            case ComponentType::Int4:
+                return GL_INT;
+            case ComponentType::Bool:
+                return GL_BOOL;
+            default:
+                return 0;
+        }
     }
 
 }

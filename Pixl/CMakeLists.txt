@@ -12,8 +12,8 @@ set(SOURCES
 
         src/Pixl/Core/Application.cpp
         src/Pixl/Core/Window.cpp
-
         src/Pixl/Core/Input.cpp
+
         src/Pixl/Rendering/GraphicsContext.cpp
         src/Pixl/Rendering/Renderer/Renderer.cpp
         src/Pixl/Rendering/Objects/Shader.cpp
@@ -22,10 +22,12 @@ set(SOURCES
         src/Pixl/Rendering/RenderCommand.cpp
         src/Pixl/Rendering/Camera/PerspectiveCamera.cpp
         src/Pixl/Rendering/Material/ColorMaterial.cpp
-        src/Pixl/Rendering/Mesh/Mesh.cpp
+        src/Pixl/Rendering/Mesh/StaticMesh.cpp
         src/Pixl/Rendering/Geometry/CubeGeometry.cpp
-        include/Pixl/Rendering/Camera/OrthographicCamera.h
         src/Pixl/Rendering/Camera/OrthographicCamera.cpp
+        src/Pixl/Rendering/Mesh/BaseMesh.cpp
+        src/Pixl/Rendering/Mesh/MultiMaterialMesh.cpp
+        src/Pixl/Rendering/Objects/VertexDeclaration.cpp
 )
 
 add_library(Pixl STATIC ${SOURCES})

@@ -7,11 +7,11 @@
 
 #include <cstdint>
 #include "Pixl/Rendering/Objects/VertexArray.h"
-#include "Geometry.h"
+#include "IGeometry.h"
 
 namespace Pixl {
 
-    class CubeGeometry : public Geometry {
+    class CubeGeometry : public IGeometry {
     private:
         VertexArray m_VAO;
         Ref<VertexBuffer> m_VBO;

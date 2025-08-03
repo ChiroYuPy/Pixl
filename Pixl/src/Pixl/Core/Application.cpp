@@ -25,6 +25,9 @@ namespace Pixl {
         m_Window = makeScope<Window>(WindowSettings(m_Specification.Name));
         m_Window->setEventCallback(makeMemberCallback(this, &Application::onEvent));
 
+        Pixl::VertexDeclaration::Initialize();
+        Renderer::Init();
+
     }
 
     Application::~Application() {
@@ -56,9 +59,7 @@ namespace Pixl {
 
     bool Application::onWindowResize(WindowResizeEvent& e) {
         if (e.getWidth() == 0 || e.getHeight() == 0)
-        {
             return false;
-        }
 
         Renderer::OnWindowResize(e.getWidth(), e.getHeight());
 

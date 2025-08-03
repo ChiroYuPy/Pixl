@@ -23,17 +23,17 @@ namespace Pixl {
 
     static GLbitfield ClearMaskToGL(ClearBufferMask mask) {
         GLbitfield result = 0;
-        if ((mask & ClearBufferMask::Color) == ClearBufferMask::Color) result |= GL_COLOR_BUFFER_BIT;
-        if ((mask & ClearBufferMask::Depth) == ClearBufferMask::Depth) result |= GL_DEPTH_BUFFER_BIT;
+        if ((mask & ClearBufferMask::Color) == ClearBufferMask::Color)     result |= GL_COLOR_BUFFER_BIT;
+        if ((mask & ClearBufferMask::Depth) == ClearBufferMask::Depth)     result |= GL_DEPTH_BUFFER_BIT;
         if ((mask & ClearBufferMask::Stencil) == ClearBufferMask::Stencil) result |= GL_STENCIL_BUFFER_BIT;
         return result;
     }
 
     static GLenum CullFaceModeToGL(CullFaceMode mode) {
         switch (mode) {
-            case CullFaceMode::Front:         return GL_FRONT;
-            case CullFaceMode::Back:          return GL_BACK;
-            case CullFaceMode::FrontAndBack:  return GL_FRONT_AND_BACK;
+            case CullFaceMode::Front:        return GL_FRONT;
+            case CullFaceMode::Back:         return GL_BACK;
+            case CullFaceMode::FrontAndBack: return GL_FRONT_AND_BACK;
         }
         return GL_BACK; // fallback
     }
@@ -94,7 +94,9 @@ namespace Pixl {
 
         EnableBlend(true);
         SetBlendFunction(BlendFunction::SrcAlpha, BlendFunction::OneMinusSrcAlpha);
+
         EnableDepthTest(true);
+        Pixl::RenderCommand::SetDepthFunction(Pixl::DepthFunction::Less);
         glEnable(GL_LINE_SMOOTH);
     }
 

@@ -1,57 +1,32 @@
-//
-// Created by ChiroYuki on 01/08/2025.
-//
-
 #ifndef PIXLENGINE_VERTEXARRAY_H
 #define PIXLENGINE_VERTEXARRAY_H
 
+#include "glad/glad.h"
 #include "Pixl/Core/Base.h"
 #include "Buffer.h"
-
-#include <vector>
-#include "glad/glad.h"
+#include "VertexDeclaration.h"
 
 namespace Pixl {
-
-    static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
-    {
-        switch (type)
-        {
-            case ShaderDataType::Float:    return GL_FLOAT;
-            case ShaderDataType::Float2:   return GL_FLOAT;
-            case ShaderDataType::Float3:   return GL_FLOAT;
-            case ShaderDataType::Float4:   return GL_FLOAT;
-            case ShaderDataType::Mat3:     return GL_FLOAT;
-            case ShaderDataType::Mat4:     return GL_FLOAT;
-            case ShaderDataType::Int:      return GL_INT;
-            case ShaderDataType::Int2:     return GL_INT;
-            case ShaderDataType::Int3:     return GL_INT;
-            case ShaderDataType::Int4:     return GL_INT;
-            case ShaderDataType::Bool:     return GL_BOOL;
-            case ShaderDataType::None:     break;
-        }
-        return 0;
-    }
 
     class VertexArray {
     public:
         VertexArray();
+        ~VertexArray();
 
-        virtual ~VertexArray();
+        void bind() const;
+        void unbind() const;
 
-        virtual void bind() const;
+        void AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer, const VertexDeclaration& declaration);
+        void SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer);
 
-        virtual void unbind() const;
-
-        virtual void AddVertexBuffer(const Ref<VertexBuffer> &vertexBuffer);
-
-        virtual void SetIndexBuffer(const Ref<IndexBuffer> &indexBuffer);
-
-        virtual const std::vector<Ref<VertexBuffer>> &GetVertexBuffers() const { return m_VertexBuffers; }
-
-        virtual const Ref<IndexBuffer> &GetIndexBuffer() const { return m_IndexBuffer; }
+        const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const { return m_VertexBuffers; }
+        const Ref<IndexBuffer>& GetIndexBuffer() const { return m_IndexBuffer; }
 
     private:
+        uint32_t CalculateStride(const std::vector<VertexDeclarationComponent>& components);
+        uint32_t GetComponentCount(ComponentType type);
+        GLenum ShaderDataTypeToOpenGLBaseType(ComponentType type);
+
         uint32_t m_RendererID;
         uint32_t m_VertexBufferIndex = 0;
         std::vector<Ref<VertexBuffer>> m_VertexBuffers;

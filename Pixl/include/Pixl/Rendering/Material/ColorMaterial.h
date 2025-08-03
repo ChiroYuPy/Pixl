@@ -6,11 +6,11 @@
 #define PIXLENGINE_COLORMATERIAL_H
 
 #include "Pixl/Rendering/Objects/Shader.h"
-#include "Material.h"
+#include "IMaterial.h"
 
 namespace Pixl {
 
-    class ColorMaterial : public Material {
+    class ColorMaterial : public IMaterial {
     private:
         Shader shader;
         glm::vec4 color;

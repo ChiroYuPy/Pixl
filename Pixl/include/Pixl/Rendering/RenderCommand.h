@@ -146,7 +146,7 @@ namespace Pixl {
 
         // Drawing commands
         static void DrawArrays(DrawMode mode, uint32_t first, uint32_t count);
-        static void DrawIndexed(DrawMode mode, uint32_t indexCount, uint32_t indexOffset, uint32_t baseVertex = 0);
+        static void DrawIndexed(DrawMode mode, uint32_t indexCount, uint32_t indexOffset, uint32_t baseVertex);
         static void DrawArraysInstanced(DrawMode mode, uint32_t first, uint32_t count, uint32_t instanceCount);
         static void DrawIndexedInstanced(DrawMode mode, uint32_t indexCount, uint32_t indexOffset, uint32_t baseVertex, uint32_t instanceCount);
         static void DrawIndirect(DrawMode mode, const void *indirect);
