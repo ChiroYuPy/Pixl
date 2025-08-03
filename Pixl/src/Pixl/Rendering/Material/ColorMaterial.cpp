@@ -53,4 +53,8 @@ namespace Pixl {
         return shader;
     }
 
+    VertexLayout ColorMaterial::getRequiredVertexLayout() const {
+        return VertexLayout::Position;
+    }
+
 }

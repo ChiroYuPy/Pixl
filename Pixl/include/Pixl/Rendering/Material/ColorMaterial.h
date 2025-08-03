@@ -7,6 +7,7 @@
 
 #include "Pixl/Rendering/Objects/Shader.h"
 #include "IMaterial.h"
+#include "Pixl/Rendering/Objects/VertexDeclaration.h"
 
 namespace Pixl {
 
@@ -25,6 +26,8 @@ namespace Pixl {
         void setColor(const glm::vec4& col);
 
         const Shader& getShader() const override;
+
+        Pixl::VertexLayout getRequiredVertexLayout() const final;
     };
 
 }

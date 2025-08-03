@@ -6,6 +6,7 @@
 #define PIXLENGINE_IMATERIAL_H
 
 #include "Pixl/Rendering/Objects/Shader.h"
+#include "Pixl/Rendering/Objects/VertexDeclaration.h"
 
 namespace Pixl {
 
@@ -14,6 +15,7 @@ namespace Pixl {
         virtual void bind() const = 0;
         virtual void unbind() const = 0;
         virtual const Shader& getShader() const = 0;
+        virtual VertexLayout getRequiredVertexLayout() const = 0;
         virtual ~IMaterial() = default;
     };
 

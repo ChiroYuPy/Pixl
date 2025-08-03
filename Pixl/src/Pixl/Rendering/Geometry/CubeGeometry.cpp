@@ -20,7 +20,8 @@ namespace Pixl {
                 m_indexCount
         );
 
-        const auto& vertexDeclaration = VertexDeclaration::Get(VertexLayout::Position);
+        // Utiliser le layout défini par la géométrie
+        const auto& vertexDeclaration = VertexDeclaration::Get(getVertexLayout());
 
         m_VAO.bind();
         m_VAO.AddVertexBuffer(m_VBO, vertexDeclaration);
@@ -38,6 +39,10 @@ namespace Pixl {
 
     uint32_t CubeGeometry::getIndexCount() const {
         return m_indexCount;
+    }
+
+    VertexLayout CubeGeometry::getVertexLayout() const {
+        return VertexLayout::Position;
     }
 
 }

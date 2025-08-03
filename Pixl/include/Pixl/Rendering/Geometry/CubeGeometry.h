@@ -46,6 +46,8 @@ namespace Pixl {
         void unbind() const override;
 
         uint32_t getIndexCount() const override;
+
+        VertexLayout getVertexLayout() const final;
     };
 
     constexpr float CubeGeometry::s_Vertices[];

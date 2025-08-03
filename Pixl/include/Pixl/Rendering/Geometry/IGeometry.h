@@ -14,6 +14,7 @@ namespace Pixl {
         virtual void bind() const = 0;
         virtual void unbind() const = 0;
         virtual uint32_t getIndexCount() const = 0;
+        virtual VertexLayout getVertexLayout() const = 0;
         virtual ~IGeometry() = default;
     };
 
