@@ -17,15 +17,15 @@
 
 namespace Pixl {
 
-    struct WindowSettings
+    struct WindowProperties
     {
         std::string Title;
         unsigned int Width;
         unsigned int Height;
 
-        WindowSettings(std::string  title = "Pixl Engine",
-                       unsigned int width = 1280,
-                       unsigned int height = 720)
+        WindowProperties(std::string  title = "Pixl Engine",
+                         unsigned int width = 1280,
+                         unsigned int height = 720)
                 : Title(std::move(title)), Width(width), Height(height) {}
     };
 
@@ -33,7 +33,7 @@ namespace Pixl {
     public:
         using EventCallbackFunction = std::function<void(Event&)>;
 
-        Window(const WindowSettings& props);
+        Window(const WindowProperties& props);
         ~Window();
 
         void onUpdate();
@@ -48,7 +48,7 @@ namespace Pixl {
 
         void* getNativeWindow() const { return m_Window; }
     private:
-        void init(const WindowSettings& props);
+        void init(const WindowProperties& props);
         void shutdown();
 
     private:

@@ -52,7 +52,7 @@ namespace Pixl {
         VertexDeclaration(int inputRate, std::initializer_list<VertexDeclarationComponent> components)
                 : m_inputRate(inputRate), m_components(components) {}
 
-        static void Initialize();
+        static void Init();
         static const VertexDeclaration& Get(VertexLayout layout);
 
         int GetInputRate() const { return m_inputRate; }

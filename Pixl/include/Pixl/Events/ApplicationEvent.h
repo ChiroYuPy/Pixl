@@ -17,8 +17,7 @@ namespace Pixl {
         unsigned int getWidth() const { return m_Width; }
         unsigned int getHeight() const { return m_Height; }
 
-        std::string toString() const override
-        {
+        std::string toString() const override {
             std::stringstream ss;
             ss << "WindowResizeEvent: " << m_Width << ", " << m_Height;
             return ss.str();

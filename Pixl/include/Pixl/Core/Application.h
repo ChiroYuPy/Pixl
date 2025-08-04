@@ -12,6 +12,8 @@
 #include "Pixl/Events/Event.h"
 #include "Pixl/Core/Window.h"
 #include "Pixl/Core/Time/Time.h"
+#include "Pixl/Core/Layer/Layer.h"
+#include "Pixl/Core/Layer/LayerStack.h"
 
 #include <memory>
 
@@ -20,25 +22,26 @@ namespace Pixl {
     struct ApplicationSpecification
     {
         std::string Name = "Hazel Application";
-        std::string WorkingDirectory;
+        std::string workingDirectory;
     };
 
     class Application {
     public:
-        Application(ApplicationSpecification  specification);
+        explicit Application(ApplicationSpecification specification);
         virtual ~Application();
 
-        virtual void onEvent(Event& e);
+        void onEvent(Event& e);
 
-        virtual void onUpdate(const Pixl::Time& deltaTime) {}
+        void PushLayer(Layer* layer);
+        void PushOverlay(Layer* layer);
 
-        Window& getWindow() { return *m_Window; }
+        Window& getWindow() { return *m_window; }
 
         void close();
 
-        static Application& get() { return *s_Instance; }
+        static Application& get() { return *s_instance; }
 
-        const ApplicationSpecification& getSpecification() const { return m_Specification; }
+        const ApplicationSpecification& getSpecification() const { return m_specification; }
 
         void run();
 
@@ -47,12 +50,14 @@ namespace Pixl {
         bool onWindowResize(WindowResizeEvent& e);
 
     private:
-        ApplicationSpecification m_Specification;
-        Scope<Window> m_Window;
+        ApplicationSpecification m_specification;
+        Scope<Window> m_window;
         bool m_Running = true;
+        bool m_minimized = false;
+        LayerStack m_LayerStack;
 
     private:
-        static Application* s_Instance;
+        static Application* s_instance;
     };
 
     Application* createApplication();

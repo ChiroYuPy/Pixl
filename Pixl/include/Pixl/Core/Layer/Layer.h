@@ -20,7 +20,7 @@ namespace Pixl {
 
         virtual void onAttach() {}
         virtual void onDetach() {}
-        virtual void onUpdate(Time ts) {}
+        virtual void onUpdate(Time& ts) {}
         virtual void onEvent(Event& event) {}
 
         const std::string& getName() const;

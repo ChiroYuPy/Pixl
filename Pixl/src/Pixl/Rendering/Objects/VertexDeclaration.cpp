@@ -8,7 +8,7 @@ namespace Pixl {
 
     std::unordered_map<VertexLayout, VertexDeclaration> VertexDeclaration::s_declarations;
 
-    void VertexDeclaration::Initialize() {
+    void VertexDeclaration::Init() {
         s_declarations[VertexLayout::Position] = VertexDeclaration(VertexInputRate::Vertex, {
                 {VertexComponent::Position, VertexAttributeType::Float3, 0}
         });

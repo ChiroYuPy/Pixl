@@ -11,8 +11,15 @@ constexpr int BIT(int x) {
     return 1 << x;
 }
 
+template<typename Fn>
+auto bindCallback(Fn fn) {
+    return [fn](auto&&... args) -> decltype(auto) {
+        return fn(std::forward<decltype(args)>(args)...);
+    };
+}
+
 template<typename T, typename Fn>
-constexpr auto makeMemberCallback(T* obj, Fn fn) {
+auto bindMemberCallback(T* obj, Fn fn) {
     return [obj, fn](auto&&... args) -> decltype(auto) {
         return (obj->*fn)(std::forward<decltype(args)>(args)...);
     };

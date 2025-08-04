@@ -36,11 +36,8 @@ set(SOURCES
         src/Pixl/Rendering/Camera/controller/FPSController.cpp
         src/Pixl/Core/Time/Timer.cpp
         src/Pixl/Core/Time/Scheduler.cpp
-        include/Pixl/Core/Time/Scheduler.h
         src/Pixl/Utils/Logger.cpp
-        include/Pixl/Utils/Logger.h
         src/Pixl/Core/Layer/LayerStack.cpp
-        include/Pixl/Core/Layer/LayerStack.h
 )
 
 add_library(Pixl STATIC ${SOURCES})

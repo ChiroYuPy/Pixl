@@ -15,7 +15,7 @@ namespace Pixl {
         std::cout << "GLFW ERROR: " << error << " | " << description << std::endl;
     }
 
-    Window::Window(const WindowSettings& props) : m_Window() {
+    Window::Window(const WindowProperties& props) : m_Window() {
         init(props);
     }
 
@@ -23,7 +23,7 @@ namespace Pixl {
         shutdown();
     }
 
-    void Window::init(const WindowSettings& props) {
+    void Window::init(const WindowProperties& props) {
         m_Data.Title = props.Title;
         m_Data.Width = props.Width;
         m_Data.Height = props.Height;

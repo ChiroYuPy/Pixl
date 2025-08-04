@@ -25,6 +25,8 @@
 
 #include "Pixl/Rendering/Camera/Controller/FPSController.h"
 
+#include "Pixl/Core/Layer/Layer.h"
+
 #include "Pixl/Core/Base.h"
 #include "Pixl/Core/Application.h"
 #include "Pixl/Core/Input.h"
