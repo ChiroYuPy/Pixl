@@ -37,6 +37,8 @@ set(SOURCES
         src/Pixl/Core/Time/Timer.cpp
         src/Pixl/Core/Time/Scheduler.cpp
         include/Pixl/Core/Time/Scheduler.h
+        src/Pixl/Utils/Logger.cpp
+        include/Pixl/Utils/Logger.h
 )
 
 add_library(Pixl STATIC ${SOURCES})

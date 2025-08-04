@@ -11,6 +11,7 @@
 #include "Pixl/Events/KeyEvent.h"
 #include "Pixl/Events/Event.h"
 #include "Pixl/Core/Window.h"
+#include "Pixl/Core/Time/Time.h"
 
 #include <memory>
 
@@ -29,6 +30,8 @@ namespace Pixl {
 
         virtual void onEvent(Event& e);
 
+        virtual void onUpdate(const Pixl::Time& deltaTime) {}
+
         Window& getWindow() { return *m_Window; }
 
         void close();
@@ -38,8 +41,6 @@ namespace Pixl {
         const ApplicationSpecification& getSpecification() const { return m_Specification; }
 
         void run();
-
-        virtual void onUpdate() {}
 
     private:
         bool onWindowClose(WindowCloseEvent& e);

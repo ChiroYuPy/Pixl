@@ -6,6 +6,7 @@
 
 #include "Pixl/Pixl.h"
 #include "Pixl/Core/EntryPoint.h"
+#include "Pixl/Core/Time/Time.h"
 
 class SandboxApp : public Pixl::Application {
 private:
@@ -42,7 +43,9 @@ public:
         // cubeMesh->addSubMesh(colorMaterial, 0, 36);
     }
 
-    void onUpdate() override {
+    void onUpdate(const Pixl::Time& deltaTime) override {
+        int time = deltaTime.asMilliseconds();
+
         Pixl::RenderCommand::Clear();
 
         Pixl::Renderer::beginFrame(*camera);
@@ -82,7 +85,7 @@ public:
         Pixl::Renderer::endFrame();
     }
 
-    void onEvent(Pixl::Event& e) {
+    void onEvent(Pixl::Event& e) override {
         Pixl::Application::onEvent(e); // default events
 
         static bool active = false;
@@ -94,7 +97,7 @@ public:
                 return fpsController->onMouseMoved(e);
             });
 
-        dispatcher.dispatch<Pixl::KeyPressedEvent>([this](Pixl::KeyPressedEvent& e) {
+        dispatcher.dispatch<Pixl::KeyPressedEvent>([](Pixl::KeyPressedEvent& e) {
             if (e.getKeyCode() == Pixl::Key::Escape) {
                 if (Pixl::Input::getCursorMode() == Pixl::CursorMode::Captured) {
                     Pixl::Input::setCursorMode(Pixl::CursorMode::Visible);

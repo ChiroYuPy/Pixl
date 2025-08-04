@@ -11,17 +11,16 @@ namespace Pixl {
 
     class Time {
     public:
-        using TimeUnit = std::int64_t;
 
         static Time Zero();
 
         static Time Seconds(float amount);
-        static Time Milliseconds(TimeUnit amount);
-        static Time Microseconds(TimeUnit amount);
+        static Time Milliseconds(int32_t amount);
+        static Time Microseconds(int64_t amount);
 
         float asSeconds() const;
-        TimeUnit asMilliseconds() const;
-        TimeUnit asMicroseconds() const;
+        int32_t asMilliseconds() const;
+        int64_t asMicroseconds() const;
 
         Time operator+(const Time& right) const;
         Time operator-(const Time& right) const;
@@ -41,9 +40,9 @@ namespace Pixl {
         bool operator>=(const Time& right) const;
 
     private:
-        explicit Time(TimeUnit microseconds) : m_microseconds(microseconds) {}
+        explicit Time( int64_t microseconds) : m_microseconds(microseconds) {}
 
-        TimeUnit m_microseconds;
+        int64_t m_microseconds;
     };
 
 }
