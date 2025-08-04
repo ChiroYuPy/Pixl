@@ -6,8 +6,46 @@
 
 namespace Pixl {
 
+
+    void OrthographicCamera::updateViewMatrix() const {
+        const glm::mat4 identity(1.0f);
+        const glm::mat4 translation = glm::translate(identity, position);
+        const glm::mat4 rotationMat = glm::rotate(identity, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+        const glm::mat4 transform = translation * rotationMat;
+
+        viewMatrix = glm::inverse(transform);
+        viewDirty = false;
+    }
+
+    void OrthographicCamera::updateProjectionMatrix() const {
+        float actualLeft = left * zoom;
+        float actualRight = right * zoom;
+        float actualBottom = bottom * zoom;
+        float actualTop = top * zoom;
+
+        projectionMatrix = glm::ortho(actualLeft, actualRight, actualBottom, actualTop, nearPlane, farPlane);
+        projDirty = false;
+    }
+
+    void OrthographicCamera::updateBounds() {
+        left = -aspectRatio * zoom;
+        right = aspectRatio * zoom;
+        bottom = -zoom;
+        top = zoom;
+    }
+
     OrthographicCamera::OrthographicCamera(float aspect, float zoom)
-            : aspectRatio(aspect), zoom(zoom) {
+    : zoom(zoom) {
+        aspectRatio = aspect;
+        updateBounds();
+        updateProjectionMatrix();
+        updateViewMatrix();
+    }
+
+    OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top, float nearPlane, float farPlane)
+    : left(left), right(right), bottom(bottom), top(top), nearPlane(nearPlane), farPlane(farPlane) {
+        zoom = 1.0f;
+        aspectRatio = (right - left) / (top - bottom);
         updateProjectionMatrix();
         updateViewMatrix();
     }
@@ -15,43 +53,15 @@ namespace Pixl {
     void OrthographicCamera::setAspectRatio(float aspect) {
         if (aspect != aspectRatio) {
             aspectRatio = aspect;
+            updateBounds();
             projDirty = true;
         }
-    }
-
-    void OrthographicCamera::setPosition(const glm::vec3& pos) {
-        if (pos != position) {
-            position = pos;
-            viewDirty = true;
-        }
-    }
-
-    void OrthographicCamera::setDirection(const glm::vec3& dir) {
-        if (dir != direction) {
-            direction = glm::normalize(dir);
-            viewDirty = true;
-        }
-    }
-
-    const glm::mat4& OrthographicCamera::getViewMatrix() {
-        if (viewDirty)
-            updateViewMatrix();
-        return viewMatrix;
-    }
-
-    const glm::mat4& OrthographicCamera::getProjectionMatrix() {
-        if (projDirty)
-            updateProjectionMatrix();
-        return projectionMatrix;
-    }
-
-    const glm::vec3& OrthographicCamera::getPosition() const {
-        return position;
     }
 
     void OrthographicCamera::setZoom(float z) {
         if (z != zoom && z > 0.0f) {
             zoom = z;
+            updateBounds();
             projDirty = true;
         }
     }
@@ -63,23 +73,51 @@ namespace Pixl {
         }
     }
 
-    void OrthographicCamera::updateViewMatrix() {
-        // Pour la 2D, on peut utiliser la rotation autour de l'axe Z
-        glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) *
-                              glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0, 0, 1));
-
-        viewMatrix = glm::inverse(transform);
-        viewDirty = false;
+    void OrthographicCamera::setBounds(float l, float r, float b, float t) {
+        this->left = l;
+        this->right = r;
+        this->bottom = b;
+        this->top = t;
+        projDirty = true;
     }
 
-    void OrthographicCamera::updateProjectionMatrix() {
-        float left = -aspectRatio * zoom;
-        float right = aspectRatio * zoom;
-        float bottom = -zoom;
-        float top = zoom;
-
-        projectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
-        projDirty = false;
+    void OrthographicCamera::setNearFarPlanes(float near, float far) {
+        if (near != nearPlane || far != farPlane) {
+            nearPlane = near;
+            farPlane = far;
+            projDirty = true;
+        }
     }
 
+    float OrthographicCamera::getZoom() const {
+        return zoom;
+    }
+
+    float OrthographicCamera::getRotation() const {
+        return rotation;
+    }
+
+    float OrthographicCamera::getLeft() const {
+        return left;
+    }
+
+    float OrthographicCamera::getRight() const {
+        return right;
+    }
+
+    float OrthographicCamera::getBottom() const {
+        return bottom;
+    }
+
+    float OrthographicCamera::getTop() const {
+        return top;
+    }
+
+    float OrthographicCamera::getNearPlane() const {
+        return nearPlane;
+    }
+
+    float OrthographicCamera::getFarPlane() const {
+        return farPlane;
+    }
 }

@@ -29,16 +29,12 @@ namespace Pixl {
     }
 
     const glm::mat4 &BaseCamera::getViewMatrix() {
-        if (viewDirty) {
-            updateViewMatrix();
-        }
+        if (viewDirty) updateViewMatrix();
         return viewMatrix;
     }
 
     const glm::mat4 &BaseCamera::getProjectionMatrix() {
-        if (projDirty) {
-            updateProjectionMatrix();
-        }
+        if (projDirty) updateProjectionMatrix();
         return projectionMatrix;
     }
 
