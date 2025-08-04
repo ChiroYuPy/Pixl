@@ -6,67 +6,41 @@
 
 namespace Pixl {
 
-    FPSController::FPSController(Pixl::ICamera *cam) : camera(cam) {}
-
     bool FPSController::onMouseMoved(Pixl::MouseMovedEvent e) {
+        static bool firstMouse = true;
+        static float lastX = 0.0f;
+        static float lastY = 0.0f;
+
+        float x = e.getX();
+        float y = e.getY();
+
         if (firstMouse) {
-            lastMousePos = {e.getX(), e.getY()};
+            lastX = x;
+            lastY = y;
             firstMouse = false;
-            return true;
+            return false;  // ignore le premier mouvement
         }
 
-        float dx = (e.getX() - lastMousePos.x) * sensitivity;
-        float dy = (e.getY() - lastMousePos.y) * sensitivity;
-        lastMousePos = {e.getX(), e.getY()};
+        float dx = (x - lastX) * sensitivity;
+        float dy = (y - lastY) * sensitivity;
 
-        // Obtenir l'orientation actuelle
-        glm::quat currentOrientation = camera->getOrientation();
+        lastX = x;
+        lastY = y;
 
-        // Yaw: rotation autour de l'axe Y mondial (0,1,0)
-        glm::quat yawRotation = glm::angleAxis(glm::radians(-dx), glm::vec3(0, 1, 0));
+        yaw -= dx;
+        pitch -= dy;
 
-        // Pitch: rotation autour de l'axe X local (right vector)
-        glm::vec3 right = camera->getRightNormal();
-        glm::quat pitchRotation = glm::angleAxis(glm::radians(-dy), right);
+        // Clamp le pitch pour éviter les flips
+        pitch = glm::clamp(pitch, -90.0f, 90.0f);
 
-        // Combiner les rotations dans le bon ordre
-        glm::quat newOrientation = yawRotation * currentOrientation * pitchRotation;
+        // Construit la rotation finale
+        glm::quat qPitch = glm::angleAxis(glm::radians(pitch), glm::vec3(1, 0, 0));
+        glm::quat qYaw   = glm::angleAxis(glm::radians(yaw),   glm::vec3(0, 1, 0));
+        glm::quat orientation = qYaw * qPitch;
 
-        // Limiter le pitch pour éviter le retournement
-        glm::vec3 forward = newOrientation * glm::vec3(0, 0, -1);
-        const float maxPitch = 89.0f;
-
-        if (forward.y > sin(glm::radians(maxPitch))) {
-            // Calculer le pitch actuel
-            float pitch = asin(forward.y);
-            pitch = glm::clamp(pitch, -glm::radians(maxPitch), glm::radians(maxPitch));
-
-            // Reconstruire l'orientation avec le pitch limité
-            forward.y = sin(pitch);
-            forward = glm::normalize(forward);
-
-            right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
-            glm::vec3 up = glm::cross(right, forward);
-
-            glm::mat3 rotationMatrix;
-            rotationMatrix[0] = right;
-            rotationMatrix[1] = up;
-            rotationMatrix[2] = -forward;
-
-            newOrientation = glm::quat_cast(rotationMatrix);
-        }
-
-        camera->setOrientation(newOrientation);
+        camera->setOrientation(orientation);
 
         return true;
-    }
-
-    void FPSController::resetMouse() {
-        firstMouse = true;
-    }
-
-    void FPSController::setSensitivity(float sens) {
-        sensitivity = sens;
     }
 
 }

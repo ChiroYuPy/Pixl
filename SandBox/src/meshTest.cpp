@@ -85,28 +85,36 @@ public:
     void onEvent(Pixl::Event& e) {
         Pixl::Application::onEvent(e); // default events
 
+        static bool active = false;
+
         Pixl::EventDispatcher dispatcher(e);
-        dispatcher.dispatch<Pixl::MouseMovedEvent>([this](Pixl::MouseMovedEvent& e) {
-            return fpsController->onMouseMoved(e);
-        });
+
+        if (active)
+            dispatcher.dispatch<Pixl::MouseMovedEvent>([this](Pixl::MouseMovedEvent& e) {
+                return fpsController->onMouseMoved(e);
+            });
 
         dispatcher.dispatch<Pixl::KeyPressedEvent>([this](Pixl::KeyPressedEvent& e) {
             if (e.getKeyCode() == Pixl::Key::Escape) {
                 if (Pixl::Input::getCursorMode() == Pixl::CursorMode::Captured) {
                     Pixl::Input::setCursorMode(Pixl::CursorMode::Visible);
-                    fpsController->resetMouse();
+                    active = false;
+                    // fpsController->resetMouse();
                 } else {
                     Pixl::Input::setCursorMode(Pixl::CursorMode::Captured);
+                    active = true;
                 }
                 return true;
             }
             return false;
         });
 
+        /*
         dispatcher.dispatch<Pixl::WindowResizeEvent>([this](Pixl::WindowResizeEvent& e) {
             fpsController->resetMouse();
             return false;
         });
+         */
     }
 
     ~SandboxApp() override = default;

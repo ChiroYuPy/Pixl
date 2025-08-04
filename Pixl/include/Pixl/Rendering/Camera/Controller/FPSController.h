@@ -15,19 +15,15 @@ namespace Pixl {
 
     class FPSController {
     private:
-        Pixl::ICamera *camera;
+        Pixl::ICamera* camera;
         float sensitivity = 0.125f;
-        glm::vec2 lastMousePos;
-        bool firstMouse = true;
+        float pitch = 0.0f; // Accumulateur de pitch
+        float yaw = 0.0f;   // Accumulateur de yaw
 
     public:
-        FPSController(Pixl::ICamera *cam);
+        FPSController(Pixl::ICamera* cam) : camera(cam) {}
 
         bool onMouseMoved(Pixl::MouseMovedEvent e);
-
-        void resetMouse();
-
-        void setSensitivity(float sens);
     };
 
 }
