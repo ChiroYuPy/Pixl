@@ -10,41 +10,41 @@ namespace Pixl {
 
     void VertexDeclaration::Initialize() {
         s_declarations[VertexLayout::Position] = VertexDeclaration(VertexInputRate::Vertex, {
-                {VertexComponent::Position, ComponentType::Float3, 0}
+                {VertexComponent::Position, VertexAttributeType::Float3, 0}
         });
 
         s_declarations[VertexLayout::PositionColor] = VertexDeclaration(VertexInputRate::Vertex, {
-                {VertexComponent::Position, ComponentType::Float3, 0},
-                {VertexComponent::Color, ComponentType::Float4, 0}
+                {VertexComponent::Position, VertexAttributeType::Float3, 0},
+                {VertexComponent::Color,    VertexAttributeType::Float4, 0}
         });
 
         s_declarations[VertexLayout::PositionUV] = VertexDeclaration(VertexInputRate::Vertex, {
-                {VertexComponent::Position, ComponentType::Float3, 0},
-                {VertexComponent::TexCoord, ComponentType::Float2, 0}
+                {VertexComponent::Position, VertexAttributeType::Float3, 0},
+                {VertexComponent::TexCoord, VertexAttributeType::Float2, 0}
         });
 
         s_declarations[VertexLayout::PositionNormal] = VertexDeclaration(VertexInputRate::Vertex, {
-                {VertexComponent::Position, ComponentType::Float3, 0},
-                {VertexComponent::Normal, ComponentType::Float3, 0}
+                {VertexComponent::Position, VertexAttributeType::Float3, 0},
+                {VertexComponent::Normal,   VertexAttributeType::Float3, 0}
         });
 
         s_declarations[VertexLayout::PositionNormalUV] = VertexDeclaration(VertexInputRate::Vertex, {
-                {VertexComponent::Position, ComponentType::Float3, 0},
-                {VertexComponent::Normal, ComponentType::Float3, 0},
-                {VertexComponent::TexCoord, ComponentType::Float2, 0}
+                {VertexComponent::Position, VertexAttributeType::Float3, 0},
+                {VertexComponent::Normal,   VertexAttributeType::Float3, 0},
+                {VertexComponent::TexCoord, VertexAttributeType::Float2, 0}
         });
 
         s_declarations[VertexLayout::PositionNormalColor] = VertexDeclaration(VertexInputRate::Vertex, {
-                {VertexComponent::Position, ComponentType::Float3, 0},
-                {VertexComponent::Normal, ComponentType::Float3, 0},
-                {VertexComponent::Color, ComponentType::Float4, 0}
+                {VertexComponent::Position, VertexAttributeType::Float3, 0},
+                {VertexComponent::Normal,   VertexAttributeType::Float3, 0},
+                {VertexComponent::Color,    VertexAttributeType::Float4, 0}
         });
 
         s_declarations[VertexLayout::PositionNormalUVColor] = VertexDeclaration(VertexInputRate::Vertex, {
-                {VertexComponent::Position, ComponentType::Float3, 0},
-                {VertexComponent::Normal, ComponentType::Float3, 0},
-                {VertexComponent::TexCoord, ComponentType::Float2, 0},
-                {VertexComponent::Color, ComponentType::Float4, 0}
+                {VertexComponent::Position, VertexAttributeType::Float3, 0},
+                {VertexComponent::Normal,   VertexAttributeType::Float3, 0},
+                {VertexComponent::TexCoord, VertexAttributeType::Float2, 0},
+                {VertexComponent::Color,    VertexAttributeType::Float4, 0}
         });
     }
 

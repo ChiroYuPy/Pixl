@@ -24,8 +24,8 @@ namespace Pixl {
 
     private:
         uint32_t CalculateStride(const std::vector<VertexDeclarationComponent>& components);
-        uint32_t GetComponentCount(ComponentType type);
-        GLenum ShaderDataTypeToOpenGLBaseType(ComponentType type);
+        uint32_t GetComponentCount(VertexAttributeType type);
+        GLenum ShaderDataTypeToOpenGLBaseType(VertexAttributeType type);
 
         uint32_t m_RendererID;
         uint32_t m_VertexBufferIndex = 0;

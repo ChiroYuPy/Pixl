@@ -7,7 +7,7 @@
 
 #include <vector>
 #include <unordered_map>
-#include "ComponentType.h"
+#include "VertexAttributeType.h"
 
 namespace Pixl {
 
@@ -39,10 +39,10 @@ namespace Pixl {
 
     struct VertexDeclarationComponent {
         VertexComponent component;
-        ComponentType type;
+        VertexAttributeType type;
         uint32_t componentIndex;
 
-        VertexDeclarationComponent(VertexComponent comp, ComponentType t, uint32_t index = 0)
+        VertexDeclarationComponent(VertexComponent comp, VertexAttributeType t, uint32_t index = 0)
                 : component(comp), type(t), componentIndex(index) {}
     };
 
