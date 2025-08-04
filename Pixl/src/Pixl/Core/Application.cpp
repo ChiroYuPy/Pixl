@@ -6,6 +6,7 @@
 #include "Pixl/Rendering/Renderer/Renderer.h"
 #include "Pixl/Core/Window.h"
 #include "Pixl/Core/Application.h"
+#include "Pixl/Core/Time/Clock.h"
 
 #include <filesystem>
 #include <utility>
@@ -45,9 +46,11 @@ namespace Pixl {
     }
 
     void Application::run() {
+        Clock clock;
         while (m_Running)
         {
-            onUpdate();
+            auto deltaTime = clock.restart();
+            onUpdate(deltaTime);
             m_Window->onUpdate();
         }
     }
