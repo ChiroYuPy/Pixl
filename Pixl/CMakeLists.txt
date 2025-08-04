@@ -34,6 +34,12 @@ set(SOURCES
         include/Pixl/Rendering/Camera/BaseCamera.h
         src/Pixl/Rendering/Camera/controller/FPSController.cpp
         include/Pixl/Rendering/Camera/Controller/FPSController.h
+        include/Pixl/Core/Layer/Layer.cpp
+        include/Pixl/Core/Layer/Layer.h
+        src/Pixl/Core/Time/Time.cpp
+        include/Pixl/Core/Time/Time.h
+        include/Pixl/Core/Time/Clock.cpp
+        include/Pixl/Core/Time/Clock.h
 )
 
 add_library(Pixl STATIC ${SOURCES})
