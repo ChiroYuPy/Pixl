@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.30)
 project(Pixl)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(PROJECT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -35,6 +35,8 @@ set(SOURCES
         src/Pixl/Rendering/Camera/BaseCamera.cpp
         src/Pixl/Rendering/Camera/controller/FPSController.cpp
         src/Pixl/Core/Time/Timer.cpp
+        src/Pixl/Core/Time/Scheduler.cpp
+        include/Pixl/Core/Time/Scheduler.h
 )
 
 add_library(Pixl STATIC ${SOURCES})
