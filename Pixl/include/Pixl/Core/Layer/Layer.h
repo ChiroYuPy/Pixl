@@ -5,26 +5,27 @@
 #ifndef PIXLENGINE_LAYER_H
 #define PIXLENGINE_LAYER_H
 
+#include "Pixl/Core/Base.h"
+#include "Pixl/Core/Time/Time.h"
+#include "Pixl/Events/Event.h"
 
 #include <string>
-#include "Pixl/Events/Event.h"
-#include "Pixl/Core/Time/Time.h"
 
 namespace Pixl {
 
     class Layer {
     public:
-        Layer(const std::string& name = "Layer");
+        Layer(std::string  name = "Layer");
         virtual ~Layer() = default;
 
-        virtual void OnAttach() {}
-        virtual void OnDetach() {}
-        virtual void OnUpdate(Time ts) {}
-        virtual void OnEvent(Event& event) {}
+        virtual void onAttach() {}
+        virtual void onDetach() {}
+        virtual void onUpdate(Time ts) {}
+        virtual void onEvent(Event& event) {}
 
-        const std::string& GetName() const { return m_DebugName; }
+        const std::string& getName() const;
     protected:
-        std::string m_DebugName;
+        std::string m_name;
     };
 
 }

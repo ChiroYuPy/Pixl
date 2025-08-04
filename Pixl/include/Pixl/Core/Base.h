@@ -7,9 +7,6 @@
 
 #include <memory>
 
-#define HZ_EXPAND_MACRO(x) x
-#define HZ_STRINGIFY_MACRO(x) #x
-
 constexpr int BIT(int x) {
     return 1 << x;
 }

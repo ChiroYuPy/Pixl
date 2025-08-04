@@ -4,10 +4,16 @@
 
 #include "Pixl/Core/Layer/Layer.h"
 
+#include <utility>
+
 namespace Pixl {
 
-    Pixl::Layer::Layer(const std::string &name) : m_DebugName(name) {
+    Pixl::Layer::Layer(std::string name) : m_name(std::move(name)) {
 
+    }
+
+    const std::string &Layer::getName() const {
+        return m_name;
     }
 
 }
