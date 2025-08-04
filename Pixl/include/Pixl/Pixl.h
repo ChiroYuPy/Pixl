@@ -18,6 +18,7 @@
 #include "Pixl/Rendering/Geometry/CubeGeometry.h"
 
 #include "Pixl/Rendering/Material/ColorMaterial.h"
+#include "Pixl/Rendering/Material/VertexColorMaterial.h"
 
 #include "Pixl/Rendering/Camera/PerspectiveCamera.h"
 #include "Pixl/Rendering/Camera/OrthographicCamera.h"

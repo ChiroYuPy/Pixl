@@ -6,7 +6,7 @@
 
 namespace Pixl {
 
-    const char* vertexSrc = R"(
+    const char* vertexSrcColorMaterial = R"(
             #version 330 core
 
             layout(location = 0) in vec3 a_position;
@@ -21,7 +21,7 @@ namespace Pixl {
         )";
 
     // Fragment Shader Source
-    const char* fragmentSrc = R"(
+    const char* fragmentSrcColorMaterial = R"(
             #version 330 core
 
             uniform vec4 u_color;
@@ -34,7 +34,7 @@ namespace Pixl {
         )";
 
     ColorMaterial::ColorMaterial(const glm::vec4 &col)
-            : shader(vertexSrc, fragmentSrc), color(col) {}
+            : shader(vertexSrcColorMaterial, fragmentSrcColorMaterial), color(col) {}
 
     void ColorMaterial::bind() const {
         shader.bind();

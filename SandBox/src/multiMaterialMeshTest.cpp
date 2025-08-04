@@ -15,7 +15,7 @@ private:
 public:
     explicit SandboxApp(const Pixl::ApplicationSpecification& specification)
     : Pixl::Application(specification) {
-        Pixl::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
+        Pixl::RenderCommand::SetClearColor({0.2f, 0.2f, 0.2f, 1.0f});
 
         camera = Pixl::makeScope<Pixl::PerspectiveCamera>(
                 90.0f, getWindow().getAspectRatio(), 0.1f, 10000.0f
@@ -31,10 +31,14 @@ public:
         Pixl::Ref<Pixl::ColorMaterial> greenMaterial = Pixl::makeRef<Pixl::ColorMaterial>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
         Pixl::Ref<Pixl::ColorMaterial> blueMaterial = Pixl::makeRef<Pixl::ColorMaterial>(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
+        Pixl::Ref<Pixl::VertexColorMaterial> colorMaterial = Pixl::makeRef<Pixl::VertexColorMaterial>();
+
         cubeMesh = Pixl::makeScope<Pixl::MultiMaterialMesh>(cubeGeometry);
-        cubeMesh->addSubMesh(redMaterial, 0, 12);
-        cubeMesh->addSubMesh(greenMaterial, 12, 12);
-        cubeMesh->addSubMesh(blueMaterial, 24, 12);
+        // cubeMesh->addSubMesh(redMaterial, 0, 12);
+        // cubeMesh->addSubMesh(greenMaterial, 12, 12);
+        // cubeMesh->addSubMesh(blueMaterial, 24, 12);
+
+        cubeMesh->addSubMesh(colorMaterial, 0, 36);
     }
 
     void onUpdate() override {
@@ -49,7 +53,7 @@ public:
 
         auto cubeTransform = glm::mat4(1.0f);
 
-        cubeTransform = glm::translate(cubeTransform, glm::vec3(0.0f, 0.0f, 0.0f));
+        cubeTransform = glm::translate(cubeTransform, glm::vec3(3.0f, 0.0f, 0.0f));
 
         cubeMesh->render(cubeTransform, viewProj);
 

@@ -28,6 +28,8 @@ set(SOURCES
         src/Pixl/Rendering/Mesh/BaseMesh.cpp
         src/Pixl/Rendering/Mesh/MultiMaterialMesh.cpp
         src/Pixl/Rendering/Objects/VertexDeclaration.cpp
+        src/Pixl/Rendering/Material/VertexColorMaterial.cpp
+        include/Pixl/Rendering/Material/VertexColorMaterial.h
 )
 
 add_library(Pixl STATIC ${SOURCES})
