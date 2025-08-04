@@ -2,8 +2,8 @@
 // Created by ChiroYuki on 03/08/2025.
 //
 
-#ifndef PIXLENGINE_SHADERDATA_H
-#define PIXLENGINE_SHADERDATA_H
+#ifndef PIXLENGINE_COMPONENTTYPE_H
+#define PIXLENGINE_COMPONENTTYPE_H
 
 #include <cstdint>
 
@@ -35,4 +35,4 @@ namespace Pixl {
 
 }
 
-#endif //PIXLENGINE_SHADERDATA_H
+#endif //PIXLENGINE_COMPONENTTYPE_H

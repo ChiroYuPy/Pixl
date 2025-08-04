@@ -7,7 +7,7 @@
 
 #include <vector>
 #include <unordered_map>
-#include "ShaderData.h"
+#include "ComponentType.h"
 
 namespace Pixl {
 
