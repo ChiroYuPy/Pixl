@@ -13,11 +13,13 @@ namespace Pixl {
     class MouseMovedEvent : public Event
     {
     public:
-        MouseMovedEvent(const float x, const float y)
-                : m_MouseX(x), m_MouseY(y) {}
+        MouseMovedEvent(const float x, const float y, const float dx, const float dy)
+                : m_MouseX(x), m_MouseY(y), m_DeltaX(dx), m_DeltaY(dy) {}
 
         float getX() const { return m_MouseX; }
         float getY() const { return m_MouseY; }
+        float getDX() const { return m_DeltaX; }
+        float getDY() const { return m_DeltaY; }
 
         std::string toString() const override
         {
@@ -30,6 +32,7 @@ namespace Pixl {
         EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
     private:
         float m_MouseX, m_MouseY;
+        float m_DeltaX, m_DeltaY;
     };
 
     class MouseScrolledEvent : public Event

@@ -15,10 +15,37 @@ namespace Pixl {
         return state == GLFW_PRESS;
     }
 
+    bool Input::isModifierPressed(ModifierKey modifier) {
+        switch (modifier) {
+            case ModifierKey::Shift:
+                return isKeyPressed(Key::LeftShift) || isKeyPressed(Key::RightShift);
+            case ModifierKey::Control:
+                return isKeyPressed(Key::LeftControl) || isKeyPressed(Key::RightControl);
+            case ModifierKey::Alt:
+                return isKeyPressed(Key::LeftAlt) || isKeyPressed(Key::RightAlt);
+            case ModifierKey::Super:
+                return isKeyPressed(Key::LeftSuper) || isKeyPressed(Key::RightSuper);
+            default:
+                return false;
+        }
+    }
+
+    bool Input::isAnyModifierPressed() {
+        return isModifierPressed(ModifierKey::Shift) ||
+               isModifierPressed(ModifierKey::Control) ||
+               isModifierPressed(ModifierKey::Alt) ||
+               isModifierPressed(ModifierKey::Super);
+    }
+
     bool Input::isMouseButtonPressed(MouseCode button) {
         auto* window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
         auto state = glfwGetMouseButton(window, static_cast<int32_t>(button));
         return state == GLFW_PRESS;
+    }
+
+    void Input::setMousePosition(float x, float y) {
+        auto* window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
+        glfwSetCursorPos(window, x, y);
     }
 
     glm::vec2 Input::getMousePosition() {
@@ -27,6 +54,26 @@ namespace Pixl {
         glfwGetCursorPos(window, &x, &y);
 
         return { (float)x, (float)y };
+    }
+
+    bool Input::isWindowFocused() {
+        auto* window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
+        return glfwGetWindowAttrib(window, GLFW_FOCUSED) == GLFW_TRUE;
+    }
+
+    bool Input::isMouseInWindow() {
+        auto* window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
+        return glfwGetWindowAttrib(window, GLFW_HOVERED) == GLFW_TRUE;
+    }
+
+    void Input::setCursorMode(CursorMode mode) {
+        auto* window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
+        glfwSetInputMode(window, GLFW_CURSOR, static_cast<int>(mode));
+    }
+
+    CursorMode Input::getCursorMode() {
+        auto* window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
+        return static_cast<CursorMode>(glfwGetInputMode(window, GLFW_CURSOR));
     }
 
 }

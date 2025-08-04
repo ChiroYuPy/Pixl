@@ -17,6 +17,8 @@ public:
     : Pixl::Application(specification) {
         Pixl::RenderCommand::SetClearColor({0.2f, 0.2f, 0.2f, 1.0f});
 
+        Pixl::Input::setCursorMode(Pixl::CursorMode::Visible);
+
         camera = Pixl::makeScope<Pixl::PerspectiveCamera>(
                 90.0f, getWindow().getAspectRatio(), 0.1f, 10000.0f
         );
@@ -58,6 +60,21 @@ public:
         cubeMesh->render(cubeTransform, viewProj);
 
         Pixl::Renderer::endFrame();
+    }
+
+    void onEvent(Pixl::Event& e) {
+        Pixl::Application::onEvent(e); // default events
+
+        Pixl::EventDispatcher dispatcher(e);
+        dispatcher.dispatch<Pixl::MouseMovedEvent>(makeMemberCallback(this, &SandboxApp::onMouseMoved));
+    }
+
+    bool onMouseMoved(Pixl::MouseMovedEvent e) {
+        float sensitivity = 0.125f;
+        float dx = e.getDX() * sensitivity;
+        float dy = e.getDY() * sensitivity;
+        camera->rotate(dx, -dy);
+        return true;
     }
 
     ~SandboxApp() override = default;

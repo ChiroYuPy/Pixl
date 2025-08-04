@@ -6,69 +6,91 @@
 #define PIXLENGINE_PERSPECTIVECAMERA_H
 
 #include "ICamera.h"
+#include "BaseCamera.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Pixl {
 
-    class PerspectiveCamera : public ICamera {
-    public:
-        explicit PerspectiveCamera(float fovY = 70.0f, float aspect = 1.f,
-                          float nearPlane = 0.1f, float farPlane = 1000.0f);
-
-        // Setters pour les paramètres de projection
-        void setFovY(float fov);
-        void setAspectRatio(float aspect) override;
-        void setNearFarPlanes(float near, float far);
-
-        // Setters pour la transformation de vue
-        void setPosition(const glm::vec3& pos) override;
-        void setDirection(const glm::vec3& dir) override;
-        void setUp(const glm::vec3& upVector);
-
-        // Getters pour les matrices
-        const glm::mat4& getViewMatrix() override;
-        const glm::mat4& getProjectionMatrix() override;
-        glm::mat4 getViewProjectionMatrix();
-
-        // Getters pour les paramètres
-        const glm::vec3& getPosition() const override;
-        const glm::vec3& getDirection() const;
-        const glm::vec3& getUp() const;
-        float getFovY() const;
-        float getAspectRatio() const;
-        float getNearPlane() const;
-        float getFarPlane() const;
-
-        // Méthodes utilitaires
-        void lookAt(const glm::vec3& target);
-        void move(const glm::vec3& offset);
-        void rotate(float yaw, float pitch);
-
+    class PerspectiveCamera : public BaseCamera {
     private:
-        // Paramètres de projection
-        float fovY;
-        float aspectRatio;
-        float nearPlane;
-        float farPlane;
+        float fovY{70.0f};
+        float nearPlane{0.1f};
+        float farPlane{1000.0f};
+        float yaw = 0.0f;
+        float pitch = 0.0f;
 
-        // Paramètres de vue
-        glm::vec3 position;
-        glm::vec3 direction;
-        glm::vec3 up;
+        void updateViewMatrix() const final {
+            viewMatrix = glm::lookAt(position, position + direction, up);
+            viewDirty = false;
+        }
 
-        // Matrices
-        glm::mat4 viewMatrix;
-        glm::mat4 projectionMatrix;
+        void updateProjectionMatrix() const final {
+            projectionMatrix = glm::perspective(glm::radians(fovY), aspectRatio, nearPlane, farPlane);
+            projDirty = false;
+        }
 
-        // Flags de mise à jour
-        bool viewDirty;
-        bool projDirty;
+        void updateDirection() {
+            float yawRad = glm::radians(yaw);
+            float pitchRad = glm::radians(pitch);
 
-        // Méthodes privées de mise à jour
-        void updateViewMatrix();
-        void updateProjectionMatrix();
+            direction.x = std::cos(pitchRad) * std::cos(yawRad);
+            direction.y = std::sin(pitchRad);
+            direction.z = std::cos(pitchRad) * std::sin(yawRad);
+            direction = glm::normalize(direction);
+
+            viewDirty = true;
+        }
+
+    public:
+        explicit PerspectiveCamera(float fovY = 70.0f, float aspect = 1.0f,
+                                   float nearPlane = 0.1f, float farPlane = 1000.0f)
+                : fovY(fovY), nearPlane(nearPlane), farPlane(farPlane) {
+            aspectRatio = aspect;
+            updateProjectionMatrix();
+            updateViewMatrix();
+        }
+
+        // Setters spécifiques à la caméra perspective
+        void setFovY(float fov) {
+            if (fov != fovY) {
+                fovY = fov;
+                projDirty = true;
+            }
+        }
+
+        void setNearFarPlanes(float near, float far) {
+            if (near != nearPlane || far != farPlane) {
+                nearPlane = near;
+                farPlane = far;
+                projDirty = true;
+            }
+        }
+
+        void setUp(const glm::vec3& upVector) {
+            glm::vec3 normalizedUp = glm::normalize(upVector);
+            if (normalizedUp != up) {
+                up = normalizedUp;
+                viewDirty = true;
+            }
+        }
+
+        void rotateAt(float newYaw, float newPitch) {
+            yaw = newYaw;
+            pitch = newPitch;
+            updateDirection();
+        }
+
+        void rotate(float yawOffset, float pitchOffset) {
+            yaw += yawOffset;
+            pitch += pitchOffset;
+            updateDirection();
+        }
+
+        float getFovY() const { return fovY; }
+        float getNearPlane() const { return nearPlane; }
+        float getFarPlane() const { return farPlane; }
     };
 
 }

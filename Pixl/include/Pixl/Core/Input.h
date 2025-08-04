@@ -7,18 +7,41 @@
 
 #include "Pixl/Core/KeyCodes.h"
 #include "Pixl/Core/MouseCodes.h"
+#include "Application.h"
 
 #include <glm/glm.hpp>
+#include <GLFW/glfw3.h>
 
 namespace Pixl {
 
-    class Input
-    {
+    enum class CursorMode {
+        Visible = GLFW_CURSOR_NORMAL,
+        Hidden = GLFW_CURSOR_HIDDEN,
+        Captured = GLFW_CURSOR_DISABLED
+    };
+
+    enum class ModifierKey {
+        Shift,
+        Control,
+        Alt,
+        Super
+    };
+
+    class Input {
     public:
         static bool isKeyPressed(KeyCode key);
+        static bool isModifierPressed(ModifierKey modifier);
+        static bool isAnyModifierPressed();
 
         static bool isMouseButtonPressed(MouseCode button);
+        static void setMousePosition(float x, float y);
         static glm::vec2 getMousePosition();
+
+        static bool isWindowFocused();
+        static bool isMouseInWindow();
+
+        static void setCursorMode(CursorMode mode);
+        static CursorMode getCursorMode();
     };
 
 }

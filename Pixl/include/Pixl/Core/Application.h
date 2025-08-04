@@ -7,6 +7,8 @@
 
 #include "Pixl/Core/Base.h"
 #include "Pixl/Events/ApplicationEvent.h"
+#include "Pixl/Events/MouseEvent.h"
+#include "Pixl/Events/KeyEvent.h"
 #include "Pixl/Events/Event.h"
 #include "Pixl/Core/Window.h"
 
@@ -25,7 +27,7 @@ namespace Pixl {
         Application(ApplicationSpecification  specification);
         virtual ~Application();
 
-        void onEvent(Event& e);
+        virtual void onEvent(Event& e);
 
         Window& getWindow() { return *m_Window; }
 

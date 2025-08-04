@@ -23,6 +23,10 @@
 #include "Pixl/Rendering/Camera/PerspectiveCamera.h"
 #include "Pixl/Rendering/Camera/OrthographicCamera.h"
 
+#include "Pixl/Core/Base.h"
 #include "Pixl/Core/Application.h"
+#include "Pixl/Core/Input.h"
+#include "Pixl/Core/KeyCodes.h"
+#include "Pixl/Core/MouseCodes.h"
 
 #endif //PIXL_PIXL_H
