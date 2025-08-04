@@ -32,6 +32,8 @@ set(SOURCES
         include/Pixl/Rendering/Material/VertexColorMaterial.h
         src/Pixl/Rendering/Camera/BaseCamera.cpp
         include/Pixl/Rendering/Camera/BaseCamera.h
+        src/Pixl/Rendering/Camera/controller/FPSController.cpp
+        include/Pixl/Rendering/Camera/Controller/FPSController.h
 )
 
 add_library(Pixl STATIC ${SOURCES})

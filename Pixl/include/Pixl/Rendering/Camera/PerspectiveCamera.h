@@ -15,31 +15,22 @@ namespace Pixl {
 
     class PerspectiveCamera : public BaseCamera {
     private:
-        float fovY{70.0f};
+        float fovY{45.0f};
         float nearPlane{0.1f};
-        float farPlane{1000.0f};
-        float yaw = 0.0f;
-        float pitch = 0.0f;
+        float farPlane{100.0f};
 
-        void updateViewMatrix() const final;
-
-        void updateProjectionMatrix() const final;
-
-        void updateDirection();
+        void updateViewMatrix() const override;
+        void updateProjectionMatrix() const override;
 
     public:
-        explicit PerspectiveCamera(float fovY = 70.0f, float aspect = 1.0f, float nearPlane = 0.1f, float farPlane = 1000.0f);
+        PerspectiveCamera(float fovY = 45.0f, float aspect = 1.0f,
+                          float nearPlane = 0.1f, float farPlane = 100.0f);
 
+        // Setters
         void setFovY(float fov);
-
         void setNearFarPlanes(float near, float far);
 
-        void setUp(const glm::vec3& upVector);
-
-        void rotateAt(float newYaw, float newPitch);
-
-        void rotate(float yawOffset, float pitchOffset);
-
+        // Getters
         float getFovY() const;
         float getNearPlane() const;
         float getFarPlane() const;

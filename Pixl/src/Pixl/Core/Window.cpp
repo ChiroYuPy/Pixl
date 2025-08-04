@@ -131,23 +131,7 @@ namespace Pixl {
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            static float lastX = (float)xPos;
-            static float lastY = (float)yPos;
-            static bool firstMouse = true;
-
-            if (firstMouse) {
-                lastX = (float)xPos;
-                lastY = (float)yPos;
-                firstMouse = false;
-            }
-
-            float deltaX = (float)xPos - lastX;
-            float deltaY = lastY - (float)yPos;
-
-            lastX = (float)xPos;
-            lastY = (float)yPos;
-
-            MouseMovedEvent event((float)xPos, (float)yPos, deltaX, deltaY);
+            MouseMovedEvent event((float)xPos, (float)yPos);
             data.EventCallback(event);
         });
     }

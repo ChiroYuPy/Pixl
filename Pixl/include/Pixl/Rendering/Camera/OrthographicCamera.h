@@ -14,34 +14,23 @@ namespace Pixl {
 
     class OrthographicCamera : public BaseCamera {
     private:
-        float zoom{1.0f};
-        float rotation{0.0f};
-        float left{-1.0f}, right{1.0f}, bottom{-1.0f}, top{1.0f};
+        float left{-1.0f}, right{1.0f};
+        float bottom{-1.0f}, top{1.0f};
         float nearPlane{-1.0f}, farPlane{1.0f};
 
-        void updateViewMatrix() const final;
-
-        void updateProjectionMatrix() const final;
-
-        void updateBounds();
+        void updateViewMatrix() const override;
+        void updateProjectionMatrix() const override;
 
     public:
-        explicit OrthographicCamera(float aspect = 1.0f, float zoom = 1.0f);
+        OrthographicCamera(float aspect = 1.0f);
+        OrthographicCamera(float left, float right, float bottom, float top,
+                           float nearPlane = -1.0f, float farPlane = 1.0f);
 
-        OrthographicCamera(float left, float right, float bottom, float top, float nearPlane = -1.0f, float farPlane = 1.0f);
-
-        void setAspectRatio(float aspect) override;
-
-        void setZoom(float z);
-
-        void setRotation(float rot);
-
-        void setBounds(float l, float r, float b, float t);
-
+        // Setters
+        void setBounds(float left, float right, float bottom, float top);
         void setNearFarPlanes(float near, float far);
 
-        float getZoom() const;
-        float getRotation() const;
+        // Getters
         float getLeft() const;
         float getRight() const;
         float getBottom() const;

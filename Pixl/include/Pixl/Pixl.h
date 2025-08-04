@@ -23,6 +23,8 @@
 #include "Pixl/Rendering/Camera/PerspectiveCamera.h"
 #include "Pixl/Rendering/Camera/OrthographicCamera.h"
 
+#include "Pixl/Rendering/Camera/Controller/FPSController.h"
+
 #include "Pixl/Core/Base.h"
 #include "Pixl/Core/Application.h"
 #include "Pixl/Core/Input.h"
