@@ -38,7 +38,7 @@ set(SOURCES
         include/Pixl/Core/Layer/Layer.h
         src/Pixl/Core/Time/Time.cpp
         include/Pixl/Core/Time/Time.h
-        include/Pixl/Core/Time/Clock.cpp
+        src/Pixl/Core/Time/Clock.cpp
         include/Pixl/Core/Time/Clock.h
 )
 

@@ -12,15 +12,13 @@ namespace Pixl {
 
     class Clock {
     public:
-        Clock() noexcept { restart(); }
+        Clock() : m_start(std::chrono::steady_clock::now()) {}
 
-        Time getElapsedTime() const noexcept;
-
-        Time restart() noexcept;
+        Time getElapsedTime() const;
+        Time restart();
 
     private:
-        using ClockImpl = std::chrono::steady_clock;
-        std::chrono::time_point<ClockImpl> _start;
+        std::chrono::steady_clock::time_point m_start;
     };
 
 }
