@@ -13,6 +13,9 @@ set(SOURCES
         src/Pixl/Core/Application.cpp
         src/Pixl/Core/Window.cpp
         src/Pixl/Core/Input.cpp
+        src/Pixl/Core/Layer/Layer.cpp
+        src/Pixl/Core/Time/Time.cpp
+        src/Pixl/Core/Time/Clock.cpp
 
         src/Pixl/Rendering/GraphicsContext.cpp
         src/Pixl/Rendering/Renderer/Renderer.cpp
@@ -29,17 +32,9 @@ set(SOURCES
         src/Pixl/Rendering/Mesh/MultiMaterialMesh.cpp
         src/Pixl/Rendering/Objects/VertexDeclaration.cpp
         src/Pixl/Rendering/Material/VertexColorMaterial.cpp
-        include/Pixl/Rendering/Material/VertexColorMaterial.h
         src/Pixl/Rendering/Camera/BaseCamera.cpp
-        include/Pixl/Rendering/Camera/BaseCamera.h
         src/Pixl/Rendering/Camera/controller/FPSController.cpp
-        include/Pixl/Rendering/Camera/Controller/FPSController.h
-        include/Pixl/Core/Layer/Layer.cpp
-        include/Pixl/Core/Layer/Layer.h
-        src/Pixl/Core/Time/Time.cpp
-        include/Pixl/Core/Time/Time.h
-        src/Pixl/Core/Time/Clock.cpp
-        include/Pixl/Core/Time/Clock.h
+        src/Pixl/Core/Time/Timer.cpp
 )
 
 add_library(Pixl STATIC ${SOURCES})

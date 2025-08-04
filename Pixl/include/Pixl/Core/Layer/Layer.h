@@ -8,6 +8,7 @@
 
 #include <string>
 #include "Pixl/Events/Event.h"
+#include "Pixl/Core/Time/Time.h"
 
 namespace Pixl {
 
@@ -18,7 +19,7 @@ namespace Pixl {
 
         virtual void OnAttach() {}
         virtual void OnDetach() {}
-        virtual void OnUpdate(Timestep ts) {}
+        virtual void OnUpdate(Time ts) {}
         virtual void OnEvent(Event& event) {}
 
         const std::string& GetName() const { return m_DebugName; }
