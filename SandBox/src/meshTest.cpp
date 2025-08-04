@@ -83,7 +83,7 @@ public:
 Pixl::Application* Pixl::createApplication() {
     Pixl::ApplicationSpecification spec;
     spec.Name = "SandboxApp";
-    spec.WorkingDirectory = R"(C:\Users\ChiroYuki\CLionProjects\Pixl\SandBox\resources)"; // chemin ressources
+    spec.WorkingDirectory = R"(C:\Users\ChiroYuki\CLionProjects\Pixl\SandBox)";
 
     return new SandboxApp(spec);
 }
