@@ -24,7 +24,6 @@ set(SOURCES
         src/Pixl/Rendering/Objects/VertexArray.cpp
         src/Pixl/Rendering/RenderCommand.cpp
         src/Pixl/Rendering/Camera/PerspectiveCamera.cpp
-        src/Pixl/Rendering/Material/UnlitMaterial.cpp
         src/Pixl/Rendering/Mesh/Mesh.cpp
         src/Pixl/Rendering/Camera/OrthographicCamera.cpp
         src/Pixl/Rendering/Camera/BaseCamera.cpp
@@ -38,6 +37,9 @@ set(SOURCES
         src/Pixl/Rendering/Objects/VertexLayout.cpp
         src/Pixl/Rendering/Geometry/Geometry.cpp
         include/Pixl/Events/WindowEvent.h
+        src/Pixl/Rendering/Objects/ShaderReflection.cpp
+        include/Pixl/Rendering/Objects/ShaderReflection.h
+        src/Pixl/Rendering/Material/Material.cpp
 )
 
 add_library(Pixl STATIC ${SOURCES})

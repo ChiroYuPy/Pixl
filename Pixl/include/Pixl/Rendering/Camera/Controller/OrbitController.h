@@ -18,8 +18,8 @@ namespace Pixl {
 
         float azimuth = 0.0f;    // rotation horizontale
         float elevation = 0.0f;  // rotation verticale
-        float minElevation = -85.0f;
-        float maxElevation = 85.0f;
+        float minElevation = -89.999f;
+        float maxElevation = 89.999f;
 
         // État de l'interaction
         bool isOrbiting = false;

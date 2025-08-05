@@ -184,4 +184,18 @@ namespace Pixl {
         glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
+    void ShaderLibrary::add(const std::string& name, const Ref<Shader>& shader) {
+        if (!exists(name)) throw std::runtime_error("Shader already exists!");
+        m_Shaders[name] = shader;
+    }
+
+    Ref<Shader> ShaderLibrary::get(const std::string& name) {
+        if (exists(name)) throw std::runtime_error("Shader not found");
+        return m_Shaders[name];
+    }
+
+    bool ShaderLibrary::exists(const std::string& name) const {
+        return m_Shaders.find(name) != m_Shaders.end();
+    }
+
 }

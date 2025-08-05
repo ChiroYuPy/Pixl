@@ -60,6 +60,19 @@ namespace Pixl {
         mutable std::unordered_map<std::string, int> m_uniformLocationCache;
     };
 
+    class ShaderLibrary
+    {
+    public:
+        void add(const std::string& name, const Ref<Shader>& shader);
+
+        Ref<Shader> get(const std::string& name);
+
+        bool exists(const std::string& name) const;
+
+    private:
+        std::unordered_map<std::string, Ref<Shader>> m_Shaders;
+    };
+
 }
 
 #endif //PIXLENGINE_SHADER_H

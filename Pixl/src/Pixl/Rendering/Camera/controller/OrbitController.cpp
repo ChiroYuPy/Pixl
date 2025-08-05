@@ -134,7 +134,10 @@ namespace Pixl {
     }
 
     void OrbitController::handleZoom(float delta) {
-        distance -= delta * zoomSpeed;
+        float zoomFactor = 1.1f;
+
+        distance *= std::pow(zoomFactor, -delta);
+
         distance = glm::clamp(distance, minDistance, maxDistance);
     }
 

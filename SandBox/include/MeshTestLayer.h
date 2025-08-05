@@ -21,6 +21,8 @@ public:
 private:
     Pixl::Scope<Pixl::ICamera> camera;
     Pixl::Scope<Pixl::OrbitController> cameraController;
+
+    Pixl::Ref<Pixl::Material> cubeMaterial;
     Pixl::Scope<Pixl::Mesh> cubeMesh;
 };
 

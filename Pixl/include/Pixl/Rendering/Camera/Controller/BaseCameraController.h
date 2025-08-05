@@ -17,8 +17,8 @@ namespace Pixl {
         bool firstMouse = true;
 
         // Configuration générale
-        float mouseSensitivity = 0.1f;
-        float movementSpeed = 5.0f;
+        float mouseSensitivity = 0.125f;
+        float movementSpeed = 8.0f;
         bool invertY = false;
 
         // État des touches

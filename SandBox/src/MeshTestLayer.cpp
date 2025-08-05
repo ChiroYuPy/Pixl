@@ -5,7 +5,8 @@
 #include "../include/MeshTestLayer.h"
 
 void MeshTestLayer::onAttach() {
-    Pixl::RenderCommand::SetClearColor({0.2f, 0.2f, 0.2f, 1.0f});
+    Pixl::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
+    Pixl::RenderCommand::SetPolygonMode(Pixl::PolygonMode::Line);
     Pixl::Input::setCursorMode(Pixl::CursorMode::Visible);
 
     // camera and cameraController init
@@ -19,37 +20,57 @@ void MeshTestLayer::onAttach() {
 
     // drawable object init
     Pixl::Ref<Pixl::Geometry> cubeGeometry = Pixl::Geometry::createCube();
-    Pixl::Ref<Pixl::Shader> unlitShader = Pixl::MakeRef<Pixl::Shader>();
 
-    unlitShader->loadFromSource(R"(
-            #version 330 core
+    const std::string vertexShader = R"(
+        #version 330 core
 
-            layout(location = 0) in vec3 a_position;
+        layout(location = 0) in vec3 a_position;
 
-            uniform mat4 u_viewProjection;
-            uniform mat4 u_transform;
+        uniform mat4 u_viewProjection;
+        uniform mat4 u_transform;
 
-            void main()
-            {
-                gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);
-            }
-        )",
-        R"(
-            #version 330 core
+        void main()
+        {
+            gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);
+        }
+    )";
 
-            uniform vec4 u_color;
-            out vec4 frag_color;
+    const std::string fragmentShader = R"(
+        #version 330 core
 
-            void main() {
-                frag_color = u_color;
-            }
+        uniform vec4 u_color;
+        uniform float u_metallic;
+        uniform float u_roughness;
+        uniform vec3 u_emissive;
 
-        )");
+        out vec4 frag_color;
 
-    Pixl::Ref<Pixl::UnlitMaterial> redMaterial = Pixl::MakeRef<Pixl::UnlitMaterial>(unlitShader);
-    redMaterial->setColor({1.0f, 0.0f, 0.0f, 1.0f});
+        void main() {
+            // Exemple d'utilisation des propriétés
+            vec3 finalColor = u_color.rgb + u_emissive;
+            finalColor = mix(finalColor, finalColor * 0.5, u_metallic);
+            finalColor = mix(finalColor, finalColor * u_roughness, 0.2);
 
-    cubeMesh = Pixl::MakeScope<Pixl::Mesh>(cubeGeometry, redMaterial);
+            frag_color = vec4(finalColor, u_color.a);
+        }
+    )";
+
+    cubeMaterial = Pixl::MaterialFactory::createFromSource(vertexShader, fragmentShader);
+
+    if (cubeMaterial) {
+        cubeMaterial->setProperty("u_color", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+        cubeMaterial->setProperty("u_metallic", 0.8f);
+        cubeMaterial->setProperty("u_roughness", 0.2f);
+        cubeMaterial->setProperty("u_emissive", glm::vec3(0.1f, 0.0f, 0.0f));
+
+        std::cout << "Available material properties:" << std::endl;
+        for (const auto& name : cubeMaterial->getPropertyNames()) {
+            std::cout << "  - " << name << " (type: "
+                      << static_cast<int>(cubeMaterial->getPropertyType(name)) << ")" << std::endl;
+        }
+    }
+
+    cubeMesh = Pixl::MakeScope<Pixl::Mesh>(cubeGeometry, cubeMaterial);
 }
 
 void MeshTestLayer::onDetach() {

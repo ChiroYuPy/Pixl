@@ -16,7 +16,7 @@
 
 #include "Pixl/Rendering/Geometry/Geometry.h"
 
-#include "Pixl/Rendering/Material/UnlitMaterial.h"
+#include "Pixl/Rendering/Material/Material.h"
 
 #include "Pixl/Rendering/Camera/PerspectiveCamera.h"
 #include "Pixl/Rendering/Camera/OrthographicCamera.h"

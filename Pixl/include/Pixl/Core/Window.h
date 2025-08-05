@@ -17,20 +17,55 @@
 #include <string>
 #include <cstdint>
 #include <utility>
-#include <GLFW/glfw3.h>
+
+struct GLFWwindow;
 
 namespace Pixl {
+
+    enum class WindowMode {
+        Windowed,           // Standard window with borders and title bar
+        Fullscreen,         // Exclusive fullscreen mode (may change resolution)
+        Borderless,         // Window without borders or title bar (borderless window)
+        FullscreenWindowed, // Borderless fullscreen window (covers entire screen without changing resolution)
+        TransparentOverlay  // Transparent window with alpha channel (overlay on top of other windows)
+    };
+
+    enum class WindowFlags : uint32_t {
+        None         = 0,
+        Resizable    = 1u << 0,
+        Decorated    = 1u << 1,
+        Floating     = 1u << 2,
+        Transparent  = 1u << 3
+    };
+
+    constexpr WindowFlags operator|(WindowFlags a, WindowFlags b) noexcept {
+        return static_cast<WindowFlags>(std::underlying_type_t<WindowFlags>(a) |
+                                        std::underlying_type_t<WindowFlags>(b));
+    }
+
+    constexpr WindowFlags operator&(WindowFlags a, WindowFlags b) noexcept {
+        return static_cast<WindowFlags>(std::underlying_type_t<WindowFlags>(a) &
+                                        std::underlying_type_t<WindowFlags>(b));
+    }
+
+    constexpr bool any(WindowFlags f) noexcept {
+        return std::underlying_type_t<WindowFlags>(f) != 0;
+    }
 
     struct WindowProperties
     {
         std::string title;
-        unsigned int width;
-        unsigned int height;
+        uint32_t width;
+        uint32_t height;
+        WindowMode mode;
+        WindowFlags flags;
 
-        WindowProperties(std::string  title = "Pixl Engine",
-                         unsigned int width = 1280,
-                         unsigned int height = 720)
-                : title(std::move(title)), width(width), height(height) {}
+        WindowProperties(std::string title = "Pixl Engine",
+                         uint32_t width = 1280,
+                         uint32_t height = 720,
+                         WindowMode mode = WindowMode::Windowed,
+                         WindowFlags flags = WindowFlags::Resizable | WindowFlags::Decorated)
+                         : title(std::move(title)), width(width), height(height), mode(mode), flags(flags) {}
     };
 
     class Window {
@@ -42,25 +77,29 @@ namespace Pixl {
 
         void onUpdate();
 
-        unsigned int getWidth() const { return m_data.width; }
-        unsigned int getHeight() const { return m_data.height; }
+        uint32_t getWidth() const { return m_data.width; }
+        uint32_t getHeight() const { return m_data.height; }
         float getAspectRatio() const { return m_data.aspectRatio; }
 
+        void* getNativeWindow() const { return m_windowHandle; }
+
         void setEventCallback(const EventCallbackFunction& callback) { m_data.eventCallback = callback; }
+
         void setVSync(bool enabled);
         bool isVSync() const;
 
-        void* getNativeWindow() const { return m_windowHandle; }
     private:
         void init(const WindowProperties& props);
         void shutdown();
+
+        void applyHints(WindowFlags flags, WindowMode mode);
+        void setupCallbacks();
 
     private:
         GLFWwindow* m_windowHandle;
         Scope<GraphicsContext> m_context;
 
-        struct WindowData
-        {
+        struct WindowData {
             std::string title;
             unsigned int width, height;
             float aspectRatio;

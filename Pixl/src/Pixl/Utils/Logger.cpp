@@ -22,6 +22,10 @@ namespace Pixl {
         log("DEBUG", COLOR_DEBUG, message);
     }
 
+    void Logger::fatal(const std::string &message) {
+        log("FATAL", COLOR_FATAL, message);
+    }
+
     void Logger::log(const std::string &level, const std::string &color, const std::string &message) {
         std::cout << "[" << currentTime() << "] "
                   << color << "[" << level << "]" << COLOR_RESET << " "
