@@ -38,6 +38,8 @@ set(SOURCES
         src/Pixl/Core/Time/Scheduler.cpp
         src/Pixl/Utils/Logger.cpp
         src/Pixl/Core/Layer/LayerStack.cpp
+        src/Pixl/Rendering/Camera/controller/BaseCameraController.cpp
+        src/Pixl/Rendering/Camera/controller/OrbitController.cpp
 )
 
 add_library(Pixl STATIC ${SOURCES})

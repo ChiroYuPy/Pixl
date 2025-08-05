@@ -20,18 +20,9 @@ namespace Pixl {
         Captured = GLFW_CURSOR_DISABLED
     };
 
-    enum class ModifierKey {
-        Shift,
-        Control,
-        Alt,
-        Super
-    };
-
     class Input {
     public:
         static bool isKeyPressed(KeyCode key);
-        static bool isModifierPressed(ModifierKey modifier);
-        static bool isAnyModifierPressed();
 
         static bool isMouseButtonPressed(MouseCode button);
         static void setMousePosition(float x, float y);

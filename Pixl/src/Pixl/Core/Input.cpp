@@ -15,28 +15,6 @@ namespace Pixl {
         return state == GLFW_PRESS;
     }
 
-    bool Input::isModifierPressed(ModifierKey modifier) {
-        switch (modifier) {
-            case ModifierKey::Shift:
-                return isKeyPressed(Key::LeftShift) || isKeyPressed(Key::RightShift);
-            case ModifierKey::Control:
-                return isKeyPressed(Key::LeftControl) || isKeyPressed(Key::RightControl);
-            case ModifierKey::Alt:
-                return isKeyPressed(Key::LeftAlt) || isKeyPressed(Key::RightAlt);
-            case ModifierKey::Super:
-                return isKeyPressed(Key::LeftSuper) || isKeyPressed(Key::RightSuper);
-            default:
-                return false;
-        }
-    }
-
-    bool Input::isAnyModifierPressed() {
-        return isModifierPressed(ModifierKey::Shift) ||
-               isModifierPressed(ModifierKey::Control) ||
-               isModifierPressed(ModifierKey::Alt) ||
-               isModifierPressed(ModifierKey::Super);
-    }
-
     bool Input::isMouseButtonPressed(MouseCode button) {
         auto* window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
         auto state = glfwGetMouseButton(window, static_cast<int32_t>(button));

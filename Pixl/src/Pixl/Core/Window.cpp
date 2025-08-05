@@ -71,19 +71,19 @@ namespace Pixl {
             {
                 case GLFW_PRESS:
                 {
-                    KeyPressedEvent event(key, 0);
+                    KeyPressedEvent event(static_cast<KeyCode>(key), 0, mods);
                     data.EventCallback(event);
                     break;
                 }
                 case GLFW_RELEASE:
                 {
-                    KeyReleasedEvent event(key);
+                    KeyReleasedEvent event(static_cast<KeyCode>(key), mods);
                     data.EventCallback(event);
                     break;
                 }
                 case GLFW_REPEAT:
                 {
-                    KeyPressedEvent event(key, true);
+                    KeyPressedEvent event(static_cast<KeyCode>(key), 1, mods);
                     data.EventCallback(event);
                     break;
                 }
@@ -106,17 +106,24 @@ namespace Pixl {
             {
                 case GLFW_PRESS:
                 {
-                    MouseButtonPressedEvent event(button);
+                    MouseButtonPressedEvent event(static_cast<MouseCode>(button), mods);
                     data.EventCallback(event);
                     break;
                 }
                 case GLFW_RELEASE:
                 {
-                    MouseButtonReleasedEvent event(button);
+                    MouseButtonReleasedEvent event(static_cast<MouseCode>(button), mods);
                     data.EventCallback(event);
                     break;
                 }
             }
+        });
+
+        glfwSetCursorEnterCallback(m_Window, [](GLFWwindow* window, int entered)
+        {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            MouseEnteredEvent event(entered == GLFW_TRUE);
+            data.EventCallback(event);
         });
 
         glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)

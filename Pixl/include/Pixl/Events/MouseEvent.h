@@ -8,6 +8,8 @@
 #include "Pixl/Events/Event.h"
 #include "Pixl/Core/MouseCodes.h"
 
+#include <glm/glm.hpp>
+
 namespace Pixl {
 
     class MouseMovedEvent : public Event
@@ -18,6 +20,8 @@ namespace Pixl {
 
         float getX() const { return m_MouseX; }
         float getY() const { return m_MouseY; }
+
+        glm::vec2 getPosition() const { return {m_MouseX, m_MouseY}; }
 
         std::string toString() const override
         {
@@ -41,6 +45,8 @@ namespace Pixl {
         float getXOffset() const { return m_XOffset; }
         float getYOffset() const { return m_YOffset; }
 
+        glm::vec2 getOffset() const { return glm::vec2(m_XOffset, m_YOffset); }
+
         std::string toString() const override
         {
             std::stringstream ss;
@@ -57,26 +63,28 @@ namespace Pixl {
     class MouseButtonEvent : public Event
     {
     public:
-        MouseCode GetMouseButton() const { return m_Button; }
+        MouseCode getMouseButton() const { return m_Button; }
+        int getMods() const { return m_Mods; }
 
         EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput | EventCategoryMouseButton)
     protected:
-        MouseButtonEvent(const MouseCode button)
-                : m_Button(button) {}
+        MouseButtonEvent(const MouseCode button, int mods = 0)
+                : m_Button(button), m_Mods(mods) {}
 
         MouseCode m_Button;
+        int m_Mods;
     };
 
     class MouseButtonPressedEvent : public MouseButtonEvent
     {
     public:
-        MouseButtonPressedEvent(const MouseCode button)
-                : MouseButtonEvent(button) {}
+        MouseButtonPressedEvent(const MouseCode button, int mods = 0)
+                : MouseButtonEvent(button, mods) {}
 
         std::string toString() const override
         {
             std::stringstream ss;
-            ss << "MouseButtonPressedEvent: " << m_Button;
+            ss << "MouseButtonPressedEvent: " << m_Button << " (mods = " << m_Mods << ")";
             return ss.str();
         }
 
@@ -86,17 +94,37 @@ namespace Pixl {
     class MouseButtonReleasedEvent : public MouseButtonEvent
     {
     public:
-        MouseButtonReleasedEvent(const MouseCode button)
-                : MouseButtonEvent(button) {}
+        MouseButtonReleasedEvent(const MouseCode button, int mods = 0)
+                : MouseButtonEvent(button, mods) {}
 
         std::string toString() const override
         {
             std::stringstream ss;
-            ss << "MouseButtonReleasedEvent: " << m_Button;
+            ss << "MouseButtonReleasedEvent: " << m_Button << " (mods = " << m_Mods << ")";
             return ss.str();
         }
 
         EVENT_CLASS_TYPE(MouseButtonReleased)
+    };
+
+    class MouseEnteredEvent : public Event
+    {
+    public:
+        MouseEnteredEvent(bool entered) : m_Entered(entered) {}
+
+        bool hasEntered() const { return m_Entered; }
+
+        std::string toString() const override
+        {
+            std::stringstream ss;
+            ss << "MouseEnteredEvent: " << (m_Entered ? "entered" : "left");
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(MouseEntered)
+        EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+    private:
+        bool m_Entered;
     };
 
 }

@@ -24,6 +24,7 @@
 #include "Pixl/Rendering/Camera/OrthographicCamera.h"
 
 #include "Pixl/Rendering/Camera/Controller/FPSController.h"
+#include "Pixl/Rendering/Camera/Controller/OrbitController.h"
 
 #include "Pixl/Core/Layer/Layer.h"
 

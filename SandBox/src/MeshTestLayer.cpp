@@ -4,10 +4,6 @@
 
 #include "../include/MeshTestLayer.h"
 
-MeshTestLayer::MeshTestLayer() {
-
-}
-
 void MeshTestLayer::onAttach() {
     Pixl::RenderCommand::SetClearColor({0.2f, 0.2f, 0.2f, 1.0f});
     Pixl::Input::setCursorMode(Pixl::CursorMode::Visible);
@@ -19,7 +15,7 @@ void MeshTestLayer::onAttach() {
     camera->setPosition({3.0f, 3.0f, 3.0f});
     camera->lookAt({0.0f, 0.0f, 0.0f});
 
-    fpsController = Pixl::makeScope<Pixl::FPSController>(camera.get());
+    cameraController = Pixl::makeScope<Pixl::OrbitController>(camera.get());
 
     Pixl::Ref<Pixl::CubeGeometry> cubeGeometry = Pixl::makeRef<Pixl::CubeGeometry>();
     Pixl::Ref<Pixl::ColorMaterial> redMaterial = Pixl::makeRef<Pixl::ColorMaterial>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
@@ -45,26 +41,7 @@ void MeshTestLayer::onUpdate(Pixl::Time &deltaTime) {
 
     camera->setAspectRatio(Pixl::Application::get().getWindow().getAspectRatio());
 
-    float moveSpeed = 5.0f * deltaTime.asSeconds();
-
-    if (Pixl::Input::isKeyPressed(Pixl::Key::W)) {
-        camera->moveRelative({0, 0, -moveSpeed});
-    }
-    if (Pixl::Input::isKeyPressed(Pixl::Key::S)) {
-        camera->moveRelative({0, 0, moveSpeed});
-    }
-    if (Pixl::Input::isKeyPressed(Pixl::Key::A)) {
-        camera->moveRelative({-moveSpeed, 0, 0});
-    }
-    if (Pixl::Input::isKeyPressed(Pixl::Key::D)) {
-        camera->moveRelative({moveSpeed, 0, 0});
-    }
-    if (Pixl::Input::isKeyPressed(Pixl::Key::Space)) {
-        camera->move({0, moveSpeed, 0});
-    }
-    if (Pixl::Input::isKeyPressed(Pixl::Key::LeftShift)) {
-        camera->move({0, -moveSpeed, 0});
-    }
+    cameraController->update(deltaTime);
 
     glm::mat4 projMatrix = camera->getProjectionMatrix();
     glm::mat4 viewMatrix = camera->getViewMatrix();
@@ -79,33 +56,69 @@ void MeshTestLayer::onUpdate(Pixl::Time &deltaTime) {
 }
 
 void MeshTestLayer::onEvent(Pixl::Event &event) {
-    static bool active = false;
+    static bool cameraControlEnabled = false;
 
     Pixl::EventDispatcher dispatcher(event);
 
-    if (active)
+    if (cameraControlEnabled) {
         dispatcher.dispatch<Pixl::MouseMovedEvent>([this](Pixl::MouseMovedEvent& e) {
-            return fpsController->onMouseMoved(e);
+            return cameraController->onMouseMoved(e);
         });
 
-    dispatcher.dispatch<Pixl::KeyPressedEvent>([](Pixl::KeyPressedEvent& e) {
-        if (e.getKeyCode() == Pixl::Key::Escape) {
-            if (Pixl::Input::getCursorMode() == Pixl::CursorMode::Captured) {
-                Pixl::Input::setCursorMode(Pixl::CursorMode::Visible);
-                active = false;
-                // fpsController->resetMouse();
-            } else {
-                Pixl::Input::setCursorMode(Pixl::CursorMode::Captured);
-                active = true;
-            }
-            return true;
+        dispatcher.dispatch<Pixl::MouseButtonPressedEvent>([this](Pixl::MouseButtonPressedEvent& e) {
+            return cameraController->onMousePressed(e);
+        });
+
+        dispatcher.dispatch<Pixl::MouseButtonReleasedEvent>([this](Pixl::MouseButtonReleasedEvent& e) {
+            return cameraController->onMouseReleased(e);
+        });
+
+        dispatcher.dispatch<Pixl::MouseScrolledEvent>([this](Pixl::MouseScrolledEvent& e) {
+            return cameraController->onMouseScrolled(e);
+        });
+    }
+
+    dispatcher.dispatch<Pixl::KeyPressedEvent>([this](Pixl::KeyPressedEvent& e) {
+        switch (e.getKeyCode()) {
+            case Pixl::Key::Escape:
+                if (cameraControlEnabled) {
+                    Pixl::Input::setCursorMode(Pixl::CursorMode::Visible);
+                    cameraControlEnabled = false;
+                    std::cout << "Camera control disabled" << std::endl;
+                } else {
+                    Pixl::Input::setCursorMode(Pixl::CursorMode::Captured);
+                    cameraControlEnabled = true;
+                    std::cout << "Camera control enabled - Use mouse to orbit, scroll to zoom, right-click to pan" << std::endl;
+                }
+                return true;
+
+            case Pixl::Key::R:
+                if (cameraController) {
+                    camera->setPosition({3.0f, 3.0f, 3.0f});
+                    camera->lookAt({0.0f, 0.0f, 0.0f});
+
+                    cameraController->setTarget({0.0f, 0.0f, 0.0f});
+                    cameraController->setDistance(glm::length(glm::vec3(3.0f, 3.0f, 3.0f)));
+                    cameraController->reset();
+
+                    std::cout << "Camera reset to initial position" << std::endl;
+                }
+                return true;
+
+            case Pixl::Key::F:
+                if (cameraController) {
+                    cameraController->setTarget({0.0f, 0.0f, 0.0f});
+                    cameraController->setDistance(5.0f);
+                    std::cout << "Camera focused on origin" << std::endl;
+                }
+                return true;
         }
         return false;
     });
 
     /*
     dispatcher.dispatch<Pixl::WindowResizeEvent>([this](Pixl::WindowResizeEvent& e) {
-        fpsController->resetMouse();
+        cameraController->resetMouse();
         return false;
     });
      */

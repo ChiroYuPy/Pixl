@@ -5,12 +5,11 @@
 #ifndef PIXLENGINE_MESHTESTLAYER_H
 #define PIXLENGINE_MESHTESTLAYER_H
 
-
 #include "Pixl/Pixl.h"
 
 class MeshTestLayer : public Pixl::Layer {
 public:
-    MeshTestLayer();
+    MeshTestLayer() = default;
     ~MeshTestLayer() override = default;
 
     void onAttach() override;
@@ -20,12 +19,9 @@ public:
     void onEvent(Pixl::Event& event) override;
 
 private:
-    Pixl::Scope<Pixl::PerspectiveCamera> camera;
-    Pixl::Scope<Pixl::FPSController> fpsController;
+    Pixl::Scope<Pixl::ICamera> camera;
+    Pixl::Scope<Pixl::OrbitController> cameraController;
     Pixl::Scope<Pixl::MultiMaterialMesh> cubeMesh;
-
-    // Pixl::OrthographicCameraController m_CameraController;
 };
-
 
 #endif //PIXLENGINE_MESHTESTLAYER_H
