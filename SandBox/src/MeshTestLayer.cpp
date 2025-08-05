@@ -102,6 +102,21 @@ void MeshTestLayer::onEvent(Pixl::Event &event) {
 
     Pixl::EventDispatcher dispatcher(event);
 
+    // --- Mouse input ---
+    dispatcher.dispatch<Pixl::MouseButtonPressedEvent>([&](Pixl::MouseButtonPressedEvent& e) {
+        if (e.getMouseButton() == Pixl::Mouse::Left && !cameraControlEnabled) {
+            Pixl::Input::setCursorMode(Pixl::CursorMode::Captured);
+            cameraControlEnabled = true;
+
+            if (cameraController)
+                cameraController->reset();
+
+            std::cout << "Camera control enabled - Use mouse to orbit, scroll to zoom, right-click to pan" << std::endl;
+            return true;
+        }
+        return false;
+    });
+
     if (cameraControlEnabled) {
         dispatcher.dispatch<Pixl::MouseMovedEvent>([this](Pixl::MouseMovedEvent& e) {
             return cameraController->onMouseMoved(e);
@@ -120,7 +135,8 @@ void MeshTestLayer::onEvent(Pixl::Event &event) {
         });
     }
 
-    dispatcher.dispatch<Pixl::KeyPressedEvent>([this](Pixl::KeyPressedEvent& e) {
+    // --- Keyboard input ---
+    dispatcher.dispatch<Pixl::KeyPressedEvent>([&](Pixl::KeyPressedEvent& e) {
         switch (e.getKeyCode()) {
             case Pixl::Key::Escape:
                 if (cameraControlEnabled) {
@@ -128,9 +144,7 @@ void MeshTestLayer::onEvent(Pixl::Event &event) {
                     cameraControlEnabled = false;
                     std::cout << "Camera control disabled" << std::endl;
                 } else {
-                    Pixl::Input::setCursorMode(Pixl::CursorMode::Captured);
-                    cameraControlEnabled = true;
-                    std::cout << "Camera control enabled - Use mouse to orbit, scroll to zoom, right-click to pan" << std::endl;
+                    Pixl::Application::get().close(); // Quitter l'application si non en mode contrôle
                 }
                 return true;
 
@@ -162,5 +176,4 @@ void MeshTestLayer::onEvent(Pixl::Event &event) {
         camera->setAspectRatio(Pixl::Application::get().getWindow().getAspectRatio());
         return false;
     });
-
 }

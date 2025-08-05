@@ -34,8 +34,12 @@ namespace Pixl {
         keyStates[keyCode] = pressed;
     }
 
-    void BaseCameraController::reset() {
+    void BaseCameraController::resetMouse() {
         firstMouse = true;
+    }
+
+    void BaseCameraController::reset() {
+        resetMouse();
         keyStates.clear();
     }
 

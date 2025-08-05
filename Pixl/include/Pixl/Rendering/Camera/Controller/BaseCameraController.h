@@ -41,6 +41,7 @@ namespace Pixl {
         float getMovementSpeed() const { return movementSpeed; }
         bool getInvertY() const { return invertY; }
 
+        void resetMouse() override;
         void reset() override;
     };
 

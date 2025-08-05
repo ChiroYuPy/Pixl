@@ -39,6 +39,7 @@ namespace Pixl {
         void setCamera(ICamera* cam) { camera = cam; }
 
         // Configuration
+        virtual void resetMouse() {}
         virtual void reset() {}
         virtual void setConfiguration(const std::string& config) {}
     };
