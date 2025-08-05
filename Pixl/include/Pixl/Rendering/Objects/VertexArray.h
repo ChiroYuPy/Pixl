@@ -1,10 +1,9 @@
 #ifndef PIXLENGINE_VERTEXARRAY_H
 #define PIXLENGINE_VERTEXARRAY_H
 
-#include "glad/glad.h"
 #include "Pixl/Core/Base.h"
-#include "Buffer.h"
-#include "VertexDeclaration.h"
+#include "Pixl/Rendering/Objects/Buffer.h"
+#include "Pixl/Rendering/Objects/VertexLayout.h"
 
 namespace Pixl {
 
@@ -13,24 +12,31 @@ namespace Pixl {
         VertexArray();
         ~VertexArray();
 
+        // Non-copiable mais déplaçable
+        VertexArray(const VertexArray&) = delete;
+        VertexArray& operator=(const VertexArray&) = delete;
+        VertexArray(VertexArray&& other) noexcept;
+        VertexArray& operator=(VertexArray&& other) noexcept;
+
         void bind() const;
         void unbind() const;
 
-        void AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer, const VertexDeclaration& declaration);
-        void SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer);
+        void addVertexBuffer(const Ref<VertexBuffer>& vertexBuffer, const VertexLayout& layout);
+        void setIndexBuffer(const Ref<IndexBuffer>& indexBuffer);
 
-        const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const { return m_VertexBuffers; }
-        const Ref<IndexBuffer>& GetIndexBuffer() const { return m_IndexBuffer; }
+        const std::vector<Ref<VertexBuffer>>& getVertexBuffers() const { return m_vertexBuffers; }
+        const Ref<IndexBuffer>& getIndexBuffer() const { return m_indexBuffer; }
+
+        bool hasIndexBuffer() const { return m_indexBuffer != nullptr; }
+        uint32_t getIndexCount() const { return m_indexBuffer ? m_indexBuffer->getCount() : 0; }
 
     private:
-        uint32_t CalculateStride(const std::vector<VertexDeclarationComponent>& components);
-        uint32_t GetComponentCount(VertexAttributeType type);
-        GLenum ShaderDataTypeToOpenGLBaseType(VertexAttributeType type);
+        static void setupVertexAttributes(const VertexLayout& layout, uint32_t bufferIndex);
 
-        uint32_t m_RendererID;
-        uint32_t m_VertexBufferIndex = 0;
-        std::vector<Ref<VertexBuffer>> m_VertexBuffers;
-        Ref<IndexBuffer> m_IndexBuffer;
+        GL_ID m_rendererID;
+        uint32_t m_vertexBufferIndex;
+        std::vector<Ref<VertexBuffer>> m_vertexBuffers;
+        Ref<IndexBuffer> m_indexBuffer;
     };
 
 }

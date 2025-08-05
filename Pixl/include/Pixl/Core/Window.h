@@ -19,14 +19,14 @@ namespace Pixl {
 
     struct WindowProperties
     {
-        std::string Title;
-        unsigned int Width;
-        unsigned int Height;
+        std::string title;
+        unsigned int width;
+        unsigned int height;
 
         WindowProperties(std::string  title = "Pixl Engine",
                          unsigned int width = 1280,
                          unsigned int height = 720)
-                : Title(std::move(title)), Width(width), Height(height) {}
+                : title(std::move(title)), width(width), height(height) {}
     };
 
     class Window {
@@ -38,33 +38,34 @@ namespace Pixl {
 
         void onUpdate();
 
-        unsigned int getWidth() const { return m_Data.Width; }
-        unsigned int getHeight() const { return m_Data.Height; }
-        float getAspectRatio() const { return static_cast<float>(m_Data.Width) / static_cast<float>(m_Data.Height); }
+        unsigned int getWidth() const { return m_data.width; }
+        unsigned int getHeight() const { return m_data.height; }
+        float getAspectRatio() const { return m_data.aspectRatio; }
 
-        void setEventCallback(const EventCallbackFunction& callback) { m_Data.EventCallback = callback; }
+        void setEventCallback(const EventCallbackFunction& callback) { m_data.eventCallback = callback; }
         void setVSync(bool enabled);
         bool isVSync() const;
 
-        void* getNativeWindow() const { return m_Window; }
+        void* getNativeWindow() const { return m_windowHandle; }
     private:
         void init(const WindowProperties& props);
         void shutdown();
 
     private:
-        GLFWwindow* m_Window;
-        Scope<GraphicsContext> m_Context;
+        GLFWwindow* m_windowHandle;
+        Scope<GraphicsContext> m_context;
 
         struct WindowData
         {
-            std::string Title;
-            unsigned int Width, Height;
-            bool VSync;
+            std::string title;
+            unsigned int width, height;
+            float aspectRatio;
+            bool verticalSynchronization;
 
-            EventCallbackFunction EventCallback;
+            EventCallbackFunction eventCallback;
         };
 
-        WindowData m_Data;
+        WindowData m_data;
     };
 }
 

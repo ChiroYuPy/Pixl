@@ -6,138 +6,85 @@
 
 namespace Pixl {
 
-    VertexArray::VertexArray() : m_RendererID() {
-        glGenVertexArrays(1, &m_RendererID);
+    VertexArray::VertexArray()
+    : m_rendererID(0), m_vertexBufferIndex(0) {
+        glGenVertexArrays(1, &m_rendererID);
     }
 
     VertexArray::~VertexArray() {
-        glDeleteVertexArrays(1, &m_RendererID);
+        if (m_rendererID) {
+            glDeleteVertexArrays(1, &m_rendererID);
+        }
+    }
+
+    VertexArray::VertexArray(VertexArray&& other) noexcept
+            : m_rendererID(other.m_rendererID),
+              m_vertexBufferIndex(other.m_vertexBufferIndex),
+              m_vertexBuffers(std::move(other.m_vertexBuffers)),
+              m_indexBuffer(std::move(other.m_indexBuffer)) {
+        other.m_rendererID = 0;
+        other.m_vertexBufferIndex = 0;
+    }
+
+    VertexArray& VertexArray::operator=(VertexArray&& other) noexcept {
+        if (this != &other) {
+            if (m_rendererID) {
+                glDeleteVertexArrays(1, &m_rendererID);
+            }
+            m_rendererID = other.m_rendererID;
+            m_vertexBufferIndex = other.m_vertexBufferIndex;
+            m_vertexBuffers = std::move(other.m_vertexBuffers);
+            m_indexBuffer = std::move(other.m_indexBuffer);
+            other.m_rendererID = 0;
+            other.m_vertexBufferIndex = 0;
+        }
+        return *this;
     }
 
     void VertexArray::bind() const {
-        glBindVertexArray(m_RendererID);
+        glBindVertexArray(m_rendererID);
     }
 
     void VertexArray::unbind() const {
         glBindVertexArray(0);
     }
 
-    void VertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer, const VertexDeclaration& declaration) {
-        glBindVertexArray(m_RendererID);
+    void VertexArray::addVertexBuffer(const Ref<VertexBuffer>& vertexBuffer, const VertexLayout& layout) {
+        bind();
         vertexBuffer->bind();
 
-        const auto& components = declaration.GetComponents();
-        uint32_t stride = CalculateStride(components);
-        size_t offset = 0;
+        setupVertexAttributes(layout, m_vertexBufferIndex);
+        m_vertexBuffers.push_back(vertexBuffer);
+        m_vertexBufferIndex++;
 
-        for (const auto& component : components) {
-            uint32_t componentSize = ShaderDataTypeSize(component.type);
-
-            switch (component.type) {
-                case VertexAttributeType::Float:
-                case VertexAttributeType::Float2:
-                case VertexAttributeType::Float3:
-                case VertexAttributeType::Float4: {
-                    glEnableVertexAttribArray(m_VertexBufferIndex);
-                    glVertexAttribPointer(m_VertexBufferIndex,
-                                          GetComponentCount(component.type),
-                                          ShaderDataTypeToOpenGLBaseType(component.type),
-                                          GL_FALSE, // normalized
-                                          stride,
-                                          reinterpret_cast<const void*>(offset));
-                    m_VertexBufferIndex++;
-                    break;
-                }
-                case VertexAttributeType::Int:
-                case VertexAttributeType::Int2:
-                case VertexAttributeType::Int3:
-                case VertexAttributeType::Int4:
-                case VertexAttributeType::Bool: {
-                    glEnableVertexAttribArray(m_VertexBufferIndex);
-                    glVertexAttribIPointer(m_VertexBufferIndex,
-                                           GetComponentCount(component.type),
-                                           ShaderDataTypeToOpenGLBaseType(component.type),
-                                           stride,
-                                           reinterpret_cast<const void*>(offset));
-                    m_VertexBufferIndex++;
-                    break;
-                }
-                case VertexAttributeType::Mat3:
-                case VertexAttributeType::Mat4: {
-                    uint8_t count = GetComponentCount(component.type);
-                    for (uint8_t i = 0; i < count; i++) {
-                        glEnableVertexAttribArray(m_VertexBufferIndex);
-                        glVertexAttribPointer(m_VertexBufferIndex,
-                                              count,
-                                              ShaderDataTypeToOpenGLBaseType(component.type),
-                                              GL_FALSE,
-                                              stride,
-                                              reinterpret_cast<const void*>(offset + sizeof(float) * count * i));
-                        glVertexAttribDivisor(m_VertexBufferIndex, 1);
-                        m_VertexBufferIndex++;
-                    }
-                    break;
-                }
-                default:
-                    break;
-            }
-
-            offset += componentSize;
-        }
-
-        m_VertexBuffers.push_back(vertexBuffer);
+        unbind();
     }
 
-    void VertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer) {
-        glBindVertexArray(m_RendererID);
+    void VertexArray::setIndexBuffer(const Ref<IndexBuffer>& indexBuffer) {
+        bind();
         indexBuffer->bind();
-
-        m_IndexBuffer = indexBuffer;
+        m_indexBuffer = indexBuffer;
+        unbind();
     }
 
-    uint32_t VertexArray::CalculateStride(const std::vector<VertexDeclarationComponent>& components) {
-        uint32_t stride = 0;
-        for (const auto& component : components) {
-            stride += ShaderDataTypeSize(component.type);
-        }
-        return stride;
-    }
+    void VertexArray::setupVertexAttributes(const VertexLayout& layout, uint32_t bufferIndex) {
+        const auto& attributes = layout.getAttributes();
 
-    uint32_t VertexArray::GetComponentCount(VertexAttributeType type) {
-        switch (type) {
-            case VertexAttributeType::Float:    return 1;
-            case VertexAttributeType::Float2:   return 2;
-            case VertexAttributeType::Float3:   return 3;
-            case VertexAttributeType::Float4:   return 4;
-            case VertexAttributeType::Mat3:     return 3; // 3x3 matrix
-            case VertexAttributeType::Mat4:     return 4; // 4x4 matrix
-            case VertexAttributeType::Int:      return 1;
-            case VertexAttributeType::Int2:     return 2;
-            case VertexAttributeType::Int3:     return 3;
-            case VertexAttributeType::Int4:     return 4;
-            case VertexAttributeType::Bool:     return 1;
-            default:                      return 0;
-        }
-    }
+        for (uint32_t i = 0; i < attributes.size(); ++i) {
+            const auto& attr = attributes[i];
 
-    GLenum VertexArray::ShaderDataTypeToOpenGLBaseType(VertexAttributeType type) {
-        switch (type) {
-            case VertexAttributeType::Float:
-            case VertexAttributeType::Float2:
-            case VertexAttributeType::Float3:
-            case VertexAttributeType::Float4:
-            case VertexAttributeType::Mat3:
-            case VertexAttributeType::Mat4:
-                return GL_FLOAT;
-            case VertexAttributeType::Int:
-            case VertexAttributeType::Int2:
-            case VertexAttributeType::Int3:
-            case VertexAttributeType::Int4:
-                return GL_INT;
-            case VertexAttributeType::Bool:
-                return GL_BOOL;
-            default:
-                return 0;
+            constexpr uint32_t MAX_ATTRIBUTES_PER_BUFFER = 8; //TODO: replace arbitrary value
+            uint32_t location = bufferIndex * MAX_ATTRIBUTES_PER_BUFFER + i;
+
+            glEnableVertexAttribArray(location);
+            glVertexAttribPointer(
+                    location,
+                    static_cast<GLint>(VertexLayout::getAttributeComponentCount(attr.type)),
+                    VertexLayout::getAttributeGLType(attr.type),
+                    attr.normalized ? GL_TRUE : GL_FALSE,
+                    static_cast<GLsizei>(layout.getStride()),
+                    reinterpret_cast<const void*>(static_cast<uintptr_t>(attr.offset))
+            );
         }
     }
 

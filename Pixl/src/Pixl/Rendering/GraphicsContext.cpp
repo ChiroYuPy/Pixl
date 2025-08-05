@@ -10,20 +10,21 @@
 namespace Pixl {
 
     GraphicsContext::GraphicsContext(GLFWwindow* windowHandle)
-            : m_WindowHandle(windowHandle)
+            : m_windowHandle(windowHandle)
     {}
 
     void GraphicsContext::Init() {
-        glfwMakeContextCurrent(m_WindowHandle);
+        glfwMakeContextCurrent(m_windowHandle);
         int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
     }
 
     void GraphicsContext::SwapBuffers() {
-        glfwSwapBuffers(m_WindowHandle);
+        glfwSwapBuffers(m_windowHandle);
     }
 
 }

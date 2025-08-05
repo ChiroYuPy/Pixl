@@ -16,8 +16,16 @@ namespace Pixl {
 
     class Shader {
     public:
-        Shader(const std::string& vertexSrc, const std::string& fragmentSrc);
+        Shader() = default;
         ~Shader();
+
+        Shader(const Shader&) = delete;
+        Shader& operator=(const Shader&) = delete;
+        Shader(Shader&& other) noexcept;
+        Shader& operator=(Shader&& other) noexcept;
+
+        bool loadFromSource(const std::string& vertexSource, const std::string& fragmentSource);
+        bool loadFromFile(const std::string& vertexPath, const std::string& fragmentPath);
 
         void bind() const;
         void unbind() const;
@@ -41,14 +49,15 @@ namespace Pixl {
         void setMat3(const std::string &name, const glm::mat3 &matrix) const;
         void setMat4(const std::string& name, const glm::mat4& matrix) const;
 
-        GL_ID getRendererID() const { return m_RendererID; }
+        bool isValid() const { return m_rendererID != 0; }
+        GL_ID getID() const { return m_rendererID; }
 
     private:
-        GL_ID CompileShader(uint32_t type, const std::string& source);
-        GL_ID m_RendererID;
-        mutable std::unordered_map<std::string, int> m_UniformLocationCache;
-
+        static uint32_t compileShader(uint32_t type, const std::string& source);
         int getUniformLocation(const std::string& name) const;
+
+        GL_ID m_rendererID = 0;
+        mutable std::unordered_map<std::string, int> m_uniformLocationCache;
     };
 
 }

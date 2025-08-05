@@ -9,7 +9,7 @@
 
 namespace Pixl {
 
-    Scope<Renderer::SceneData> Renderer::s_sceneData = makeScope<SceneData>();
+    Scope<Renderer::SceneData> Renderer::s_sceneData = MakeScope<SceneData>();
 
     void Renderer::Init() {
         RenderCommand::Init();

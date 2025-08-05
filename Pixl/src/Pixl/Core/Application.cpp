@@ -25,11 +25,14 @@ namespace Pixl {
         if (!m_specification.workingDirectory.empty())
             std::filesystem::current_path(m_specification.workingDirectory);
 
-        m_window = makeScope<Window>(WindowProperties(m_specification.Name));
-        m_window->setEventCallback(bindMemberCallback(this, &Application::onEvent));
+        m_window = MakeScope<Window>(WindowProperties(m_specification.Name));
+        m_window->setEventCallback(MakeMemberCallback(this, &Application::onEvent));
 
-        VertexDeclaration::Init();
         Renderer::Init();
+
+        // default events
+        WindowResizeEvent resizeEvent(m_window->getWidth(), m_window->getHeight(), m_window->getAspectRatio());
+        onEvent(resizeEvent);
     }
 
     Application::~Application() {
@@ -53,8 +56,8 @@ namespace Pixl {
 
     void Application::onEvent(Event& e) {
         EventDispatcher dispatcher(e);
-        dispatcher.dispatch<WindowCloseEvent>(bindMemberCallback(this, &Application::onWindowClose));
-        dispatcher.dispatch<WindowResizeEvent>(bindMemberCallback(this, &Application::onWindowResize));
+        dispatcher.dispatch<WindowCloseEvent>(MakeMemberCallback(this, &Application::onWindowClose));
+        dispatcher.dispatch<WindowResizeEvent>(MakeMemberCallback(this, &Application::onWindowResize));
 
         for (auto & it : std::ranges::reverse_view(m_LayerStack)) {
             if (e.Handled) break;

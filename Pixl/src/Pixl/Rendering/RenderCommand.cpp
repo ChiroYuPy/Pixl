@@ -62,35 +62,14 @@ namespace Pixl {
         return static_cast<GLenum>(mode);
     }
 
-    void RenderCommand::OpenGLMessageCallback(
-            unsigned source,
-            unsigned type,
-            unsigned id,
-            unsigned severity,
-            int length,
-            const char* message,
-            const void* userParam)
-    {
-        std::cerr << "[OpenGL Debug Message] (" << id << "): " << message << "\n";
-
-        switch (severity) {
-            case GL_DEBUG_SEVERITY_HIGH:         std::cerr << "Severity: HIGH\n"; break;
-            case GL_DEBUG_SEVERITY_MEDIUM:       std::cerr << "Severity: MEDIUM\n"; break;
-            case GL_DEBUG_SEVERITY_LOW:          std::cerr << "Severity: LOW\n"; break;
-            case GL_DEBUG_SEVERITY_NOTIFICATION: std::cerr << "Severity: NOTIFICATION\n"; break;
-        }
-
-        std::cerr << std::endl;
-    }
-
     // Initialization
     void RenderCommand::Init() {
-#ifdef PIXL_DEBUG
+// #ifdef PIXL_DEBUG
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-        glDebugMessageCallback(OpenGLMessageCallback, nullptr);
-        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
-#endif
+        glDebugMessageCallback(GLDebugCallback, nullptr);
+        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+// #endif
 
         EnableBlend(true);
         SetBlendFunction(BlendFunction::SrcAlpha, BlendFunction::OneMinusSrcAlpha);
@@ -463,15 +442,52 @@ namespace Pixl {
     }
 
     void RenderCommand::PushDebugGroup(const std::string& name) {
-#ifdef PIXL_DEBUG
+// #ifdef PIXL_DEBUG
         glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, static_cast<GLsizei>(name.length()), name.c_str());
-#endif
+// #endif
     }
 
     void RenderCommand::PopDebugGroup() {
-#ifdef PIXL_DEBUG
+// #ifdef PIXL_DEBUG
         glPopDebugGroup();
-#endif
+// #endif
+    }
+
+    void APIENTRY RenderCommand::GLDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
+                                                 const GLchar *message, const void *userParam) {
+
+        if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
+        std::cerr << "[OpenGL Debug] (" << id << "): " << message << std::endl;
+
+        std::cerr << "Source: ";
+        switch (source) {
+            case GL_DEBUG_SOURCE_API:             std::cerr << "API"; break;
+            case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   std::cerr << "Window System"; break;
+            case GL_DEBUG_SOURCE_SHADER_COMPILER: std::cerr << "Shader Compiler"; break;
+            case GL_DEBUG_SOURCE_THIRD_PARTY:     std::cerr << "Third Party"; break;
+            case GL_DEBUG_SOURCE_APPLICATION:     std::cerr << "Application"; break;
+            case GL_DEBUG_SOURCE_OTHER:           std::cerr << "Other"; break;
+        }
+        std::cerr << "\nType: ";
+        switch (type) {
+            case GL_DEBUG_TYPE_ERROR:               std::cerr << "Error"; break;
+            case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: std::cerr << "Deprecated Behaviour"; break;
+            case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  std::cerr << "Undefined Behaviour"; break;
+            case GL_DEBUG_TYPE_PORTABILITY:         std::cerr << "Portability"; break;
+            case GL_DEBUG_TYPE_PERFORMANCE:         std::cerr << "Performance"; break;
+            case GL_DEBUG_TYPE_MARKER:              std::cerr << "Marker"; break;
+            case GL_DEBUG_TYPE_PUSH_GROUP:          std::cerr << "Push Group"; break;
+            case GL_DEBUG_TYPE_POP_GROUP:           std::cerr << "Pop Group"; break;
+            case GL_DEBUG_TYPE_OTHER:               std::cerr << "Other"; break;
+        }
+        std::cerr << "\nSeverity: ";
+        switch (severity) {
+            case GL_DEBUG_SEVERITY_HIGH:         std::cerr << "HIGH"; break;
+            case GL_DEBUG_SEVERITY_MEDIUM:       std::cerr << "MEDIUM"; break;
+            case GL_DEBUG_SEVERITY_LOW:          std::cerr << "LOW"; break;
+            case GL_DEBUG_SEVERITY_NOTIFICATION: std::cerr << "NOTIFICATION"; break;
+        }
+        std::cerr << std::endl << std::endl;
     }
 
 }

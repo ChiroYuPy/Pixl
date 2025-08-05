@@ -12,14 +12,14 @@ constexpr int BIT(int x) {
 }
 
 template<typename Fn>
-auto bindCallback(Fn fn) {
+auto MakeCallback(Fn fn) {
     return [fn](auto&&... args) -> decltype(auto) {
         return fn(std::forward<decltype(args)>(args)...);
     };
 }
 
 template<typename T, typename Fn>
-auto bindMemberCallback(T* obj, Fn fn) {
+auto MakeMemberCallback(T* obj, Fn fn) {
     return [obj, fn](auto&&... args) -> decltype(auto) {
         return (obj->*fn)(std::forward<decltype(args)>(args)...);
     };
@@ -27,23 +27,23 @@ auto bindMemberCallback(T* obj, Fn fn) {
 
 namespace Pixl {
 
-    template<typename T>
-    using Scope = std::unique_ptr<T>;
-    template<typename T, typename ... Args>
-    constexpr Scope<T> makeScope(Args&& ... args)
-    {
-        return std::make_unique<T>(std::forward<Args>(args)...);
-    }
+    typedef uint32_t GL_ID;
 
     template<typename T>
     using Ref = std::shared_ptr<T>;
+
+    template<typename T>
+    using Scope = std::unique_ptr<T>;
+
     template<typename T, typename ... Args>
-    constexpr Ref<T> makeRef(Args&& ... args)
-    {
+    constexpr Ref<T> MakeRef(Args&& ... args) {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
 
-    typedef uint32_t GL_ID;
+    template<typename T, typename ... Args>
+    constexpr Scope<T> MakeScope(Args&& ... args) {
+        return std::make_unique<T>(std::forward<Args>(args)...);
+    }
 
 }
 

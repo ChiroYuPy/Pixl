@@ -12,13 +12,11 @@
 #include "Pixl/Rendering/Objects/VertexArray.h"
 #include "Pixl/Rendering/Objects/Buffer.h"
 
-#include "Pixl/Rendering/Mesh/StaticMesh.h"
-#include "Pixl/Rendering/Mesh/MultiMaterialMesh.h"
+#include "Pixl/Rendering/Mesh/Mesh.h"
 
-#include "Pixl/Rendering/Geometry/CubeGeometry.h"
+#include "Pixl/Rendering/Geometry/Geometry.h"
 
-#include "Pixl/Rendering/Material/ColorMaterial.h"
-#include "Pixl/Rendering/Material/VertexColorMaterial.h"
+#include "Pixl/Rendering/Material/UnlitMaterial.h"
 
 #include "Pixl/Rendering/Camera/PerspectiveCamera.h"
 #include "Pixl/Rendering/Camera/OrthographicCamera.h"

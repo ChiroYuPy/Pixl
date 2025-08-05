@@ -16,7 +16,7 @@ namespace Pixl {
         void Init();
         void SwapBuffers();
     private:
-        GLFWwindow* m_WindowHandle;
+        GLFWwindow* m_windowHandle;
     };
 }
 

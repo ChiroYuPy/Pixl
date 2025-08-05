@@ -21,7 +21,7 @@ public:
 private:
     Pixl::Scope<Pixl::ICamera> camera;
     Pixl::Scope<Pixl::OrbitController> cameraController;
-    Pixl::Scope<Pixl::MultiMaterialMesh> cubeMesh;
+    Pixl::Scope<Pixl::Mesh> cubeMesh;
 };
 
 #endif //PIXLENGINE_MESHTESTLAYER_H

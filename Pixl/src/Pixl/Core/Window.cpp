@@ -15,7 +15,7 @@ namespace Pixl {
         std::cout << "GLFW ERROR: " << error << " | " << description << std::endl;
     }
 
-    Window::Window(const WindowProperties& props) : m_Window() {
+    Window::Window(const WindowProperties& props) : m_windowHandle() {
         init(props);
     }
 
@@ -24,9 +24,9 @@ namespace Pixl {
     }
 
     void Window::init(const WindowProperties& props) {
-        m_Data.Title = props.Title;
-        m_Data.Width = props.Width;
-        m_Data.Height = props.Height;
+        m_data.title = props.title;
+        m_data.width = props.width;
+        m_data.height = props.height;
 
         if (s_GLFWWindowCount == 0)
         {
@@ -35,35 +35,36 @@ namespace Pixl {
         }
 
         {
-            m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+            m_windowHandle = glfwCreateWindow((int)props.width, (int)props.height, m_data.title.c_str(), nullptr, nullptr);
             ++s_GLFWWindowCount;
         }
 
-        m_Context = makeScope<GraphicsContext>(m_Window);
-        m_Context->Init();
+        m_context = MakeScope<GraphicsContext>(m_windowHandle);
+        m_context->Init();
 
-        glfwSetWindowUserPointer(m_Window, &m_Data);
+        glfwSetWindowUserPointer(m_windowHandle, &m_data);
         setVSync(true);
 
         // Set GLFW callbacks
-        glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
+        glfwSetWindowSizeCallback(m_windowHandle, [](GLFWwindow* window, int width, int height)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-            data.Width = width;
-            data.Height = height;
+            data.width = width;
+            data.height = height;
+            data.aspectRatio = static_cast<float>(data.width) / static_cast<float>(data.height);
 
-            WindowResizeEvent event(width, height);
-            data.EventCallback(event);
+            WindowResizeEvent event(width, height, data.aspectRatio);
+            data.eventCallback(event);
         });
 
-        glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
+        glfwSetWindowCloseCallback(m_windowHandle, [](GLFWwindow* window)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             WindowCloseEvent event;
-            data.EventCallback(event);
+            data.eventCallback(event);
         });
 
-        glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+        glfwSetKeyCallback(m_windowHandle, [](GLFWwindow* window, int key, int scancode, int action, int mods)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
@@ -72,33 +73,33 @@ namespace Pixl {
                 case GLFW_PRESS:
                 {
                     KeyPressedEvent event(static_cast<KeyCode>(key), 0, mods);
-                    data.EventCallback(event);
+                    data.eventCallback(event);
                     break;
                 }
                 case GLFW_RELEASE:
                 {
                     KeyReleasedEvent event(static_cast<KeyCode>(key), mods);
-                    data.EventCallback(event);
+                    data.eventCallback(event);
                     break;
                 }
                 case GLFW_REPEAT:
                 {
                     KeyPressedEvent event(static_cast<KeyCode>(key), 1, mods);
-                    data.EventCallback(event);
+                    data.eventCallback(event);
                     break;
                 }
             }
         });
 
-        glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
+        glfwSetCharCallback(m_windowHandle, [](GLFWwindow* window, unsigned int keycode)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
             KeyTypedEvent event(keycode);
-            data.EventCallback(event);
+            data.eventCallback(event);
         });
 
-        glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
+        glfwSetMouseButtonCallback(m_windowHandle, [](GLFWwindow* window, int button, int action, int mods)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
@@ -107,44 +108,44 @@ namespace Pixl {
                 case GLFW_PRESS:
                 {
                     MouseButtonPressedEvent event(static_cast<MouseCode>(button), mods);
-                    data.EventCallback(event);
+                    data.eventCallback(event);
                     break;
                 }
                 case GLFW_RELEASE:
                 {
                     MouseButtonReleasedEvent event(static_cast<MouseCode>(button), mods);
-                    data.EventCallback(event);
+                    data.eventCallback(event);
                     break;
                 }
             }
         });
 
-        glfwSetCursorEnterCallback(m_Window, [](GLFWwindow* window, int entered)
+        glfwSetCursorEnterCallback(m_windowHandle, [](GLFWwindow* window, int entered)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             MouseEnteredEvent event(entered == GLFW_TRUE);
-            data.EventCallback(event);
+            data.eventCallback(event);
         });
 
-        glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
+        glfwSetScrollCallback(m_windowHandle, [](GLFWwindow* window, double xOffset, double yOffset)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
             MouseScrolledEvent event((float)xOffset, (float)yOffset);
-            data.EventCallback(event);
+            data.eventCallback(event);
         });
 
-        glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
+        glfwSetCursorPosCallback(m_windowHandle, [](GLFWwindow* window, double xPos, double yPos)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
             MouseMovedEvent event((float)xPos, (float)yPos);
-            data.EventCallback(event);
+            data.eventCallback(event);
         });
     }
 
     void Window::shutdown() {
-        glfwDestroyWindow(m_Window);
+        glfwDestroyWindow(m_windowHandle);
         --s_GLFWWindowCount;
 
         if (s_GLFWWindowCount == 0)
@@ -155,7 +156,7 @@ namespace Pixl {
 
     void Window::onUpdate() {
         glfwPollEvents();
-        m_Context->SwapBuffers();
+        m_context->SwapBuffers();
     }
 
     void Window::setVSync(bool enabled) {
@@ -164,10 +165,10 @@ namespace Pixl {
         else
             glfwSwapInterval(0);
 
-        m_Data.VSync = enabled;
+        m_data.verticalSynchronization = enabled;
     }
 
     bool Window::isVSync() const {
-        return m_Data.VSync;
+        return m_data.verticalSynchronization;
     }
 }

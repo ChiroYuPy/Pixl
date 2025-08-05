@@ -8,26 +8,48 @@ void MeshTestLayer::onAttach() {
     Pixl::RenderCommand::SetClearColor({0.2f, 0.2f, 0.2f, 1.0f});
     Pixl::Input::setCursorMode(Pixl::CursorMode::Visible);
 
-    camera = Pixl::makeScope<Pixl::PerspectiveCamera>(
-            90.0f, Pixl::Application::get().getWindow().getAspectRatio(), 0.1f, 10000.0f
-    );
+    // camera and cameraController init
+    float aspectRatio = Pixl::Application::get().getWindow().getAspectRatio();
+    camera = Pixl::MakeScope<Pixl::PerspectiveCamera>(90.0f, aspectRatio, 0.1f, 10000.0f);
 
-    camera->setPosition({3.0f, 3.0f, 3.0f});
-    camera->lookAt({0.0f, 0.0f, 0.0f});
+    camera->setPosition({12, 12, 12});
+    camera->lookAt({0, 0, 0});
 
-    cameraController = Pixl::makeScope<Pixl::OrbitController>(camera.get());
+    cameraController = Pixl::MakeScope<Pixl::OrbitController>(camera.get());
 
-    Pixl::Ref<Pixl::CubeGeometry> cubeGeometry = Pixl::makeRef<Pixl::CubeGeometry>();
-    Pixl::Ref<Pixl::ColorMaterial> redMaterial = Pixl::makeRef<Pixl::ColorMaterial>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-    Pixl::Ref<Pixl::ColorMaterial> greenMaterial = Pixl::makeRef<Pixl::ColorMaterial>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+    // drawable object init
+    Pixl::Ref<Pixl::Geometry> cubeGeometry = Pixl::Geometry::createCube();
+    Pixl::Ref<Pixl::Shader> unlitShader = Pixl::MakeRef<Pixl::Shader>();
 
-    Pixl::Ref<Pixl::VertexColorMaterial> colorMaterial = Pixl::makeRef<Pixl::VertexColorMaterial>();
+    unlitShader->loadFromSource(R"(
+            #version 330 core
 
-    cubeMesh = Pixl::makeScope<Pixl::MultiMaterialMesh>(cubeGeometry);
-    cubeMesh->addSubMesh(redMaterial, 0, 18);
-    cubeMesh->addSubMesh(greenMaterial, 18, 18);
+            layout(location = 0) in vec3 a_position;
 
-    // cubeMesh->addSubMesh(colorMaterial, 0, 36);
+            uniform mat4 u_viewProjection;
+            uniform mat4 u_transform;
+
+            void main()
+            {
+                gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);
+            }
+        )",
+        R"(
+            #version 330 core
+
+            uniform vec4 u_color;
+            out vec4 frag_color;
+
+            void main() {
+                frag_color = u_color;
+            }
+
+        )");
+
+    Pixl::Ref<Pixl::UnlitMaterial> redMaterial = Pixl::MakeRef<Pixl::UnlitMaterial>(unlitShader);
+    redMaterial->setColor({1.0f, 0.0f, 0.0f, 1.0f});
+
+    cubeMesh = Pixl::MakeScope<Pixl::Mesh>(cubeGeometry, redMaterial);
 }
 
 void MeshTestLayer::onDetach() {
@@ -39,8 +61,6 @@ void MeshTestLayer::onUpdate(Pixl::Time &deltaTime) {
 
     Pixl::Renderer::beginFrame(*camera);
 
-    camera->setAspectRatio(Pixl::Application::get().getWindow().getAspectRatio());
-
     cameraController->update(deltaTime);
 
     glm::mat4 projMatrix = camera->getProjectionMatrix();
@@ -49,8 +69,9 @@ void MeshTestLayer::onUpdate(Pixl::Time &deltaTime) {
 
     auto cubeTransform = glm::mat4(1.0f);
     cubeTransform = glm::translate(cubeTransform, glm::vec3(0.0f, 0.0f, 0.0f));
+    cubeMesh->setTransform(cubeTransform);
 
-    cubeMesh->render(cubeTransform, viewProj);
+    cubeMesh->render(viewProj);
 
     Pixl::Renderer::endFrame();
 }
@@ -116,10 +137,9 @@ void MeshTestLayer::onEvent(Pixl::Event &event) {
         return false;
     });
 
-    /*
     dispatcher.dispatch<Pixl::WindowResizeEvent>([this](Pixl::WindowResizeEvent& e) {
-        cameraController->resetMouse();
+        camera->setAspectRatio(Pixl::Application::get().getWindow().getAspectRatio());
         return false;
     });
-     */
+
 }
