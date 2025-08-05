@@ -107,26 +107,6 @@ namespace Pixl {
         EVENT_CLASS_TYPE(MouseButtonReleased)
     };
 
-    class MouseEnteredEvent : public Event
-    {
-    public:
-        MouseEnteredEvent(bool entered) : m_Entered(entered) {}
-
-        bool hasEntered() const { return m_Entered; }
-
-        std::string toString() const override
-        {
-            std::stringstream ss;
-            ss << "MouseEnteredEvent: " << (m_Entered ? "entered" : "left");
-            return ss.str();
-        }
-
-        EVENT_CLASS_TYPE(MouseEntered)
-        EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
-    private:
-        bool m_Entered;
-    };
-
 }
 
 #endif //PIXLENGINE_MOUSEEVENT_H

@@ -37,6 +37,7 @@ set(SOURCES
         src/Pixl/Rendering/Camera/controller/OrbitController.cpp
         src/Pixl/Rendering/Objects/VertexLayout.cpp
         src/Pixl/Rendering/Geometry/Geometry.cpp
+        include/Pixl/Events/WindowEvent.h
 )
 
 add_library(Pixl STATIC ${SOURCES})

@@ -6,9 +6,7 @@
 #define PIXL_APPLICATION_H
 
 #include "Pixl/Core/Base.h"
-#include "Pixl/Events/ApplicationEvent.h"
-#include "Pixl/Events/MouseEvent.h"
-#include "Pixl/Events/KeyEvent.h"
+#include "Pixl/Events/WindowEvent.h"
 #include "Pixl/Events/Event.h"
 #include "Pixl/Core/Window.h"
 #include "Pixl/Core/Time/Time.h"

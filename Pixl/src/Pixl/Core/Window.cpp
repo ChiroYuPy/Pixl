@@ -3,9 +3,7 @@
 //
 
 #include "Pixl/Core/Window.h"
-#include "Pixl/Events/ApplicationEvent.h"
-#include "Pixl/Events/KeyEvent.h"
-#include "Pixl/Events/MouseEvent.h"
+#include "Pixl/Utils/Logger.h"
 
 namespace Pixl {
 
@@ -120,19 +118,14 @@ namespace Pixl {
             }
         });
 
-        glfwSetCursorEnterCallback(m_windowHandle, [](GLFWwindow* window, int entered)
-        {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-            MouseEnteredEvent event(entered == GLFW_TRUE);
-            data.eventCallback(event);
-        });
-
         glfwSetScrollCallback(m_windowHandle, [](GLFWwindow* window, double xOffset, double yOffset)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
             MouseScrolledEvent event((float)xOffset, (float)yOffset);
             data.eventCallback(event);
+
+            Logger::debug("MouseScrolledEvent");
         });
 
         glfwSetCursorPosCallback(m_windowHandle, [](GLFWwindow* window, double xPos, double yPos)
@@ -141,6 +134,75 @@ namespace Pixl {
 
             MouseMovedEvent event((float)xPos, (float)yPos);
             data.eventCallback(event);
+
+            Logger::debug("MouseMovedEvent");
+        });
+
+        glfwSetWindowPosCallback(m_windowHandle, [](GLFWwindow* window, int x, int y)
+        {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            WindowMovedEvent event(x, y);
+            data.eventCallback(event);
+        });
+
+        glfwSetWindowFocusCallback(m_windowHandle, [](GLFWwindow* window, int focused)
+        {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            if (focused)
+            {
+                WindowFocusGainedEvent event;
+                data.eventCallback(event);
+            }
+            else
+            {
+                WindowFocusLostEvent event;
+                data.eventCallback(event);
+            }
+        });
+
+        glfwSetWindowIconifyCallback(m_windowHandle, [](GLFWwindow* window, int iconified)
+        {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            if (iconified)
+            {
+                WindowMinimizedEvent event;
+                data.eventCallback(event);
+            }
+            else
+            {
+                WindowRestoredEvent event;
+                data.eventCallback(event);
+            }
+        });
+
+        glfwSetWindowMaximizeCallback(m_windowHandle, [](GLFWwindow* window, int maximized)
+        {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            if (maximized)
+            {
+                WindowMaximizedEvent event;
+                data.eventCallback(event);
+            }
+            else
+            {
+                WindowRestoredEvent event;
+                data.eventCallback(event);
+            }
+        });
+
+        glfwSetCursorEnterCallback(m_windowHandle, [](GLFWwindow* window, int entered)
+        {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            if (entered)
+            {
+                WindowEnterEvent event;
+                data.eventCallback(event);
+            }
+            else
+            {
+                WindowLeaveEvent event;
+                data.eventCallback(event);
+            }
         });
     }
 

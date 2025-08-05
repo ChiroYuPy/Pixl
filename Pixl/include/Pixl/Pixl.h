@@ -24,6 +24,11 @@
 #include "Pixl/Rendering/Camera/Controller/FPSController.h"
 #include "Pixl/Rendering/Camera/Controller/OrbitController.h"
 
+#include "Pixl/Events/ApplicationEvent.h"
+#include "Pixl/Events/WindowEvent.h"
+#include "Pixl/Events/MouseEvent.h"
+#include "Pixl/Events/KeyEvent.h"
+
 #include "Pixl/Core/Layer/Layer.h"
 
 #include "Pixl/Core/Base.h"

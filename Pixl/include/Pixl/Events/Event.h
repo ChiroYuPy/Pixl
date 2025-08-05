@@ -14,21 +14,28 @@ namespace Pixl {
     enum class EventType
     {
         None = 0,
-        WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
-        AppTick, AppUpdate, AppRender,
+        WindowResize, WindowMoved, WindowClose,
+        WindowFocusGained, WindowFocusLost,
+        WindowMinimized, WindowMaximized, WindowRestored,
+        WindowEnter, WindowLeave,
+
+        AppTick, AppUpdate, AppRender, AppQuit,
+
         KeyPressed, KeyReleased, KeyTyped,
-        MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled, MouseEntered
+
+        MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
     };
 
 
     enum EventCategory // bitshift for getting multiple categories
     {
         None = 0,
-        EventCategoryApplication    = 1 << 0,
-        EventCategoryInput          = 1 << 1,
-        EventCategoryKeyboard       = 1 << 2,
-        EventCategoryMouse          = 1 << 3,
-        EventCategoryMouseButton    = 1 << 4
+        EventCategoryApplication = 1 << 0,
+        EventCategoryWindow      = 1 << 1,
+        EventCategoryInput       = 1 << 2,
+        EventCategoryKeyboard    = 1 << 3,
+        EventCategoryMouse       = 1 << 4,
+        EventCategoryMouseButton = 1 << 5
     };
 
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
@@ -49,8 +56,7 @@ namespace Pixl {
         virtual int getCategoryFlags() const = 0;
         virtual std::string toString() const { return getName(); }
 
-        bool isInCategory(EventCategory category)
-        {
+        bool isInCategory(EventCategory category) {
             return getCategoryFlags() & category;
         }
     };
