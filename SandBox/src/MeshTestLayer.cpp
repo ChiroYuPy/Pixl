@@ -109,7 +109,7 @@ void MeshTestLayer::onEvent(Pixl::Event &event) {
             cameraControlEnabled = true;
 
             if (cameraController)
-                cameraController->reset();
+                cameraController->resetMouse();
 
             std::cout << "Camera control enabled - Use mouse to orbit, scroll to zoom, right-click to pan" << std::endl;
             return true;
