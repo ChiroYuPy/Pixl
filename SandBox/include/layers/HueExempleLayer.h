@@ -2,12 +2,12 @@
 // Created by ChiroYuki on 08/08/2025.
 //
 
-#ifndef PIXLENGINE_RESOURCETESTLAYER_H
-#define PIXLENGINE_RESOURCETESTLAYER_H
+#ifndef PIXLENGINE_HUEEXEMPLELAYER_H
+#define PIXLENGINE_HUEEXEMPLELAYER_H
 
 #include "Pixl/Pixl.h"
 
-class ResourceTestLayer : public Pixl::Layer {
+class HueExempleLayer : public Pixl::Layer {
 public:
     void onAttach() override;
     void onDetach() override;
@@ -15,8 +15,7 @@ public:
     void onEvent(Pixl::Event& e) override;
 
 private:
-    void loadTestSet();
-    void printStats();
+    float m_Hue = 0.0f;
 };
 
-#endif //PIXLENGINE_RESOURCETESTLAYER_H
+#endif //PIXLENGINE_HUEEXEMPLELAYER_H

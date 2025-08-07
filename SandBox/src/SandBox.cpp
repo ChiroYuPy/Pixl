@@ -6,7 +6,7 @@
 
 #include "layers/CameraTestLayer.h"
 #include "layers/MeshTestLayer.h"
-#include "layers/ResourceTestLayer.h"
+#include "layers/HueExempleLayer.h"
 
 #include <iostream>
 
@@ -14,7 +14,7 @@ SandboxApp::SandboxApp(const Pixl::ApplicationSpecification &specification)
         : Pixl::Application(specification) {
     // PushLayer(new CameraTestLayer());
     // PushLayer(new MeshTestLayer());
-    PushLayer(new ResourceTestLayer());
+    PushLayer(new HueExempleLayer());
 }
 
 Pixl::Application* Pixl::createApplication() {
