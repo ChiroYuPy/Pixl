@@ -12,6 +12,8 @@ add_executable(Sandbox src/SandBox.cpp
         src/layers/HueExempleLayer.cpp
         include/layers/HueExempleLayer.h
         include/SandBox.h
+        src/layers/ResourceLoadingTestLayer.cpp
+        include/layers/ResourceLoadingTestLayer.h
 )
 
 target_include_directories(Pixl PUBLIC

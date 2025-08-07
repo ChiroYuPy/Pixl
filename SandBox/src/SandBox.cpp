@@ -12,9 +12,9 @@
 
 SandboxApp::SandboxApp(const Pixl::ApplicationSpecification &specification)
         : Pixl::Application(specification) {
-    // PushLayer(new CameraTestLayer());
+    PushLayer(new CameraTestLayer());
     // PushLayer(new MeshTestLayer());
-    PushLayer(new HueExempleLayer());
+    // PushLayer(new HueExempleLayer());
 }
 
 Pixl::Application* Pixl::createApplication() {

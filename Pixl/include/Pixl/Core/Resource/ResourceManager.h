@@ -5,7 +5,6 @@
 #ifndef PIXLENGINE_RESOURCEMANAGER_H
 #define PIXLENGINE_RESOURCEMANAGER_H
 
-#include "Pixl/Core/Application.h"
 #include "ResourceCache.h"
 
 namespace Pixl {
@@ -20,7 +19,6 @@ namespace Pixl {
 
         template<typename T>
         Ref<T> getOrLoad(const std::string &name) {
-            // std::string resourcePath = Application::get().getSpecifications().workingDirectory;
             return getCache<T>().getOrLoad(name);
         }
 
