@@ -4,9 +4,10 @@
 
 #include "../include/MeshTestLayer.h"
 
+
 void MeshTestLayer::onAttach() {
     Pixl::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
-    Pixl::RenderCommand::SetPolygonMode(Pixl::PolygonMode::Line);
+    // Pixl::RenderCommand::SetPolygonMode(Pixl::PolygonMode::Line);
     Pixl::Input::setCursorMode(Pixl::CursorMode::Visible);
 
     // camera and cameraController init
@@ -17,6 +18,35 @@ void MeshTestLayer::onAttach() {
     camera->lookAt({0, 0, 0});
 
     cameraController = Pixl::MakeScope<Pixl::OrbitController>(camera.get());
+
+
+
+    auto& resourceManager = Pixl::Application::get().getResourceManager();
+    try {
+        // Utilisation normale
+        auto tex = resourceManager.getOrLoad<Pixl::Texture>("grass.png");
+        tex->use();
+
+        // Vérification d'existence
+        if (resourceManager.exists<Pixl::Texture>("grass.png"))
+            std::cout << "Texture already loaded\n";
+
+        // Rechargement forcé
+        auto tex2 = resourceManager.forceReload<Pixl::Texture>("grass.png");
+        tex2->use();
+
+        // Stats
+        std::cout << "Loaded textures: " << resourceManager.getLoadedCount<Pixl::Texture>() << "\n";
+
+        // Déchargement
+        resourceManager.unload<Pixl::Texture>("grass.png");
+        std::cout << "After unload - Loaded textures: " << resourceManager.getLoadedCount<Pixl::Texture>() << "\n";
+
+    } catch (const std::exception &e) {
+        std::cout << "Error: " << e.what() << "\n";
+    }
+
+
 
     // drawable object init
     Pixl::Ref<Pixl::Geometry> cubeGeometry = Pixl::Geometry::createCube();
@@ -61,7 +91,7 @@ void MeshTestLayer::onAttach() {
         cubeMaterial->setProperty("u_color", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
         cubeMaterial->setProperty("u_metallic", 0.8f);
         cubeMaterial->setProperty("u_roughness", 0.2f);
-        cubeMaterial->setProperty("u_emissive", glm::vec3(0.1f, 0.0f, 0.0f));
+        cubeMaterial->setProperty("u_emissive", glm::vec3(0.1f, 0.1f, 0.0f));
 
         std::cout << "Available material properties:" << std::endl;
         for (const auto& name : cubeMaterial->getPropertyNames()) {

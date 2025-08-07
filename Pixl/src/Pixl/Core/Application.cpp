@@ -33,6 +33,13 @@ namespace Pixl {
         // default events
         WindowResizeEvent resizeEvent(m_window->getWidth(), m_window->getHeight(), m_window->getAspectRatio());
         onEvent(resizeEvent);
+
+        // resources
+        m_resourceManager = MakeScope<ResourceManager>();
+        m_resourceManager->registerLoader<Texture>([](const std::string &name) -> std::shared_ptr<Texture> {
+            std::cout << "[Loader] Loading texture: " << name << "\n";
+            return MakeRef<Texture>(name);
+        });
     }
 
     Application::~Application() {

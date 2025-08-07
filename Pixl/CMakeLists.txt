@@ -40,6 +40,9 @@ set(SOURCES
         src/Pixl/Rendering/Objects/ShaderReflection.cpp
         include/Pixl/Rendering/Objects/ShaderReflection.h
         src/Pixl/Rendering/Material/Material.cpp
+        include/Pixl/Core/Resource/Resource.h
+        include/Pixl/Core/Resource/ResourceCache.h
+        include/Pixl/Core/Resource/ResourceManager.h
 )
 
 add_library(Pixl STATIC ${SOURCES})
