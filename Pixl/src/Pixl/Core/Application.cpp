@@ -36,10 +36,6 @@ namespace Pixl {
 
         // resources
         m_resourceManager = MakeScope<ResourceManager>();
-        m_resourceManager->registerLoader<Texture>([](const std::string &name) -> std::shared_ptr<Texture> {
-            std::cout << "[Loader] Loading texture: " << name << "\n";
-            return MakeRef<Texture>(name);
-        });
     }
 
     Application::~Application() {
@@ -107,4 +103,4 @@ namespace Pixl {
 
 }
 
-extern Pixl::Application* Pixl::createApplication();
+// extern Pixl::Application* Pixl::createApplication();

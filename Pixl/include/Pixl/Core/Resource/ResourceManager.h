@@ -5,6 +5,7 @@
 #ifndef PIXLENGINE_RESOURCEMANAGER_H
 #define PIXLENGINE_RESOURCEMANAGER_H
 
+#include "Pixl/Core/Application.h"
 #include "ResourceCache.h"
 
 namespace Pixl {
@@ -14,11 +15,12 @@ namespace Pixl {
         template<typename T>
         void registerLoader(typename ResourceCache<T>::LoaderFunc loader) {
             auto typeIdx = std::type_index(typeid(T));
-            caches_[typeIdx] = std::make_unique<ResourceCache<T>>(std::move(loader));
+            m_caches[typeIdx] = std::make_unique<ResourceCache<T>>(std::move(loader));
         }
 
         template<typename T>
         Ref<T> getOrLoad(const std::string &name) {
+            // std::string resourcePath = Application::get().getSpecifications().workingDirectory;
             return getCache<T>().getOrLoad(name);
         }
 
@@ -44,7 +46,7 @@ namespace Pixl {
 
         // Utilitaires pour la gestion globale
         void clearAll() {
-            for (auto &[type, cache]: caches_)
+            for (auto &[type, cache]: m_caches)
                 cache->clear();
         }
 
@@ -53,20 +55,19 @@ namespace Pixl {
             getCache<T>().clear();
         }
 
-        // Pour les statistiques et le debug
         template<typename T>
         size_t getLoadedCount() {
             return getCache<T>().size();
         }
 
     private:
-        std::unordered_map<std::type_index, std::unique_ptr<IResourceCache>> caches_;
+        std::unordered_map<std::type_index, std::unique_ptr<IResourceCache>> m_caches;
 
         template<typename T>
         ResourceCache<T> &getCache() {
             auto typeIdx = std::type_index(typeid(T));
-            auto it = caches_.find(typeIdx);
-            if (it == caches_.end())
+            auto it = m_caches.find(typeIdx);
+            if (it == m_caches.end())
                 throw std::runtime_error("No ResourceCache registered for this type");
 
             return static_cast<ResourceCache<T> &>(*it->second);

@@ -1,0 +1,11 @@
+{
+  "source": "albedo.png",
+  "sampler": {
+    "wrapS": "repeat",
+    "wrapT": "repeat",
+    "minFilter": "linear",
+    "magFilter": "linear",
+    "anisotropy": 0
+  },
+  "generateMips": true
+}

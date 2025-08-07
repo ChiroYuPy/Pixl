@@ -5,10 +5,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(PROJECT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set(GLAD_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include)
+set(VENDOR_INCLUDE_DIR vendor/include)
 
 set(SOURCES
-        vendor/glad/src/glad.c
+        vendor/src/glad/glad.c
 
         src/Pixl/Core/Application.cpp
         src/Pixl/Core/Window.cpp
@@ -36,20 +36,16 @@ set(SOURCES
         src/Pixl/Rendering/Camera/controller/OrbitController.cpp
         src/Pixl/Rendering/Objects/VertexLayout.cpp
         src/Pixl/Rendering/Geometry/Geometry.cpp
-        include/Pixl/Events/WindowEvent.h
         src/Pixl/Rendering/Objects/ShaderReflection.cpp
-        include/Pixl/Rendering/Objects/ShaderReflection.h
         src/Pixl/Rendering/Material/Material.cpp
-        include/Pixl/Core/Resource/Resource.h
-        include/Pixl/Core/Resource/ResourceCache.h
-        include/Pixl/Core/Resource/ResourceManager.h
+        src/Pixl/Core/Resource/FileTextureLoader.cpp
 )
 
 add_library(Pixl STATIC ${SOURCES})
 
 target_include_directories(Pixl PUBLIC
         ${PROJECT_INCLUDE_DIR}
-        ${GLAD_INCLUDE_DIR}
+        ${VENDOR_INCLUDE_DIR}
 )
 
 find_package(glfw3 REQUIRED)

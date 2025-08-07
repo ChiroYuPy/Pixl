@@ -2,7 +2,7 @@
 // Created by ChiroYuki on 05/08/2025.
 //
 
-#include "../include/MeshTestLayer.h"
+#include "layers/MeshTestLayer.h"
 
 
 void MeshTestLayer::onAttach() {
@@ -46,12 +46,7 @@ void MeshTestLayer::onAttach() {
         std::cout << "Error: " << e.what() << "\n";
     }
 
-
-
-    // drawable object init
-    Pixl::Ref<Pixl::Geometry> cubeGeometry = Pixl::Geometry::createCube();
-
-    const std::string vertexShader = R"(
+    const std::string CUBE_VERT = R"(
         #version 330 core
 
         layout(location = 0) in vec3 a_position;
@@ -65,7 +60,7 @@ void MeshTestLayer::onAttach() {
         }
     )";
 
-    const std::string fragmentShader = R"(
+    const std::string CUBE_FRAG = R"(
         #version 330 core
 
         uniform vec4 u_color;
@@ -85,7 +80,10 @@ void MeshTestLayer::onAttach() {
         }
     )";
 
-    cubeMaterial = Pixl::MaterialFactory::createFromSource(vertexShader, fragmentShader);
+    // drawable object init
+    Pixl::Ref<Pixl::Geometry> cubeGeometry = Pixl::Geometry::createCube();
+
+    cubeMaterial = Pixl::MaterialFactory::createFromSource(CUBE_VERT, CUBE_FRAG);
 
     if (cubeMaterial) {
         cubeMaterial->setProperty("u_color", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));

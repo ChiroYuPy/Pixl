@@ -9,19 +9,14 @@
 
 class MeshTestLayer : public Pixl::Layer {
 public:
-    MeshTestLayer() = default;
-    ~MeshTestLayer() override = default;
-
     void onAttach() override;
     void onDetach() override;
-
     void onUpdate(Pixl::Time& deltaTime) override;
     void onEvent(Pixl::Event& event) override;
 
 private:
     Pixl::Scope<Pixl::ICamera> camera;
     Pixl::Scope<Pixl::OrbitController> cameraController;
-
     Pixl::Ref<Pixl::Material> cubeMaterial;
     Pixl::Scope<Pixl::Mesh> cubeMesh;
 };

@@ -6,6 +6,7 @@
 #define PIXLENGINE_RESOURCECACHE_H
 
 #include "Resource.h"
+#include "IResourceLoader.h"
 
 namespace Pixl {
 
@@ -23,60 +24,58 @@ namespace Pixl {
         static_assert(std::is_base_of_v<Resource, T>, "T must inherit from Resource");
 
     public:
-        using LoaderFunc = std::function<Ref<T>(const std::string &)>;
-
-        explicit ResourceCache(LoaderFunc loader) : loader_(std::move(loader)) {}
+        explicit ResourceCache(Ref<IResourceLoader<T>> loader) : m_loader(std::move(loader)) {}
 
         Ref<T> getOrLoad(const std::string &name) {
-            if (auto it = resources_.find(name); it != resources_.end())
+            if (auto it = m_resources.find(name); it != m_resources.end())
                 return it->second;
 
-            if (!loader_)
+            if (!m_loader)
                 throw std::runtime_error("No loader registered for resource: " + name);
 
-            auto resource = loader_(name);
+            Ref<T> resource = m_loader->load(name);
             if (!resource)
                 throw std::runtime_error("Failed to load resource: " + name);
 
-            resources_[name] = resource;
+            m_resources[name] = resource;
             return resource;
         }
 
         Ref<T> forceReload(const std::string &name) {
-            if (!loader_)
+            if (!m_loader)
                 throw std::runtime_error("No loader registered for resource: " + name);
 
-            auto resource = loader_(name);
+            auto resource = m_loader->load(name);
             if (!resource)
                 throw std::runtime_error("Failed to reload resource: " + name);
 
-            resources_[name] = resource;
+            m_resources[name] = resource;
             return resource;
         }
 
         Ref<T> get(const std::string &name) const {
-            if (auto it = resources_.find(name); it != resources_.end())
+            if (auto it = m_resources.find(name); it != m_resources.end())
                 return it->second;
 
             return nullptr;
         }
 
         bool exists(const std::string &name) const {
-            return resources_.find(name) != resources_.end();
+            return m_resources.find(name) != m_resources.end();
         }
 
         void unload(const std::string &name) {
-            resources_.erase(name);
+            m_resources.erase(name);
         }
 
         // Interface IResourceCache
-        void clear() override { resources_.clear(); }
+        void clear() override { m_resources.clear(); }
 
-        size_t size() const override { return resources_.size(); }
+        size_t size() const override { return m_resources.size(); }
 
     private:
-        std::unordered_map<std::string, std::shared_ptr<T>> resources_;
-        LoaderFunc loader_;
+        std::unordered_map<std::string, std::shared_ptr<T>> m_resources;
+        Ref<IResourceLoader<T>> m_loader;
     };
 
 }

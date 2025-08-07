@@ -2,22 +2,20 @@
 // Created by ChiroYuki on 02/08/2025.
 //
 
+#include "SandBox.h"
+
+#include "layers/CameraTestLayer.h"
+#include "layers/MeshTestLayer.h"
+#include "layers/ResourceTestLayer.h"
+
 #include <iostream>
 
-#include "Pixl/Pixl.h"
-#include "Pixl/Core/EntryPoint.h"
-#include "Pixl/Core/Time/Time.h"
-#include "../include/MeshTestLayer.h"
-
-class SandboxApp : public Pixl::Application {
-public:
-    explicit SandboxApp(const Pixl::ApplicationSpecification& specification)
-    : Pixl::Application(specification) {
-        PushLayer(new MeshTestLayer());
-    }
-
-    ~SandboxApp() override = default;
-};
+SandboxApp::SandboxApp(const Pixl::ApplicationSpecification &specification)
+        : Pixl::Application(specification) {
+    // PushLayer(new CameraTestLayer());
+    // PushLayer(new MeshTestLayer());
+    PushLayer(new ResourceTestLayer());
+}
 
 Pixl::Application* Pixl::createApplication() {
     Pixl::ApplicationSpecification spec;
