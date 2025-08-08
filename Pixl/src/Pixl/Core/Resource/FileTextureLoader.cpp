@@ -2,16 +2,13 @@
 // Created by ChiroYuki on 07/08/2025.
 //
 
-#include "Pixl/Core/Resource/FileTextureLoader.h"
-
 #include <nlohmann/json.hpp>
-
-#include <fstream>
 #include <filesystem>
 #include <fstream>
 
 namespace Pixl {
 
+    /*
     struct SamplerDesc {
         std::string wrapS = "repeat";
         std::string wrapT = "repeat";
@@ -36,44 +33,40 @@ namespace Pixl {
         out.sourceFile   = j.value("source", "");
         out.generateMips = j.value("generateMips", true);
 
-        const auto& s = j["sampler"];
-        out.sampler.wrapS     = s.value("wrapS", "repeat");
-        out.sampler.wrapT     = s.value("wrapT", "repeat");
-        out.sampler.minFilter = s.value("minFilter", "linear");
-        out.sampler.magFilter = s.value("magFilter", "linear");
-        out.sampler.anisotropy = s.value("anisotropy", 0.f);
+        if (j.contains("sampler")) {
+            const auto& s = j["sampler"];
+            out.sampler.wrapS     = s.value("wrapS", "repeat");
+            out.sampler.wrapT     = s.value("wrapT", "repeat");
+            out.sampler.minFilter = s.value("minFilter", "linear");
+            out.sampler.magFilter = s.value("magFilter", "linear");
+            out.sampler.anisotropy = s.value("anisotropy", 0.f);
+        }
         return true;
     }
 
-    Ref<Texture> FileTextureLoader::load(const std::string& logicalPath) {
-        namespace fs = std::filesystem;
+    ResourceLoader<Texture> CreateFileTextureLoader() {
+        return [](const std::string& logicalPath) -> Ref<Texture> {
+            namespace fs = std::filesystem;
 
-        fs::path jsonPath = logicalPath;
-        if (jsonPath.extension() != ".texture") {
-            jsonPath.replace_extension(".texture");
-        }
-        if (!fs::exists(jsonPath)) {
-            std::cerr << "Texture descriptor not found: " << jsonPath << "\n";
-            return nullptr;
-        }
+            fs::path jsonPath = logicalPath;
+            if (jsonPath.extension() != ".texture") {
+                jsonPath.replace_extension(".texture");
+            }
+            if (!fs::exists(jsonPath)) {
+                std::cerr << "Texture descriptor not found: " << jsonPath << "\n";
+                return nullptr;
+            }
 
-        TextureDesc desc;
-        if (!LoadTextureDesc(jsonPath.string(), desc))
-            return nullptr;
+            TextureDesc desc;
+            if (!LoadTextureDesc(jsonPath.string(), desc))
+                return nullptr;
 
-        /*
-        // 3. Charger l’image référencée
-        fs::path imagePath = jsonPath.parent_path() / desc.sourceFile;
-        auto rawImage      = LoadImageData(imagePath.string()); // stb_image ou autre
-        if (!rawImage)
-            return nullptr;
-        */
+            auto texture = MakeRef<Texture>(jsonPath.stem().string());
+            // TODO: texture->upload(...);
 
-        // 4. Créer la Texture GPU
-        auto texture = MakeRef<Texture>(jsonPath.stem().string()); // nom = fichier sans ext
-        //TODO: texture->upload(rawImage, desc); // tu implémentes upload()
-
-        return texture;
+            return texture;
+        };
     }
+     */
 
 }

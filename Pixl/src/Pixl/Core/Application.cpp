@@ -2,10 +2,10 @@
 // Created by ChiroYuki on 26/07/2025.
 //
 
+#include "Pixl/Core/Application.h"
 #include "Pixl/Core/Base.h"
 #include "Pixl/Rendering/Renderer/Renderer.h"
 #include "Pixl/Core/Window.h"
-#include "Pixl/Core/Application.h"
 #include "Pixl/Core/Time/Clock.h"
 
 #include <filesystem>
@@ -35,13 +35,12 @@ namespace Pixl {
         onEvent(resizeEvent);
 
         // resources
-        m_resourceManager = MakeScope<ResourceManager>();
+        m_resourceService = MakeScope<ResourceService>();
     }
 
     Application::~Application() {
         Renderer::Shutdown();
     }
-
 
     void Application::PushLayer(Layer* layer) {
         m_LayerStack.PushLayer(layer);

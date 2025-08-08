@@ -27,8 +27,6 @@ void CameraTestLayer::onDetach() {
 }
 
 void CameraTestLayer::onUpdate(Pixl::Time &dt) {
-    Pixl::RenderCommand::Clear();
-
     Pixl::Renderer::beginFrame(*camera);
 
     cameraController->update(dt);

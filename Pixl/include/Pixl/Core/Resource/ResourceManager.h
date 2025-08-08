@@ -5,72 +5,46 @@
 #ifndef PIXLENGINE_RESOURCEMANAGER_H
 #define PIXLENGINE_RESOURCEMANAGER_H
 
-#include "Pixl/Core/Application.h"
-#include "ResourceCache.h"
+#include "IResourceLoader.h"
+#include "Resource.h"
 
 namespace Pixl {
 
+    template<typename R>
     class ResourceManager {
     public:
-        template<typename T>
-        void registerLoader(typename ResourceCache<T>::LoaderFunc loader) {
-            auto typeIdx = std::type_index(typeid(T));
-            m_caches[typeIdx] = std::make_unique<ResourceCache<T>>(std::move(loader));
+        explicit ResourceManager(std::shared_ptr<IResourceLoader<R>> loader)
+        : m_loader(loader) {}
+
+        ~ResourceManager() = default;
+
+        std::optional<Ref<R>> get(const std::string& absolutePath) {
+            std::lock_guard<std::mutex> lock(mutex_);
+
+            auto it = m_cache.find(absolutePath);
+            if (it != m_cache.end()) {
+                if (auto ptr = it->second.lock())
+                    return ptr;
+            }
+
+            auto loaded = m_loader->load(absolutePath);
+            if (!loaded.has_value()) {
+                std::cerr << "Erreur : Impossible de charger la ressource '" << absolutePath << "'\n";
+                return std::nullopt;
+            }
+            m_cache[absolutePath] = *loaded;
+            return *loaded;
         }
 
-        template<typename T>
-        Ref<T> getOrLoad(const std::string &name) {
-            return getCache<T>().getOrLoad(name);
-        }
-
-        template<typename T>
-        Ref<T> forceReload(const std::string &name) {
-            return getCache<T>().forceReload(name);
-        }
-
-        template<typename T>
-        Ref<T> get(const std::string &name) {
-            return getCache<T>().get(name);
-        }
-
-        template<typename T>
-        bool exists(const std::string &name) {
-            return getCache<T>().exists(name);
-        }
-
-        template<typename T>
-        void unload(const std::string &name) {
-            getCache<T>().unload(name);
-        }
-
-        // Utilitaires pour la gestion globale
-        void clearAll() {
-            for (auto &[type, cache]: m_caches)
-                cache->clear();
-        }
-
-        template<typename T>
-        void clearType() {
-            getCache<T>().clear();
-        }
-
-        template<typename T>
-        size_t getLoadedCount() {
-            return getCache<T>().size();
+        void clear() {
+            std::lock_guard<std::mutex> lock(mutex_);
+            m_cache.clear();
         }
 
     private:
-        std::unordered_map<std::type_index, std::unique_ptr<IResourceCache>> m_caches;
-
-        template<typename T>
-        ResourceCache<T> &getCache() {
-            auto typeIdx = std::type_index(typeid(T));
-            auto it = m_caches.find(typeIdx);
-            if (it == m_caches.end())
-                throw std::runtime_error("No ResourceCache registered for this type");
-
-            return static_cast<ResourceCache<T> &>(*it->second);
-        }
+        std::unordered_map<std::string, std::weak_ptr<R>> m_cache;
+        Ref<IResourceLoader<R>> m_loader;
+        std::mutex mutex_;
     };
 
 }

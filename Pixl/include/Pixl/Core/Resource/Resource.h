@@ -15,28 +15,37 @@
 
 namespace Pixl {
 
+    // Classe de base simple pour toutes les ressources
     class Resource {
     public:
         virtual ~Resource() = default;
 
-        virtual void use() const = 0;
-
-        const std::string &getName() const { return name; }
-
-    protected:
-        explicit Resource(std::string name) : name(std::move(name)) {}
-
-    private:
-        std::string name;
+        virtual void use() const {}
     };
 
+    // Exemple de ressource texture
     class Texture : public Resource {
     public:
-        explicit Texture(const std::string &name) : Resource(name) {}
+        int getWidth() const { return m_width; }
+        int getHeight() const { return m_height; }
+        const std::vector<uint8_t>& getData() const { return m_data; }
 
-        void use() const override {
-            std::cout << "Using texture: " << getName() << "\n";
-        }
+    private:
+        friend class TextureLoader; // seul TextureLoader peut modifier ces membres
+
+        void setSize(int w, int h) { m_width = w; m_height = h; }
+        void setData(std::vector<uint8_t>&& data) { m_data = std::move(data); }
+
+        int m_width = 0;
+        int m_height = 0;
+        std::vector<uint8_t> m_data; // pixels RGBA8 par exemple
+
+        // Optionnel: paramètres de wrapping/filter
+        int m_wrapMode = 0;
+        int m_filter = 0;
+
+        void setWrapMode(int mode) { m_wrapMode = mode; }
+        void setFilter(int filter) { m_filter = filter; }
     };
 
 }

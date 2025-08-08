@@ -12,7 +12,7 @@
 #include "Pixl/Core/Time/Time.h"
 #include "Pixl/Core/Layer/Layer.h"
 #include "Pixl/Core/Layer/LayerStack.h"
-#include "Pixl/Core/Resource/ResourceManager.h"
+#include "Pixl/Core/Resource/ResourceService.h"
 
 #include <memory>
 
@@ -36,7 +36,7 @@ namespace Pixl {
 
         Window& getWindow() { return *m_window; }
 
-        ResourceManager& getResourceManager() { return *m_resourceManager; }
+        ResourceService& getResourceService() { return *m_resourceService; }
 
         void close();
 
@@ -53,7 +53,7 @@ namespace Pixl {
     private:
         ApplicationSpecification m_specification;
         Scope<Window> m_window;
-        Scope<ResourceManager> m_resourceManager;
+        Scope<ResourceService> m_resourceService;
         bool m_Running = true;
         bool m_minimized = false;
         LayerStack m_LayerStack;

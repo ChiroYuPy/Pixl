@@ -39,6 +39,10 @@ set(SOURCES
         src/Pixl/Rendering/Objects/ShaderReflection.cpp
         src/Pixl/Rendering/Material/Material.cpp
         src/Pixl/Core/Resource/FileTextureLoader.cpp
+        include/Pixl/Core/Resource/TextureLoader.h
+        src/Pixl/Core/Resource/TextureLoader.cpp
+        src/Pixl/Core/Resource/ResourceService.cpp
+        include/Pixl/Core/Resource/ResourceService.h
 )
 
 add_library(Pixl STATIC ${SOURCES})

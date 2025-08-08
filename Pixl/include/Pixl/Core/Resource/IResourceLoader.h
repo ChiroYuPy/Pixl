@@ -7,13 +7,15 @@
 
 #include "Pixl/Core/Base.h"
 
+#include <optional>
+
 namespace Pixl {
 
-    template<typename T>
+    template<typename R>
     class IResourceLoader {
     public:
         virtual ~IResourceLoader() = default;
-        virtual Ref<T> load(const std::string& logicalPath) = 0;
+        virtual std::optional<Ref<R>> load(const std::string& path) = 0;
     };
 
 }
