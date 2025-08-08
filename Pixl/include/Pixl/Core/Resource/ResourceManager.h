@@ -5,6 +5,7 @@
 #ifndef PIXLENGINE_RESOURCEMANAGER_H
 #define PIXLENGINE_RESOURCEMANAGER_H
 
+#include "Pixl/Core/Application.h"
 #include "ResourceCache.h"
 
 namespace Pixl {

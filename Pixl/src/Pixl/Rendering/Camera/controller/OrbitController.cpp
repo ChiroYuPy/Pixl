@@ -16,6 +16,8 @@ namespace Pixl {
             glm::vec3 dir = glm::normalize(pos - target);
             azimuth = glm::degrees(atan2(dir.x, dir.z));
             elevation = glm::degrees(asin(dir.y));
+
+            updateCameraPosition();
         }
     }
 
@@ -113,16 +115,21 @@ namespace Pixl {
         camera->lookAt(target);
     }
 
+    void OrbitController::setOrientation(float a, float e) {
+        azimuth = a;
+        elevation = e;
+
+        elevation = glm::clamp(elevation, minElevation, maxElevation);
+
+        while (azimuth > 180.0f) azimuth -= 360.0f;
+        while (azimuth < -180.0f) azimuth += 360.0f;
+    }
+
     void OrbitController::handleOrbit(float dx, float dy) {
         azimuth -= dx;
         elevation += dy;
 
-        // Contraindre l'élévation
-        elevation = glm::clamp(elevation, minElevation, maxElevation);
-
-        // Normaliser l'azimuth
-        while (azimuth > 180.0f) azimuth -= 360.0f;
-        while (azimuth < -180.0f) azimuth += 360.0f;
+        setOrientation(azimuth - dx, elevation + dy);
     }
 
     void OrbitController::handlePan(float dx, float dy) {

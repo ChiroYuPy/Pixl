@@ -10,9 +10,10 @@ void CameraTestLayer::onAttach() {
     // camera & cameraController setup
     float ar = Pixl::Application::get().getWindow().getAspectRatio();
     camera = Pixl::MakeScope<Pixl::PerspectiveCamera>(90.f, ar, 0.1f, 10000.f);
-    camera->setPosition({12,12,12});
-    camera->lookAt({0,0,0});
+    camera->setPosition({3, 3, 3});
+
     cameraController = Pixl::MakeScope<Pixl::OrbitController>(camera.get());
+    cameraController->setOrientation(135, 45);
 
     // Cube & material setup
     auto geo = Pixl::Geometry::createCube();
@@ -107,12 +108,10 @@ void CameraTestLayer::onEvent(Pixl::Event &event) {
 
             case Pixl::Key::R:
                 if (cameraController) {
-                    camera->setPosition({3.0f, 3.0f, 3.0f});
-                    camera->lookAt({0.0f, 0.0f, 0.0f});
-
-                    cameraController->setTarget({0.0f, 0.0f, 0.0f});
-                    cameraController->setDistance(glm::length(glm::vec3(3.0f, 3.0f, 3.0f)));
                     cameraController->reset();
+
+                    cameraController->setDistance(glm::length(glm::vec3(3.0f, 3.0f, 3.0f)));
+                    cameraController->setOrientation(135, 45);
 
                     std::cout << "Camera reset to initial position" << std::endl;
                 }

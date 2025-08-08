@@ -47,6 +47,8 @@ namespace Pixl {
         void setZoomSpeed(float speed) { zoomSpeed = speed; }
         void setPanSpeed(float speed) { panSpeed = speed; }
 
+        void setOrientation(float a, float e);
+
         const glm::vec3& getTarget() const { return target; }
         float getDistance() const { return distance; }
 
