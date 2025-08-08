@@ -53,6 +53,8 @@ private:
     Pixl::Scope<Pixl::Mesh> mesh;
 
     float elapsedTime = 0.0f;
+
+    glm::mat4 computeAnimatedTransform(float t);
 };
 
 #endif //PIXLENGINE_ANIMATIONTRANSFORMTESTLAYER_H

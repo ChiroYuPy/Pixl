@@ -1,25 +1,3 @@
-//
-// Created by ChiroYuki on 08/08/2025.
-//
-
-#include "layers/HueExempleLayer.h"
-
-void HueExempleLayer::onAttach() {
-    m_totalTime = 0.0f;
-
-
-    const std::string vertexSrc = R"(
-#version 330 core
-out vec2 vUV;
-void main()
-{
-    vec2 positions[3] = vec2[](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
-    gl_Position = vec4(positions[gl_VertexID], 0.0, 1.0);
-    vUV = positions[gl_VertexID] * 0.5 + 0.5;
-}
-)";
-
-    const std::string fragmentSrc = R"(
 #version 330 core
 in vec2 vUV;
 out vec4 FragColor;
@@ -188,30 +166,4 @@ void main() {
     finalColor = clamp(finalColor, 0.0, 1.0);
 
     FragColor = vec4(finalColor, 1.0);
-}
-)";
-
-    shader = Pixl::MakeRef<Pixl::Shader>();
-    shader->loadFromSource(vertexSrc, fragmentSrc);
-
-}
-
-void HueExempleLayer::onDetach() {
-
-}
-
-void HueExempleLayer::onUpdate(Pixl::Time &deltaTime) {
-    Pixl::RenderCommand::Clear();
-
-    m_totalTime += deltaTime.asSeconds();
-
-    shader->bind();
-    shader->setFloat("u_time", m_totalTime);
-    Pixl::RenderCommand::DrawArrays(Pixl::DrawMode::Triangles, 0, 3);
-    shader->unbind();
-
-}
-
-void HueExempleLayer::onEvent(Pixl::Event &event) {
-
 }

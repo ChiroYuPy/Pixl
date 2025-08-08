@@ -15,7 +15,9 @@ public:
     void onEvent(Pixl::Event& event) override;
 
 private:
-    float m_Hue = 0.0f;
+    Pixl::Ref<Pixl::Shader> shader;
+
+    float m_totalTime = 0.0f;
 };
 
 #endif //PIXLENGINE_HUEEXEMPLELAYER_H
