@@ -14,7 +14,7 @@ add_executable(Sandbox src/SandBox.cpp
         src/layers/ResourceLoadingTestLayer.cpp
         include/layers/ResourceLoadingTestLayer.h
         src/layers/AnimationTransformTestLayer.cpp
-        src/layers/AnimationTransformTestLayer.h
+        include/layers/AnimationTransformTestLayer.h
 )
 
 target_include_directories(Pixl PUBLIC

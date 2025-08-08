@@ -11,8 +11,8 @@ class HueExempleLayer : public Pixl::Layer {
 public:
     void onAttach() override;
     void onDetach() override;
-    void onUpdate(Pixl::Time& dt) override;
-    void onEvent(Pixl::Event& e) override;
+    void onUpdate(Pixl::Time& deltaTime) override;
+    void onEvent(Pixl::Event& event) override;
 
 private:
     float m_Hue = 0.0f;

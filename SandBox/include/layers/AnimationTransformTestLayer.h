@@ -1,13 +1,13 @@
 //
-// Created by ChiroYuki on 07/08/2025.
+// Created by ChiroYuki on 08/08/2025.
 //
 
-#ifndef PIXLENGINE_CAMERATESTLAYER_H
-#define PIXLENGINE_CAMERATESTLAYER_H
+#ifndef PIXLENGINE_ANIMATIONTRANSFORMTESTLAYER_H
+#define PIXLENGINE_ANIMATIONTRANSFORMTESTLAYER_H
 
 #include "Pixl/Pixl.h"
 
-const std::string CUBE_VERT = R"(
+const std::string CUBE_VERT_A = R"(
         #version 330 core
 
         layout(location = 0) in vec3 a_position;
@@ -21,7 +21,7 @@ const std::string CUBE_VERT = R"(
         }
     )";
 
-const std::string CUBE_FRAG = R"(
+const std::string CUBE_FRAG_A = R"(
         #version 330 core
 
         uniform vec4 u_color;
@@ -41,7 +41,7 @@ const std::string CUBE_FRAG = R"(
         }
     )";
 
-class CameraTestLayer : public Pixl::Layer {
+class AnimationTransformTestLayer : public Pixl::Layer {
 public:
     void onAttach() override;
     void onDetach() override;
@@ -49,9 +49,10 @@ public:
     void onEvent(Pixl::Event& event) override;
 
 private:
-    Pixl::Scope<Pixl::PerspectiveCamera>  camera;
-    Pixl::Scope<Pixl::OrbitController>    cameraController;
-    Pixl::Ref<Pixl::Mesh>                 mesh;
+    Pixl::Scope<Pixl::PerspectiveCamera> camera;
+    Pixl::Scope<Pixl::Mesh> mesh;
+
+    float elapsedTime = 0.0f;
 };
 
-#endif //PIXLENGINE_CAMERATESTLAYER_H
+#endif //PIXLENGINE_ANIMATIONTRANSFORMTESTLAYER_H

@@ -26,10 +26,10 @@ void CameraTestLayer::onDetach() {
 
 }
 
-void CameraTestLayer::onUpdate(Pixl::Time &dt) {
+void CameraTestLayer::onUpdate(Pixl::Time &deltaTime) {
     Pixl::Renderer::beginFrame(*camera);
 
-    cameraController->update(dt);
+    cameraController->update(deltaTime);
 
     glm::mat4 projMatrix = camera->getProjectionMatrix();
     glm::mat4 viewMatrix = camera->getViewMatrix();
@@ -65,26 +65,26 @@ void CameraTestLayer::onEvent(Pixl::Event &event) {
     });
 
     if (cameraControlEnabled) {
-        dispatcher.dispatch<Pixl::MouseMovedEvent>([this](Pixl::MouseMovedEvent& e) {
-            return cameraController->onMouseMoved(e);
+        dispatcher.dispatch<Pixl::MouseMovedEvent>([this](Pixl::MouseMovedEvent& event) {
+            return cameraController->onMouseMoved(event);
         });
 
-        dispatcher.dispatch<Pixl::MouseButtonPressedEvent>([this](Pixl::MouseButtonPressedEvent& e) {
-            return cameraController->onMousePressed(e);
+        dispatcher.dispatch<Pixl::MouseButtonPressedEvent>([this](Pixl::MouseButtonPressedEvent& event) {
+            return cameraController->onMousePressed(event);
         });
 
-        dispatcher.dispatch<Pixl::MouseButtonReleasedEvent>([this](Pixl::MouseButtonReleasedEvent& e) {
-            return cameraController->onMouseReleased(e);
+        dispatcher.dispatch<Pixl::MouseButtonReleasedEvent>([this](Pixl::MouseButtonReleasedEvent& event) {
+            return cameraController->onMouseReleased(event);
         });
 
-        dispatcher.dispatch<Pixl::MouseScrolledEvent>([this](Pixl::MouseScrolledEvent& e) {
-            return cameraController->onMouseScrolled(e);
+        dispatcher.dispatch<Pixl::MouseScrolledEvent>([this](Pixl::MouseScrolledEvent& event) {
+            return cameraController->onMouseScrolled(event);
         });
     }
 
     // --- Keyboard input ---
-    dispatcher.dispatch<Pixl::KeyPressedEvent>([&](Pixl::KeyPressedEvent& e) {
-        switch (e.getKeyCode()) {
+    dispatcher.dispatch<Pixl::KeyPressedEvent>([&](Pixl::KeyPressedEvent& event) {
+        switch (event.getKeyCode()) {
             case Pixl::Key::Escape:
                 if (cameraControlEnabled) {
                     Pixl::Input::setCursorMode(Pixl::CursorMode::Visible);
@@ -126,7 +126,7 @@ void CameraTestLayer::onEvent(Pixl::Event &event) {
         return false;
     });
 
-    dispatcher.dispatch<Pixl::WindowResizeEvent>([this](Pixl::WindowResizeEvent& e) {
+    dispatcher.dispatch<Pixl::WindowResizeEvent>([this](Pixl::WindowResizeEvent& event) {
         camera->setAspectRatio(Pixl::Application::get().getWindow().getAspectRatio());
         return false;
     });

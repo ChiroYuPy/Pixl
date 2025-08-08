@@ -31,10 +31,10 @@ glm::vec3 HSVtoRGB(float h, float s, float v) {
     return { r + m, g + m, b + m };
 }
 
-void HueExempleLayer::onUpdate(Pixl::Time &dt) {
+void HueExempleLayer::onUpdate(Pixl::Time &deltaTime) {
     Pixl::RenderCommand::Clear();
 
-    m_Hue += 60.0f * dt.asSeconds();
+    m_Hue += 60.0f * deltaTime.asSeconds();
     if (m_Hue >= 360.0f)
         m_Hue -= 360.0f;
 
@@ -42,6 +42,6 @@ void HueExempleLayer::onUpdate(Pixl::Time &dt) {
     Pixl::RenderCommand::SetClearColor({ rgb.r, rgb.g, rgb.b, 1.0f });
 }
 
-void HueExempleLayer::onEvent(Pixl::Event &e) {
+void HueExempleLayer::onEvent(Pixl::Event &event) {
 
 }
