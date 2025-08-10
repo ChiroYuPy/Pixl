@@ -9,12 +9,9 @@ set(PROJECT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_executable(Sandbox src/SandBox.cpp
         src/layers/CameraTestLayer.cpp
         src/layers/HueExempleLayer.cpp
-        include/layers/HueExempleLayer.h
-        include/SandBox.h
         src/layers/ResourceLoadingTestLayer.cpp
-        include/layers/ResourceLoadingTestLayer.h
         src/layers/AnimationTransformTestLayer.cpp
-        include/layers/AnimationTransformTestLayer.h
+        src/layers/EnttTestLayer.cpp
 )
 
 target_include_directories(Pixl PUBLIC

@@ -43,6 +43,17 @@ set(SOURCES
         src/Pixl/Core/Resource/TextureLoader.cpp
         src/Pixl/Core/Resource/ResourceService.cpp
         include/Pixl/Core/Resource/ResourceService.h
+        include/Pixl/Components.h
+        include/Pixl/Components/Transform.h
+        include/Pixl/Core/ECS/ISystem.h
+        src/Pixl/Systems/RenderSystem.cpp
+        include/Pixl/Systems/RenderSystem.h
+        include/Pixl/Core/ECS/SystemManager.h
+        include/Pixl/Core/ECS/Scene.h
+        include/Pixl/Core/ECS.h
+        src/Pixl/Core/ECS/SceneManager.cpp
+        include/Pixl/Core/ECS/SceneManager.h
+        include/Pixl/Systems/TransformSsytem.h
 )
 
 add_library(Pixl STATIC ${SOURCES})

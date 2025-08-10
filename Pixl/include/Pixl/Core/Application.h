@@ -13,13 +13,14 @@
 #include "Pixl/Core/Layer/Layer.h"
 #include "Pixl/Core/Layer/LayerStack.h"
 #include "Pixl/Core/Resource/ResourceService.h"
+#include "Pixl/Core/ECS/SystemManager.h"
+#include "Pixl/Core/ECS/SceneManager.h"
 
 #include <memory>
 
 namespace Pixl {
 
-    struct ApplicationSpecification
-    {
+    struct ApplicationSpecification {
         std::string Name = "Hazel Application";
         std::string workingDirectory;
     };
@@ -46,17 +47,24 @@ namespace Pixl {
 
         void run();
 
+        Scene& createScene(std::string name);
+
     private:
         bool onWindowClose(WindowCloseEvent& e);
         bool onWindowResize(WindowResizeEvent& e);
 
     private:
         ApplicationSpecification m_specification;
+
         Scope<Window> m_window;
         Scope<ResourceService> m_resourceService;
-        bool m_Running = true;
-        bool m_minimized = false;
+
         LayerStack m_LayerStack;
+        SceneManager m_sceneManager;
+        SystemManager m_systemManager;
+
+        bool m_running = true;
+        bool m_minimized = false;
 
     private:
         static Application* s_instance;

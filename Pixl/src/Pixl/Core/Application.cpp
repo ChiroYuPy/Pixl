@@ -7,6 +7,8 @@
 #include "Pixl/Rendering/Renderer/Renderer.h"
 #include "Pixl/Core/Window.h"
 #include "Pixl/Core/Time/Clock.h"
+#include "Pixl/Systems/RenderSystem.h"
+#include "Pixl/Systems/TransformSsytem.h"
 
 #include <filesystem>
 #include <ranges>
@@ -30,12 +32,16 @@ namespace Pixl {
 
         Renderer::Init();
 
-        // default events
-        WindowResizeEvent resizeEvent(m_window->getWidth(), m_window->getHeight(), m_window->getAspectRatio());
-        onEvent(resizeEvent);
+        // default systems
+        m_systemManager.add<TransformSystem>();
+        m_systemManager.add<RenderSystem>();
 
         // resources
         m_resourceService = MakeScope<ResourceService>();
+
+        // default events
+        WindowResizeEvent resizeEvent(m_window->getWidth(), m_window->getHeight(), m_window->getAspectRatio());
+        onEvent(resizeEvent);
     }
 
     Application::~Application() {
@@ -53,7 +59,7 @@ namespace Pixl {
     }
 
     void Application::close() {
-        m_Running = false;
+        m_running = false;
     }
 
     void Application::onEvent(Event& e) {
@@ -70,20 +76,28 @@ namespace Pixl {
     void Application::run() {
         Clock clock;
 
-        while (m_Running) {
-            Time deltaTime = clock.restart();
+        while (m_running) {
+            try {
+                Time deltaTime = clock.restart();
 
-            if (!m_minimized) {
-                for (Layer* layer : m_LayerStack)
-                    layer->onUpdate(deltaTime);
+                if (!m_minimized) {
+                    auto &activeScene = m_sceneManager.getActiveScene();
+                    m_systemManager.update(activeScene, deltaTime);
+
+                    for (Layer *layer: m_LayerStack)
+                        layer->onUpdate(deltaTime);
+                }
+
+                m_window->onUpdate();
             }
-
-            m_window->onUpdate();
+            catch (const std::exception& e) {
+                std::cerr << "Error in main loop: " << e.what() << std::endl;
+            }
         }
     }
 
     bool Application::onWindowClose(WindowCloseEvent& e) {
-        m_Running = false;
+        m_running = false;
         return true;
     }
 
@@ -98,6 +112,10 @@ namespace Pixl {
         Renderer::OnWindowResize(e.getWidth(), e.getHeight());
 
         return false;
+    }
+
+    Scene& Application::createScene(std::string name) {
+        return m_sceneManager.loadScene(name);
     }
 
 }
