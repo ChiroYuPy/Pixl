@@ -28,7 +28,7 @@ namespace Pixl {
         bool loadFromFile(const std::string& vertexPath, const std::string& fragmentPath);
 
         void bind() const;
-        static void unbind();
+        void unbind() const;
 
         void setInt(const std::string& name, int value) const;
         void setInt2(const std::string &name, const glm::ivec2 &value) const;

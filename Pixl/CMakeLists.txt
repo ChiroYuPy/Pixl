@@ -55,6 +55,8 @@ set(SOURCES
         include/Pixl/Core/ECS/SceneManager.h
         include/Pixl/Systems/TransformSystem.h
         include/Pixl/Components/MeshComponent.h
+        include/Pixl/Components/CameraProjectionComponent.h
+        src/Pixl/Systems/TransformSystem.cpp
 )
 
 add_library(Pixl STATIC ${SOURCES})

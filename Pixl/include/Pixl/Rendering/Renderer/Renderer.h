@@ -33,7 +33,8 @@ namespace Pixl {
 
         static void onWindowResize(uint32_t width, uint32_t height);
 
-        static void setActiveCamera(const Ref <ICamera> &camera);
+        static void setViewMatrix(const glm::mat4& camera);
+        static void setProjMatrix(const glm::mat4& camera);
 
         static void beginFrame();
         static void endFrame();
@@ -47,8 +48,9 @@ namespace Pixl {
 
     private:
         struct SceneData {
-            Ref<ICamera> camera;
-            float aspectRatio;
+            float aspectRatio = 1.f;
+            glm::mat4 view = glm::mat4(1.f);
+            glm::mat4 proj = glm::mat4(1.f);
         };
 
         struct RenderCommandData {

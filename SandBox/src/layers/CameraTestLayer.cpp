@@ -10,7 +10,6 @@ void CameraTestLayer::onAttach() {
     float ar = Pixl::Application::get().getWindow().getAspectRatio();
     camera = Pixl::MakeRef<Pixl::PerspectiveCamera>(90.f, ar, 0.1f, 10000.f);
     camera->setPosition({3, 3, 3});
-    Pixl::Renderer::setActiveCamera(camera);
 
     cameraController = Pixl::MakeScope<Pixl::OrbitController>(camera.get());
     cameraController->setOrientation(135, 45);
@@ -22,6 +21,9 @@ void CameraTestLayer::onDetach() {
 
 void CameraTestLayer::onUpdate(Pixl::Time &deltaTime) {
     cameraController->update(deltaTime);
+
+    Pixl::Renderer::setProjMatrix(camera->getProjectionMatrix());
+    Pixl::Renderer::setViewMatrix(camera->getViewMatrix());
 }
 
 void CameraTestLayer::onEvent(Pixl::Event &event) {

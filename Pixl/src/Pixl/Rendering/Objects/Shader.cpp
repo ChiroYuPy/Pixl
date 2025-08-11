@@ -87,7 +87,7 @@ namespace Pixl {
         glUseProgram(m_rendererID);
     }
 
-    void Shader::unbind() {
+    void Shader::unbind() const {
         glUseProgram(0);
     }
 

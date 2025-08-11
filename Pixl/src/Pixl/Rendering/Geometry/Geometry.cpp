@@ -10,8 +10,8 @@ namespace Pixl {
         m_vertexArray->bind();
     }
 
-    void Geometry::unbind() {
-        VertexArray::unbind();
+    void Geometry::unbind() const {
+        m_vertexArray->unbind();
     }
 
     void Geometry::setVertexData(const void* vertices, uint32_t size, const VertexLayout& layout) {

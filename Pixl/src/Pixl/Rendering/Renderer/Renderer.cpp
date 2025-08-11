@@ -17,11 +17,10 @@ namespace Pixl {
 
     void Renderer::init() {
         RenderCommand::init();
-        // Renderer2D::init();
     }
 
     void Renderer::shutdown() {
-        // Renderer2D::shutdown();
+
     }
 
     void Renderer::onWindowResize(uint32_t width, uint32_t height) {
@@ -29,8 +28,12 @@ namespace Pixl {
         s_sceneData->aspectRatio = static_cast<float>(width) / static_cast<float>(height);
     }
 
-    void Renderer::setActiveCamera(const Ref<ICamera>& camera) {
-        s_sceneData->camera = camera;
+    void Renderer::setViewMatrix(const glm::mat4& view) {
+        s_sceneData->view = view;
+    }
+
+    void Renderer::setProjMatrix(const glm::mat4& proj) {
+        s_sceneData->proj = proj;
     }
 
     void Renderer::beginFrame() {
@@ -38,9 +41,6 @@ namespace Pixl {
     }
 
     void Renderer::endFrame() {
-        Geometry::unbind();
-        Shader::unbind();
-
         auto stats = Pixl::Renderer::getStats();
         std::cout << "Draw Calls: " << stats.drawCalls << ", Triangles: " << stats.triangles << std::endl;
     }
@@ -66,8 +66,8 @@ namespace Pixl {
                 shader->bind();
                 currentShaderID = shader->getID();
 
-                const glm::mat4 proj = s_sceneData->camera->getProjectionMatrix();
-                const glm::mat4 view = s_sceneData->camera->getViewMatrix();
+                const glm::mat4 proj = s_sceneData->proj;
+                const glm::mat4 view = s_sceneData->view;
                 shader->setMat4("u_viewProjection", proj * view);
             }
             shader->setMat4("u_transform", cmd.transform);
@@ -89,10 +89,9 @@ namespace Pixl {
                 }
 
                 s_stats.drawCalls++;
-
-                vertexArray->unbind();
             }
         }
+
         s_renderQueue.clear();
     }
 

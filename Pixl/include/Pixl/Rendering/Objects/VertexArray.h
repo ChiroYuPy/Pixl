@@ -19,7 +19,7 @@ namespace Pixl {
         VertexArray& operator=(VertexArray&& other) noexcept;
 
         void bind() const;
-        static void unbind();
+        void unbind() const;
 
         void addVertexBuffer(const Ref<VertexBuffer>& vertexBuffer, const VertexLayout& layout);
         void setIndexBuffer(const Ref<IndexBuffer>& indexBuffer);
