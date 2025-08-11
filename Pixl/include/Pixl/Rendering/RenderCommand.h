@@ -130,7 +130,7 @@ namespace Pixl {
     class RenderCommand {
     public:
         // Initialization
-        static void Init();
+        static void init();
         static void Shutdown();
 
         // Viewport and scissor

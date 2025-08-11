@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <string>
 #include <glm/glm.hpp>
-#include "glad/glad.h"
+#include <glad/glad.h>
 
 namespace Pixl {
 
@@ -28,7 +28,7 @@ namespace Pixl {
         bool loadFromFile(const std::string& vertexPath, const std::string& fragmentPath);
 
         void bind() const;
-        void unbind() const;
+        static void unbind();
 
         void setInt(const std::string& name, int value) const;
         void setInt2(const std::string &name, const glm::ivec2 &value) const;

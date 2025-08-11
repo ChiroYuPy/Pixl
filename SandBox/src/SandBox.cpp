@@ -6,12 +6,14 @@
 
 #include "layers/CameraTestLayer.h"
 #include "layers/EnttTestLayer.h"
+#include "layers/AnimationTransformTestLayer.h"
 
 #include <iostream>
 
 SandboxApp::SandboxApp(const Pixl::ApplicationSpecification &specification)
         : Pixl::Application(specification) {
     PushLayer(new CameraTestLayer());
+    PushLayer(new EnttTestLayer());
 }
 
 Pixl::Application* Pixl::createApplication() {

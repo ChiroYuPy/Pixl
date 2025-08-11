@@ -8,7 +8,7 @@
 #include "Pixl/Core/Window.h"
 #include "Pixl/Core/Time/Clock.h"
 #include "Pixl/Systems/RenderSystem.h"
-#include "Pixl/Systems/TransformSsytem.h"
+#include "Pixl/Systems/TransformSystem.h"
 
 #include <filesystem>
 #include <ranges>
@@ -30,7 +30,7 @@ namespace Pixl {
         m_window = MakeScope<Window>(WindowProperties(m_specification.Name));
         m_window->setEventCallback(MakeMemberCallback(this, &Application::onEvent));
 
-        Renderer::Init();
+        Renderer::init();
 
         // default systems
         m_systemManager.add<TransformSystem>();
@@ -45,7 +45,7 @@ namespace Pixl {
     }
 
     Application::~Application() {
-        Renderer::Shutdown();
+        Renderer::shutdown();
     }
 
     void Application::PushLayer(Layer* layer) {
@@ -80,6 +80,8 @@ namespace Pixl {
             try {
                 Time deltaTime = clock.restart();
 
+                Renderer::beginFrame();
+
                 if (!m_minimized) {
                     auto &activeScene = m_sceneManager.getActiveScene();
                     m_systemManager.update(activeScene, deltaTime);
@@ -89,6 +91,7 @@ namespace Pixl {
                 }
 
                 m_window->onUpdate();
+                Renderer::endFrame();
             }
             catch (const std::exception& e) {
                 std::cerr << "Error in main loop: " << e.what() << std::endl;
@@ -109,7 +112,7 @@ namespace Pixl {
 
         m_minimized = false;
 
-        Renderer::OnWindowResize(e.getWidth(), e.getHeight());
+        Renderer::onWindowResize(e.getWidth(), e.getHeight());
 
         return false;
     }

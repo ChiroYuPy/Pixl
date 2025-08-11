@@ -5,6 +5,6 @@
 #ifndef PIXLENGINE_COMPONENTS_H
 #define PIXLENGINE_COMPONENTS_H
 
-#include "Pixl/Components/Transform.h"
+#include "Pixl/Components/TransformComponent.h"
 
 #endif //PIXLENGINE_COMPONENTS_H

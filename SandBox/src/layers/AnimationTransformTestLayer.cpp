@@ -50,8 +50,6 @@ glm::mat4 AnimationTransformTestLayer::computeAnimatedTransform(float t) {
 void AnimationTransformTestLayer::onUpdate(Pixl::Time &deltaTime) {
     elapsedTime += deltaTime.asSeconds();
 
-    Pixl::Renderer::beginFrame(*camera);
-
     glm::mat4 projMatrix = camera->getProjectionMatrix();
     glm::mat4 viewMatrix = camera->getViewMatrix();
     glm::mat4 viewProj = projMatrix * viewMatrix;
@@ -63,8 +61,6 @@ void AnimationTransformTestLayer::onUpdate(Pixl::Time &deltaTime) {
 
     mesh->setTransform(transform);
     mesh->render(viewProj);
-
-    Pixl::Renderer::endFrame();
 }
 
 void AnimationTransformTestLayer::onEvent(Pixl::Event &event) {

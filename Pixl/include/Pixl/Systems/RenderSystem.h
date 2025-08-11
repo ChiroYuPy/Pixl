@@ -6,23 +6,17 @@
 #define PIXLENGINE_RENDERSYSTEM_H
 
 #include "Pixl/Core/ECS/ISystem.h"
-#include "Pixl/Components/Transform.h"
+#include "Pixl/Components/TransformComponent.h"
+#include "Pixl/Rendering/Objects/Shader.h"
+#include "Pixl/Rendering/Geometry/Geometry.h"
 
 namespace Pixl {
 
     class RenderSystem : public ISystem {
     public:
-        void update(Scene& scene, Time deltaTime) override {
-            auto& registry = scene.getRegistry();
-            auto view = registry.view<Transform>();
-            for (auto entity : view) {
-                auto& transform = view.get<Transform>(entity);
-                printf("Rendering entity at position %.2f, %.2f, %.2f\n",
-                       transform.position.x,
-                       transform.position.y,
-                       transform.position.z);
-            }
-        }
+        RenderSystem();
+
+        void update(Scene& scene, Time deltaTime) override;
     };
 
 }

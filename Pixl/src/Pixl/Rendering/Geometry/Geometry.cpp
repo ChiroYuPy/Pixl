@@ -6,6 +6,14 @@
 
 namespace Pixl {
 
+    void Geometry::bind() const {
+        m_vertexArray->bind();
+    }
+
+    void Geometry::unbind() {
+        VertexArray::unbind();
+    }
+
     void Geometry::setVertexData(const void* vertices, uint32_t size, const VertexLayout& layout) {
         if (!m_vertexArray) {
             m_vertexArray = MakeRef<VertexArray>();

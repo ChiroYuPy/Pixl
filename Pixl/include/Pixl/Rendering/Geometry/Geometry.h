@@ -18,6 +18,9 @@ namespace Pixl {
         Geometry() = default;
         virtual ~Geometry() = default;
 
+        void bind() const;
+        static void unbind();
+
         void setVertexData(const void* vertices, uint32_t size, const VertexLayout& layout);
         void setIndexData(const std::vector<uint32_t>& indices);
 

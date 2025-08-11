@@ -63,7 +63,7 @@ namespace Pixl {
     }
 
     // Initialization
-    void RenderCommand::Init() {
+    void RenderCommand::init() {
 // #ifdef PIXL_DEBUG
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);

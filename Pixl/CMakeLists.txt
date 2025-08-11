@@ -44,7 +44,7 @@ set(SOURCES
         src/Pixl/Core/Resource/ResourceService.cpp
         include/Pixl/Core/Resource/ResourceService.h
         include/Pixl/Components.h
-        include/Pixl/Components/Transform.h
+        include/Pixl/Components/TransformComponent.h
         include/Pixl/Core/ECS/ISystem.h
         src/Pixl/Systems/RenderSystem.cpp
         include/Pixl/Systems/RenderSystem.h
@@ -53,7 +53,8 @@ set(SOURCES
         include/Pixl/Core/ECS.h
         src/Pixl/Core/ECS/SceneManager.cpp
         include/Pixl/Core/ECS/SceneManager.h
-        include/Pixl/Systems/TransformSsytem.h
+        include/Pixl/Systems/TransformSystem.h
+        include/Pixl/Components/MeshComponent.h
 )
 
 add_library(Pixl STATIC ${SOURCES})
