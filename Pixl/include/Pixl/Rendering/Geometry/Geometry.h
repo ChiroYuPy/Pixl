@@ -6,36 +6,109 @@
 #define PIXLENGINE_GEOMETRY_H
 
 #include "Pixl/Core/Base.h"
-#include "Pixl/Rendering/Objects/VertexLayout.h"
+#include "Pixl/Rendering/Objects/VertexFormat.h"
 #include "Pixl/Rendering/Objects/VertexArray.h"
 
 #include <cstdint>
+#include <utility>
 
 namespace Pixl {
 
     class Geometry {
     public:
-        Geometry() = default;
-        virtual ~Geometry() = default;
+        Geometry(VertexFormat format, const void* vertices, size_t vertexDataSize,
+                 const unsigned int* indices = nullptr, size_t indexCount = 0)
+                : vertexFormat(std::move(format)), indices(indices != nullptr)
+        {
+            vao.bind();
 
-        void bind() const;
-        void unbind() const;
+            vbo.setData(vertices, vertexDataSize);
+            vertexCount = vertexDataSize / vertexFormat.getStride();
 
-        void setVertexData(const void* vertices, uint32_t size, const VertexLayout& layout);
-        void setIndexData(const std::vector<uint32_t>& indices);
+            if (indices) {
+                ebo.setData(indices, indexCount);
+                this->indexCount = indexCount;
+            }
 
-        const Ref<VertexArray>& getVertexArray() const { return m_vertexArray; }
-        uint32_t getVertexCount() const { return m_vertexCount; }
-        uint32_t getIndexCount() const { return m_vertexArray ? m_vertexArray->getIndexCount() : 0; }
-        bool hasIndices() const { return m_vertexArray && m_vertexArray->hasIndexBuffer(); }
+            vao.setVertexFormat(vertexFormat);
 
-        static Ref<Geometry> createTriangle();
-        static Ref<Geometry> createQuad();
-        static Ref<Geometry> createCube();
+            vao.unbind();
+            vbo.unbind();
+            if (indices) ebo.unbind();
+        }
+
+        void bind() const {
+            vao.bind();
+        }
+
+        void unbind() const {
+            vao.unbind();
+        }
+
+        size_t getIndexCount() const {
+            return indexCount;
+        }
+
+        size_t getVertexCount() const {
+            return vertexCount;
+        }
+
+        bool hasIndices() const {
+            return indices;
+        }
+
+        struct Vertex {
+            float position[3];
+            float color[4];
+            static VertexFormat* format;
+        };
+
+        static Ref<Geometry> createCube() {
+            static VertexFormat cubeFormat;
+
+            static bool initialized = false;
+            if (!initialized) {
+                cubeFormat.addAttribute(VertexAttributeType::Float3, 0, offsetof(Vertex, position));
+                cubeFormat.addAttribute(VertexAttributeType::Float4, 1, offsetof(Vertex, color));
+                initialized = true;
+            }
+
+            Vertex vertices[] = {
+                    {{-1.f, -1.f, -1.f}, {1.f, 0.f, 0.f, 1.f}},
+                    {{ 1.f, -1.f, -1.f}, {0.f, 1.f, 0.f, 1.f}},
+                    {{ 1.f,  1.f, -1.f}, {0.f, 0.f, 1.f, 1.f}},
+                    {{-1.f,  1.f, -1.f}, {1.f, 1.f, 0.f, 1.f}},
+                    {{-1.f, -1.f,  1.f}, {1.f, 0.f, 1.f, 1.f}},
+                    {{ 1.f, -1.f,  1.f}, {0.f, 1.f, 1.f, 1.f}},
+                    {{ 1.f,  1.f,  1.f}, {1.f, 1.f, 1.f, 1.f}},
+                    {{-1.f,  1.f,  1.f}, {0.f, 0.f, 0.f, 1.f}},
+            };
+
+            unsigned int indices[] = {
+                    0, 1, 2, 2, 3, 0,
+                    4, 5, 6, 6, 7, 4,
+                    0, 4, 7, 7, 3, 0,
+                    1, 5, 6, 6, 2, 1,
+                    3, 2, 6, 6, 7, 3,
+                    0, 1, 5, 5, 4, 0,
+            };
+
+            return MakeRef<Geometry>(
+                    cubeFormat,
+                    vertices, sizeof(vertices),
+                    indices, sizeof(indices) / sizeof(indices[0])
+            );
+        }
 
     protected:
-        Ref<VertexArray> m_vertexArray;
-        uint32_t m_vertexCount = 0;
+        VertexArray vao;
+        VertexBuffer vbo;
+        IndexBuffer ebo;
+
+        VertexFormat vertexFormat;
+        size_t indexCount = 0;
+        size_t vertexCount = 0;
+        bool indices = false;
     };
 
 }

@@ -34,7 +34,7 @@ set(SOURCES
         src/Pixl/Core/Layer/LayerStack.cpp
         src/Pixl/Rendering/Camera/controller/BaseCameraController.cpp
         src/Pixl/Rendering/Camera/controller/OrbitController.cpp
-        src/Pixl/Rendering/Objects/VertexLayout.cpp
+        src/Pixl/Rendering/Objects/VertexFormat.cpp
         src/Pixl/Rendering/Geometry/Geometry.cpp
         src/Pixl/Rendering/Objects/ShaderReflection.cpp
         src/Pixl/Rendering/Material/Material.cpp

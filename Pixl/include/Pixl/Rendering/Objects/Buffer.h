@@ -11,60 +11,66 @@
 
 namespace Pixl {
 
-    enum class BufferUsage {
-        Static = GL_STATIC_DRAW,
-        Dynamic = GL_DYNAMIC_DRAW,
-        Stream = GL_STREAM_DRAW
-    };
-
     class VertexBuffer {
     public:
-        VertexBuffer(uint32_t size, BufferUsage usage = BufferUsage::Dynamic);
-        VertexBuffer(const void* vertices, uint32_t size, BufferUsage usage = BufferUsage::Static);
-        ~VertexBuffer();
+        GLuint ID;
 
-        // Non-copiable mais déplaçable
-        VertexBuffer(const VertexBuffer&) = delete;
-        VertexBuffer& operator=(const VertexBuffer&) = delete;
-        VertexBuffer(VertexBuffer&& other) noexcept;
-        VertexBuffer& operator=(VertexBuffer&& other) noexcept;
+        VertexBuffer() {
+            glGenBuffers(1, &ID);
+            if (ID == 0)
+                throw std::runtime_error("Failed to generate VBO");
+        }
 
-        void bind() const;
-        void unbind() const;
+        ~VertexBuffer() {
+            if (ID != 0)
+                glDeleteBuffers(1, &ID);
+        }
 
-        void setData(const void* data, uint32_t size);
-        void setSubData(const void* data, uint32_t size, uint32_t offset = 0);
+        void bind() const {
+            glBindBuffer(GL_ARRAY_BUFFER, ID);
+        }
 
-        uint32_t getSize() const { return m_size; }
-        GL_ID getID() const { return m_rendererID; }
+        void unbind() const {
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        }
 
-    private:
-        GL_ID m_rendererID = 0;
-        uint32_t m_size = 0;
-        BufferUsage m_usage;
+        void setData(const void* data, size_t size, GLenum usage = GL_STATIC_DRAW) {
+            bind();
+            glBufferData(GL_ARRAY_BUFFER, size, data, usage);
+        }
     };
 
     class IndexBuffer {
     public:
-        IndexBuffer(const uint32_t* indices, uint32_t count, BufferUsage usage = BufferUsage::Static);
-        ~IndexBuffer();
+        GLuint ID;
+        size_t count;
 
-        // Non-copiable mais déplaçable
-        IndexBuffer(const IndexBuffer&) = delete;
-        IndexBuffer& operator=(const IndexBuffer&) = delete;
-        IndexBuffer(IndexBuffer&& other) noexcept;
-        IndexBuffer& operator=(IndexBuffer&& other) noexcept;
+        IndexBuffer() : count(0) {
+            glGenBuffers(1, &ID);
+            if (ID == 0)
+                throw std::runtime_error("Failed to generate EBO");
+        }
 
-        void bind() const;
-        void unbind() const;
+        ~IndexBuffer() {
+            if (ID != 0)
+                glDeleteBuffers(1, &ID);
+        }
 
-        uint32_t getCount() const { return m_count; }
-        GL_ID getID() const { return m_rendererID; }
+        void bind() const {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID);
+        }
 
-    private:
-        GL_ID m_rendererID = 0;
-        uint32_t m_count = 0;
+        void unbind() const {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        }
+
+        void setData(const void* data, size_t countIndices, GLenum usage = GL_STATIC_DRAW) {
+            bind();
+            count = countIndices;
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, usage);
+        }
     };
+
 
 }
 

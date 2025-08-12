@@ -72,24 +72,21 @@ namespace Pixl {
             }
             shader->setMat4("u_transform", cmd.transform);
 
-            auto vertexArray = cmd.geometry->getVertexArray();
-            if (vertexArray) {
-                vertexArray->bind();
+            cmd.geometry->bind();
 
-                if (cmd.geometry->hasIndices()) {
-                    uint32_t indexCount = cmd.geometry->getIndexCount();
-                    RenderCommand::DrawIndexed(DrawMode::Triangles, indexCount, 0, 0);
+            if (cmd.geometry->hasIndices()) {
+                uint32_t indexCount = cmd.geometry->getIndexCount();
+                RenderCommand::DrawIndexed(DrawMode::Triangles, indexCount, 0, 0);
 
-                    s_stats.triangles += indexCount / 3;
-                } else {
-                    uint32_t vertexCount = cmd.geometry->getVertexCount();
-                    RenderCommand::DrawArrays(DrawMode::Triangles, 0, vertexCount);
+                s_stats.triangles += indexCount / 3;
+            } else {
+                uint32_t vertexCount = cmd.geometry->getVertexCount();
+                RenderCommand::DrawArrays(DrawMode::Triangles, 0, vertexCount);
 
-                    s_stats.triangles += vertexCount / 3;
-                }
-
-                s_stats.drawCalls++;
+                s_stats.triangles += vertexCount / 3;
             }
+
+            s_stats.drawCalls++;
         }
 
         s_renderQueue.clear();

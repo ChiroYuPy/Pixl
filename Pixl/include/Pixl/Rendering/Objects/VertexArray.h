@@ -3,40 +3,37 @@
 
 #include "Pixl/Core/Base.h"
 #include "Pixl/Rendering/Objects/Buffer.h"
-#include "Pixl/Rendering/Objects/VertexLayout.h"
+#include "Pixl/Rendering/Objects/VertexFormat.h"
 
 namespace Pixl {
 
     class VertexArray {
     public:
-        VertexArray();
-        ~VertexArray();
+        GLuint ID;
 
-        // Non-copiable mais déplaçable
-        VertexArray(const VertexArray&) = delete;
-        VertexArray& operator=(const VertexArray&) = delete;
-        VertexArray(VertexArray&& other) noexcept;
-        VertexArray& operator=(VertexArray&& other) noexcept;
+        VertexArray() {
+            glGenVertexArrays(1, &ID);
+            if (ID == 0)
+                throw std::runtime_error("Failed to generate VAO");
+        }
 
-        void bind() const;
-        void unbind() const;
+        ~VertexArray() {
+            if (ID != 0)
+                glDeleteVertexArrays(1, &ID);
+        }
 
-        void addVertexBuffer(const Ref<VertexBuffer>& vertexBuffer, const VertexLayout& layout);
-        void setIndexBuffer(const Ref<IndexBuffer>& indexBuffer);
+        void bind() const {
+            glBindVertexArray(ID);
+        }
 
-        const std::vector<Ref<VertexBuffer>>& getVertexBuffers() const { return m_vertexBuffers; }
-        const Ref<IndexBuffer>& getIndexBuffer() const { return m_indexBuffer; }
+        void unbind() const {
+            glBindVertexArray(0);
+        }
 
-        bool hasIndexBuffer() const { return m_indexBuffer != nullptr; }
-        uint32_t getIndexCount() const { return m_indexBuffer ? m_indexBuffer->getCount() : 0; }
-
-    private:
-        static void setupVertexAttributes(const VertexLayout& layout, uint32_t bufferIndex);
-
-        GL_ID m_rendererID;
-        uint32_t m_vertexBufferIndex;
-        std::vector<Ref<VertexBuffer>> m_vertexBuffers;
-        Ref<IndexBuffer> m_indexBuffer;
+        // Configure les attributs en utilisant un VertexFormat et un VBO déjà liés
+        void setVertexFormat(const VertexFormat& format, bool instanced = false, unsigned int divisor = 1) const {
+            format.applyToVAO(instanced, divisor);
+        }
     };
 
 }

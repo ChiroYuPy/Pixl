@@ -22,18 +22,15 @@ namespace Pixl {
             shader->setMat4("u_transform", m_transform);
         }
 
-        auto vertexArray = m_geometry->getVertexArray();
-        if (vertexArray) {
-            vertexArray->bind();
+        m_geometry->bind();
 
-            if (m_geometry->hasIndices()) {
-                RenderCommand::DrawIndexed(DrawMode::Triangles, m_geometry->getIndexCount(), 0, 0);
-            } else {
-                RenderCommand::DrawArrays(DrawMode::Triangles, 0, m_geometry->getVertexCount());
-            }
-
-            vertexArray->unbind();
+        if (m_geometry->hasIndices()) {
+            RenderCommand::DrawIndexed(DrawMode::Triangles, m_geometry->getIndexCount(), 0, 0);
+        } else {
+            RenderCommand::DrawArrays(DrawMode::Triangles, 0, m_geometry->getVertexCount());
         }
+
+        m_geometry->unbind();
 
         m_material->unbind();
     }

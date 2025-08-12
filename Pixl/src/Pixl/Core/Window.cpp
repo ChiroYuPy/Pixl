@@ -24,6 +24,12 @@ namespace Pixl {
     }
 
     void Window::init(const WindowProperties& props) {
+        m_data.title = props.title;
+        m_data.width = props.width;
+        m_data.height = props.height;
+        m_data.aspectRatio = static_cast<float>(props.width) / static_cast<float>(std::max(1u, props.height));
+        m_data.verticalSynchronization = true;
+
         if (!glfwInit())
             throw std::runtime_error("GLFW initialization failed");
 
@@ -39,12 +45,6 @@ namespace Pixl {
 
         m_context = MakeScope<GraphicsContext>(m_windowHandle);
         m_context->Init();
-
-        m_data.title = props.title;
-        m_data.width = props.width;
-        m_data.height = props.height;
-        m_data.aspectRatio = static_cast<float>(props.width) / std::max(1u, props.height);
-        m_data.verticalSynchronization = true;
 
         glfwSetWindowUserPointer(m_windowHandle, &m_data);
         setVSync(true);
