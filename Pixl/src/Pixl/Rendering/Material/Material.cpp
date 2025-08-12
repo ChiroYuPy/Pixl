@@ -27,13 +27,40 @@ namespace Pixl {
         m_shader->unbind();
     }
 
-    Ref<Material> MaterialFactory::createFromSource(const std::string& vertexSource,
-                                                    const std::string& fragmentSource) {
+    Ref<Material> MaterialFactory::createSolidColor() {
         auto shader = MakeRef<Shader>();
+
+        const std::string vertexSource = R"(
+        #version 330 core
+
+        layout(location = 0) in vec3 a_position;
+
+        uniform mat4 u_viewProjection;
+        uniform mat4 u_transform;
+
+        void main() {
+            gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);
+        }
+        )";
+
+        const std::string fragmentSource = R"(
+        #version 330 core
+
+        out vec4 frag_color;
+
+        uniform vec3 u_color;
+
+        void main() {
+            frag_color = vec4(u_color, 1.0);
+        }
+        )";
+
         if (!shader->loadFromSource(vertexSource, fragmentSource)) {
             Logger::error("Failed to load shader from source");
             return nullptr;
         }
+
+        shader->setFloat3("u_color", {1.f, 0.f, 0.f});
         return MakeRef<Material>(std::move(shader));
     }
 

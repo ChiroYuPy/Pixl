@@ -13,7 +13,7 @@ namespace Pixl {
     class Material {
     public:
         explicit Material(Ref<Shader> shader);
-        virtual ~Material() = default;
+        ~Material() = default;
 
         void bind() const;
         void unbind() const;
@@ -26,7 +26,7 @@ namespace Pixl {
 
     class MaterialFactory {
     public:
-        static Ref<Material> createFromSource(const std::string& vertexSource, const std::string& fragmentSource);
+        static Ref<Material> createSolidColor();
     };
 
 }

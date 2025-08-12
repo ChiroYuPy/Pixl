@@ -55,6 +55,8 @@ set(SOURCES
         include/Pixl/Components/MeshComponent.h
         include/Pixl/Components/CameraProjectionComponent.h
         src/Pixl/Systems/TransformSystem.cpp
+        src/Pixl/Utils/PrefabRegistery.cpp
+        include/Pixl/Utils/PrefabRegistery.h
 )
 
 add_library(Pixl STATIC ${SOURCES})

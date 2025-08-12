@@ -18,9 +18,8 @@ void EnttTestLayer::onAttach() {
     std::uniform_real_distribution<float> distScale(1.0f, 2.f);
     std::uniform_real_distribution<float> distAngle(0.f, glm::two_pi<float>());
 
-
-    m_material = Pixl::MaterialFactory::createFromSource(CUBE_VERT, CUBE_FRAG);
-    m_geometry = Pixl::Geometry::createCube(0.5f);
+    m_material = Pixl::MaterialFactory::createSolidColor();
+    m_geometry = Pixl::GeometryFactory::createCube(0.5f);
 
     constexpr unsigned int objectCount = 16;
     for (int i = 0; i < objectCount; ++i) {

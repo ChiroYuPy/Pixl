@@ -17,89 +17,17 @@ namespace Pixl {
     class Geometry {
     public:
         Geometry(VertexFormat format, const void* vertices, size_t vertexDataSize,
-                 const unsigned int* indices = nullptr, size_t indexCount = 0)
-                : vertexFormat(std::move(format)), indices(indices != nullptr)
-        {
-            vao.bind();
+                 const unsigned int* indices = nullptr, size_t indexCount = 0);
 
-            vbo.setData(vertices, vertexDataSize);
-            vertexCount = vertexDataSize / vertexFormat.getStride();
+        void bind() const;
 
-            if (indices) {
-                ebo.setData(indices, indexCount);
-                this->indexCount = indexCount;
-            }
+        void unbind() const;
 
-            vao.setVertexFormat(vertexFormat);
+        size_t getIndexCount() const;
 
-            vao.unbind();
-            vbo.unbind();
-            if (indices) ebo.unbind();
-        }
+        size_t getVertexCount() const;
 
-        void bind() const {
-            vao.bind();
-        }
-
-        void unbind() const {
-            vao.unbind();
-        }
-
-        size_t getIndexCount() const {
-            return indexCount;
-        }
-
-        size_t getVertexCount() const {
-            return vertexCount;
-        }
-
-        bool hasIndices() const {
-            return indices;
-        }
-
-        struct Vertex {
-            float position[3];
-            float color[4];
-            static VertexFormat* format;
-        };
-
-        static Ref<Geometry> createCube(const float size = 1.f) {
-            static VertexFormat cubeFormat;
-
-            static bool initialized = false;
-            if (!initialized) {
-                cubeFormat.addAttribute(VertexAttributeType::Float3, 0, offsetof(Vertex, position));
-                cubeFormat.addAttribute(VertexAttributeType::Float4, 1, offsetof(Vertex, color));
-                initialized = true;
-            }
-
-            const float hSize = size / 2.f;
-            Vertex vertices[] = {
-                    {{-hSize, -hSize, -hSize}, {1.f, 0.f, 0.f, 1.f}},
-                    {{ hSize, -hSize, -hSize}, {0.f, 1.f, 0.f, 1.f}},
-                    {{ hSize,  hSize, -hSize}, {0.f, 0.f, 1.f, 1.f}},
-                    {{-hSize,  hSize, -hSize}, {1.f, 1.f, 0.f, 1.f}},
-                    {{-hSize, -hSize,  hSize}, {1.f, 0.f, 1.f, 1.f}},
-                    {{ hSize, -hSize,  hSize}, {0.f, 1.f, 1.f, 1.f}},
-                    {{ hSize,  hSize,  hSize}, {1.f, 1.f, 1.f, 1.f}},
-                    {{-hSize,  hSize,  hSize}, {0.f, 0.f, 0.f, 1.f}},
-            };
-
-            unsigned int indices[] = {
-                    0, 1, 2, 2, 3, 0,
-                    4, 5, 6, 6, 7, 4,
-                    0, 4, 7, 7, 3, 0,
-                    1, 5, 6, 6, 2, 1,
-                    3, 2, 6, 6, 7, 3,
-                    0, 1, 5, 5, 4, 0,
-            };
-
-            return MakeRef<Geometry>(
-                    cubeFormat,
-                    vertices, sizeof(vertices),
-                    indices, sizeof(indices) / sizeof(indices[0])
-            );
-        }
+        bool hasIndices() const;
 
     protected:
         VertexArray vao;
@@ -110,6 +38,17 @@ namespace Pixl {
         size_t indexCount = 0;
         size_t vertexCount = 0;
         bool indices = false;
+    };
+
+    struct Vertex {
+        float position[3];
+        float color[4];
+        static VertexFormat* format;
+    };
+
+    class GeometryFactory {
+    public:
+        static Ref<Geometry> createCube(float size = 1.f);
     };
 
 }
