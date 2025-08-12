@@ -24,7 +24,6 @@ set(SOURCES
         src/Pixl/Rendering/Objects/VertexArray.cpp
         src/Pixl/Rendering/RenderCommand.cpp
         src/Pixl/Rendering/Camera/PerspectiveCamera.cpp
-        src/Pixl/Rendering/Mesh/Mesh.cpp
         src/Pixl/Rendering/Camera/OrthographicCamera.cpp
         src/Pixl/Rendering/Camera/BaseCamera.cpp
         src/Pixl/Rendering/Camera/controller/FPSController.cpp

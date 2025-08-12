@@ -10,7 +10,6 @@ add_executable(Sandbox src/SandBox.cpp
         src/layers/CameraTestLayer.cpp
         src/layers/HueExempleLayer.cpp
         src/layers/ResourceLoadingTestLayer.cpp
-        src/layers/AnimationTransformTestLayer.cpp
         src/layers/EnttTestLayer.cpp
 )
 

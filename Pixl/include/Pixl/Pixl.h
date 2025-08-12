@@ -12,8 +12,6 @@
 #include "Pixl/Rendering/Objects/VertexArray.h"
 #include "Pixl/Rendering/Objects/Buffer.h"
 
-#include "Pixl/Rendering/Mesh/Mesh.h"
-
 #include "Pixl/Rendering/Geometry/Geometry.h"
 
 #include "Pixl/Rendering/Material/Material.h"

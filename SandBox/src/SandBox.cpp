@@ -6,7 +6,6 @@
 
 #include "layers/CameraTestLayer.h"
 #include "layers/EnttTestLayer.h"
-#include "layers/AnimationTransformTestLayer.h"
 
 #include <iostream>
 
