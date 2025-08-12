@@ -39,6 +39,12 @@ namespace Pixl {
         uint32_t vertexShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         uint32_t fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
 
+        if (vertexShader == 0 || fragmentShader == 0) {
+            if (vertexShader) glDeleteShader(vertexShader);
+            if (fragmentShader) glDeleteShader(fragmentShader);
+            return false;
+        }
+
         if (m_rendererID)
             glDeleteProgram(m_rendererID);
 
@@ -53,14 +59,13 @@ namespace Pixl {
             char infoLog[512];
             glGetProgramInfoLog(m_rendererID, 512, nullptr, infoLog);
             std::cerr << "Shader linking failed:\n" << infoLog << std::endl;
-            return false;
-        }
-
-        if (vertexShader == 0 || fragmentShader == 0) {
             glDeleteShader(vertexShader);
             glDeleteShader(fragmentShader);
             return false;
         }
+
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
 
         return true;
     }
@@ -105,6 +110,8 @@ namespace Pixl {
             std::cerr << "Shader compilation error ("
                       << (type == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT")
                       << "): " << infoLog << std::endl;
+            glDeleteShader(id);
+            return 0;
         }
 
         return id;
@@ -182,20 +189,6 @@ namespace Pixl {
 
     void Shader::setMat4(const std::string& name, const glm::mat4& matrix) const {
         glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix));
-    }
-
-    void ShaderLibrary::add(const std::string& name, const Ref<Shader>& shader) {
-        if (!exists(name)) throw std::runtime_error("Shader already exists!");
-        m_Shaders[name] = shader;
-    }
-
-    Ref<Shader> ShaderLibrary::get(const std::string& name) {
-        if (exists(name)) throw std::runtime_error("Shader not found");
-        return m_Shaders[name];
-    }
-
-    bool ShaderLibrary::exists(const std::string& name) const {
-        return m_Shaders.find(name) != m_Shaders.end();
     }
 
 }

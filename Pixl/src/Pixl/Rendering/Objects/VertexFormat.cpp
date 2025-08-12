@@ -4,8 +4,6 @@
 
 #include "Pixl/Rendering/Objects/VertexFormat.h"
 
-#include <glad/glad.h>
-
 namespace Pixl {
 
 }

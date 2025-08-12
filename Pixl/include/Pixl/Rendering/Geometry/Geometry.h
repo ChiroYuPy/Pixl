@@ -63,7 +63,7 @@ namespace Pixl {
             static VertexFormat* format;
         };
 
-        static Ref<Geometry> createCube() {
+        static Ref<Geometry> createCube(const float size = 1.f) {
             static VertexFormat cubeFormat;
 
             static bool initialized = false;
@@ -73,15 +73,16 @@ namespace Pixl {
                 initialized = true;
             }
 
+            const float hSize = size / 2.f;
             Vertex vertices[] = {
-                    {{-1.f, -1.f, -1.f}, {1.f, 0.f, 0.f, 1.f}},
-                    {{ 1.f, -1.f, -1.f}, {0.f, 1.f, 0.f, 1.f}},
-                    {{ 1.f,  1.f, -1.f}, {0.f, 0.f, 1.f, 1.f}},
-                    {{-1.f,  1.f, -1.f}, {1.f, 1.f, 0.f, 1.f}},
-                    {{-1.f, -1.f,  1.f}, {1.f, 0.f, 1.f, 1.f}},
-                    {{ 1.f, -1.f,  1.f}, {0.f, 1.f, 1.f, 1.f}},
-                    {{ 1.f,  1.f,  1.f}, {1.f, 1.f, 1.f, 1.f}},
-                    {{-1.f,  1.f,  1.f}, {0.f, 0.f, 0.f, 1.f}},
+                    {{-hSize, -hSize, -hSize}, {1.f, 0.f, 0.f, 1.f}},
+                    {{ hSize, -hSize, -hSize}, {0.f, 1.f, 0.f, 1.f}},
+                    {{ hSize,  hSize, -hSize}, {0.f, 0.f, 1.f, 1.f}},
+                    {{-hSize,  hSize, -hSize}, {1.f, 1.f, 0.f, 1.f}},
+                    {{-hSize, -hSize,  hSize}, {1.f, 0.f, 1.f, 1.f}},
+                    {{ hSize, -hSize,  hSize}, {0.f, 1.f, 1.f, 1.f}},
+                    {{ hSize,  hSize,  hSize}, {1.f, 1.f, 1.f, 1.f}},
+                    {{-hSize,  hSize,  hSize}, {0.f, 0.f, 0.f, 1.f}},
             };
 
             unsigned int indices[] = {

@@ -60,17 +60,16 @@ namespace Pixl {
         uint32_t currentShaderID = 0;
 
         for (auto& cmd : s_renderQueue) {
-            Ref<Shader> shader = cmd.material->getShader();
 
-            if (shader->getID() != currentShaderID) {
-                shader->bind();
-                currentShaderID = shader->getID();
+            if (cmd.material->getShader()->getID() != currentShaderID) {
+                cmd.material->bind();
+                currentShaderID = cmd.material->getShader()->getID();
 
                 const glm::mat4 proj = s_sceneData->proj;
                 const glm::mat4 view = s_sceneData->view;
-                shader->setMat4("u_viewProjection", proj * view);
+                cmd.material->getShader()->setMat4("u_viewProjection", proj * view);
             }
-            shader->setMat4("u_transform", cmd.transform);
+            cmd.material->getShader()->setMat4("u_transform", cmd.transform);
 
             cmd.geometry->bind();
 

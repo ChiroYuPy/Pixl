@@ -35,7 +35,6 @@ set(SOURCES
         src/Pixl/Rendering/Camera/controller/OrbitController.cpp
         src/Pixl/Rendering/Objects/VertexFormat.cpp
         src/Pixl/Rendering/Geometry/Geometry.cpp
-        src/Pixl/Rendering/Objects/ShaderReflection.cpp
         src/Pixl/Rendering/Material/Material.cpp
         src/Pixl/Core/Resource/FileTextureLoader.cpp
         include/Pixl/Core/Resource/TextureLoader.h

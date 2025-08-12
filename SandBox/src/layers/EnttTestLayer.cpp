@@ -20,10 +20,10 @@ void EnttTestLayer::onAttach() {
 
 
     m_material = Pixl::MaterialFactory::createFromSource(CUBE_VERT, CUBE_FRAG);
-    m_geometry = Pixl::Geometry::createCube();
+    m_geometry = Pixl::Geometry::createCube(0.5f);
 
-
-    for (int i = 0; i < 1000; ++i) {
+    constexpr unsigned int objectCount = 16;
+    for (int i = 0; i < objectCount; ++i) {
         auto entity = scene.createEntity();
         auto& transform = scene.addComponent<Pixl::TransformComponent>(entity);
         auto& mesh = scene.addComponent<Pixl::MeshComponent>(entity);
