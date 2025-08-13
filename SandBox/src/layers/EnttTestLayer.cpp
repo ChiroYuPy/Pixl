@@ -5,6 +5,7 @@
 #include "layers/EnttTestLayer.h"
 #include "Pixl/Components/TransformComponent.h"
 #include "Pixl/Components/MeshComponent.h"
+#include "Pixl/Utils/PrefabRegistery.h"
 
 #include <random>
 
@@ -23,23 +24,19 @@ void EnttTestLayer::onAttach() {
 
     constexpr unsigned int objectCount = 16;
     for (int i = 0; i < objectCount; ++i) {
-        auto entity = scene.createEntity();
-        auto& transform = scene.addComponent<Pixl::TransformComponent>(entity);
-        auto& mesh = scene.addComponent<Pixl::MeshComponent>(entity);
+        entt::entity entity = Pixl::PrefabRegistry::create(scene.getRegistry(), "cube");
+        auto* transform = scene.getComponent<Pixl::TransformComponent>(entity);
 
-        transform.position = {distPos(gen), distPos(gen), distPos(gen)};
+        transform->position = {distPos(gen), distPos(gen), distPos(gen)};
 
         float scaleValue = distScale(gen);
-        transform.scale = {scaleValue, scaleValue, scaleValue};
+        transform->scale = {scaleValue, scaleValue, scaleValue};
 
         float angle = distAngle(gen);
         glm::vec3 axis = glm::normalize(glm::vec3(distPos(gen), distPos(gen), distPos(gen)));
-        transform.rotation = glm::angleAxis(angle, axis);
+        transform->rotation = glm::angleAxis(angle, axis);
 
-        transform.isDirty = true;
-
-        mesh.geometry = m_geometry;
-        mesh.material = m_material;
+        transform->isDirty = true;
     }
 }
 

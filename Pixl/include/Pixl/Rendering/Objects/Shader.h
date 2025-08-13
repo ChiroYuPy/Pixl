@@ -15,7 +15,7 @@
 
 namespace Pixl {
 
-    class Shader {
+    class Shader : public IResource {
     public:
         Shader() = default;
         ~Shader();
@@ -50,8 +50,11 @@ namespace Pixl {
         void setMat3(const std::string &name, const glm::mat3 &matrix) const;
         void setMat4(const std::string& name, const glm::mat4& matrix) const;
 
-        bool isValid() const { return m_rendererID != 0; }
         GL_ID getID() const { return m_rendererID; }
+
+        // Implémentation de IResource
+        void cleanup() final;
+        [[nodiscard]] bool isValid() const override;
 
     private:
         static uint32_t compileShader(uint32_t type, const std::string& source);

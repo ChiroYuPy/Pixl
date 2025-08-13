@@ -8,8 +8,11 @@
 void ResourceLoadingTestLayer::onAttach() {
     auto& resourceService = Pixl::Application::get().getResourceService();
 
-    auto texture = resourceService.getTexture("albedo.tpx");
-    if (texture) Pixl::Logger::info("loading success !");
+    auto texture = resourceService.getTexture("textures/albedo.json");
+    if (texture) Pixl::Logger::info("texture loading success !");
+
+    auto shader = resourceService.getShader("shaders/basic.json");
+    if (shader) Pixl::Logger::info("shader loading success !");
 }
 
 void ResourceLoadingTestLayer::onDetach() {

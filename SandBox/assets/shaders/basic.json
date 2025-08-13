@@ -1,0 +1,6 @@
+{
+  "vertex": "shaders/basic.vert",
+  "fragment": "shaders/basic.frag",
+  "name": "BasicShader",
+  "defines": ["USE_TEXTURE", "MAX_LIGHTS 8"]
+}

@@ -31,7 +31,7 @@ namespace Pixl {
         }
 
         template<typename T>
-        T& getComponent(entt::entity entity) {
+        T* getComponent(entt::entity entity) {
             if (!registry.valid(entity)) return nullptr;
             return registry.try_get<T>(entity);
         }

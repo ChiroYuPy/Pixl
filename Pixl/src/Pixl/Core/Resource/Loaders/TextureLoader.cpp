@@ -2,7 +2,7 @@
 // Created by ChiroYuki on 08/08/2025.
 //
 
-#include "Pixl/Core/Resource/TextureLoader.h"
+#include "Pixl/Core/Resource/Loaders/TextureLoader.h"
 
 #include <fstream>
 #include <iostream>

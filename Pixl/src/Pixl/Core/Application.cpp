@@ -9,6 +9,7 @@
 #include "Pixl/Core/Time/Clock.h"
 #include "Pixl/Systems/RenderSystem.h"
 #include "Pixl/Systems/TransformSystem.h"
+#include "Pixl/Utils/PrefabRegistery.h"
 
 #include <filesystem>
 #include <ranges>
@@ -42,6 +43,8 @@ namespace Pixl {
         // default events
         WindowResizeEvent resizeEvent(m_window->getWidth(), m_window->getHeight(), m_window->getAspectRatio());
         onEvent(resizeEvent);
+
+        PrefabRegistry::init();
     }
 
     Application::~Application() {

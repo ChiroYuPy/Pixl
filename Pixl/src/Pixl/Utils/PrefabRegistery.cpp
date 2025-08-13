@@ -34,3 +34,6 @@ namespace Pixl {
     }
 
 }
+
+
+//TODO: simple loading system, no centralisation ( loader + simple ressource without interface )

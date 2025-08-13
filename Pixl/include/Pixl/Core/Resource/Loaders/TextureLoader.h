@@ -8,8 +8,8 @@
 #include "IResourceLoader.h"
 #include "Pixl/Rendering/Objects/Texture.h"
 
-#include <glad/glad.h>
-#include <nlohmann/json.hpp>
+#include "glad/glad.h"
+#include "nlohmann/json.hpp"
 
 #include <optional>
 

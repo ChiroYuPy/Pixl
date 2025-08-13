@@ -37,29 +37,15 @@ set(SOURCES
         src/Pixl/Rendering/Geometry/Geometry.cpp
         src/Pixl/Rendering/Material/Material.cpp
         src/Pixl/Core/Resource/FileTextureLoader.cpp
-        include/Pixl/Core/Resource/TextureLoader.h
-        src/Pixl/Core/Resource/TextureLoader.cpp
+        src/Pixl/Core/Resource/Loaders/TextureLoader.cpp
         src/Pixl/Core/Resource/ResourceService.cpp
-        include/Pixl/Core/Resource/ResourceService.h
-        include/Pixl/Components.h
-        include/Pixl/Components/TransformComponent.h
-        include/Pixl/Core/ECS/ISystem.h
         src/Pixl/Systems/RenderSystem.cpp
-        include/Pixl/Systems/RenderSystem.h
-        include/Pixl/Core/ECS/SystemManager.h
-        include/Pixl/Core/ECS/Scene.h
-        include/Pixl/Core/ECS.h
         src/Pixl/Core/ECS/SceneManager.cpp
-        include/Pixl/Core/ECS/SceneManager.h
-        include/Pixl/Systems/TransformSystem.h
-        include/Pixl/Components/MeshComponent.h
-        include/Pixl/Components/CameraProjectionComponent.h
         src/Pixl/Systems/TransformSystem.cpp
         src/Pixl/Utils/PrefabRegistery.cpp
-        include/Pixl/Utils/PrefabRegistery.h
         src/Pixl/Rendering/Objects/Texture.cpp
-        include/Pixl/Rendering/Objects/Texture.h
-        include/Pixl/Core/Resource/ResourceHandle.h
+        src/Pixl/Core/Resource/Loaders/ShaderLoader.cpp
+        include/Pixl/Core/Resource/Loaders/ShaderLoader.h
 )
 
 add_library(Pixl STATIC ${SOURCES})

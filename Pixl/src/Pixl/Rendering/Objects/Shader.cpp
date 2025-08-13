@@ -3,7 +3,6 @@
 //
 
 #include "Pixl/Rendering/Objects/Shader.h"
-#include "Pixl/Utils/Logger.h"
 
 #include <fstream>
 #include <sstream>
@@ -14,28 +13,53 @@
 namespace Pixl {
 
     Shader::~Shader() {
-        if (m_rendererID)
-            glDeleteProgram(m_rendererID);
+        cleanup();
     }
 
-    Shader::Shader(Shader&& other) noexcept {
+    void Shader::cleanup() {
+        if (m_rendererID) {
+            glDeleteProgram(m_rendererID);
+            m_rendererID = 0;
+            m_uniformLocationCache.clear();
+        }
+    }
+
+    bool Shader::isValid() const {
+        return m_rendererID != 0;
+    }
+
+    Shader::Shader(Shader &&other) noexcept {
         m_rendererID = other.m_rendererID;
         m_uniformLocationCache = std::move(other.m_uniformLocationCache);
+
+        // Copier les métadonnées de IResource
+        path = std::move(other.path);
+        refCount = other.refCount;
+        persistent = other.persistent;
+
         other.m_rendererID = 0;
+        other.refCount = 0;
     }
 
-    Shader& Shader::operator=(Shader&& other) noexcept {
+    Shader &Shader::operator=(Shader &&other) noexcept {
         if (this != &other) {
-            if (m_rendererID)
-                glDeleteProgram(m_rendererID);
+            cleanup();
+
             m_rendererID = other.m_rendererID;
             m_uniformLocationCache = std::move(other.m_uniformLocationCache);
+
+            // Copier les métadonnées de IResource
+            path = std::move(other.path);
+            refCount = other.refCount;
+            persistent = other.persistent;
+
             other.m_rendererID = 0;
+            other.refCount = 0;
         }
         return *this;
     }
 
-    bool Shader::loadFromSource(const std::string& vertexSource, const std::string& fragmentSource) {
+    bool Shader::loadFromSource(const std::string &vertexSource, const std::string &fragmentSource) {
         uint32_t vertexShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         uint32_t fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
 
@@ -61,6 +85,7 @@ namespace Pixl {
             std::cerr << "Shader linking failed:\n" << infoLog << std::endl;
             glDeleteShader(vertexShader);
             glDeleteShader(fragmentShader);
+            cleanup();
             return false;
         }
 
@@ -70,7 +95,7 @@ namespace Pixl {
         return true;
     }
 
-    bool Shader::loadFromFile(const std::string& vertexPath, const std::string& fragmentPath) {
+    bool Shader::loadFromFile(const std::string &vertexPath, const std::string &fragmentPath) {
         std::ifstream vertexFile(vertexPath);
         std::ifstream fragmentFile(fragmentPath);
 
@@ -89,17 +114,18 @@ namespace Pixl {
     }
 
     void Shader::bind() const {
-        glUseProgram(m_rendererID);
-
+        if (isValid()) {
+            glUseProgram(m_rendererID);
+        }
     }
 
     void Shader::unbind() const {
         glUseProgram(0);
     }
 
-    uint32_t Shader::compileShader(uint32_t type, const std::string& source) {
+    uint32_t Shader::compileShader(uint32_t type, const std::string &source) {
         uint32_t id = glCreateShader(type);
-        const char* src = source.c_str();
+        const char *src = source.c_str();
         glShaderSource(id, 1, &src, nullptr);
         glCompileShader(id);
 
@@ -118,7 +144,7 @@ namespace Pixl {
         return id;
     }
 
-    int Shader::getUniformLocation(const std::string& name) const {
+    int Shader::getUniformLocation(const std::string &name) const {
         if (m_uniformLocationCache.find(name) != m_uniformLocationCache.end())
             return m_uniformLocationCache[name];
 
@@ -132,63 +158,63 @@ namespace Pixl {
 
     // ------------ [ Uniform setters ] ------------ //
 
-    void Shader::setInt(const std::string& name, int value) const {
+    void Shader::setInt(const std::string &name, int value) const {
         glUniform1i(getUniformLocation(name), value);
     }
 
-    void Shader::setInt2(const std::string& name, const glm::ivec2& value) const {
+    void Shader::setInt2(const std::string &name, const glm::ivec2 &value) const {
         glUniform2i(getUniformLocation(name), value.x, value.y);
     }
 
-    void Shader::setInt3(const std::string& name, const glm::ivec3& value) const {
+    void Shader::setInt3(const std::string &name, const glm::ivec3 &value) const {
         glUniform3i(getUniformLocation(name), value.x, value.y, value.z);
     }
 
-    void Shader::setInt4(const std::string& name, const glm::ivec4& value) const {
+    void Shader::setInt4(const std::string &name, const glm::ivec4 &value) const {
         glUniform4i(getUniformLocation(name), value.x, value.y, value.z, value.w);
     }
 
-    void Shader::setUInt(const std::string& name, uint32_t value) const {
+    void Shader::setUInt(const std::string &name, uint32_t value) const {
         glUniform1ui(getUniformLocation(name), value);
     }
 
-    void Shader::setUInt2(const std::string& name, const glm::uvec2& value) const {
+    void Shader::setUInt2(const std::string &name, const glm::uvec2 &value) const {
         glUniform2ui(getUniformLocation(name), value.x, value.y);
     }
 
-    void Shader::setUInt3(const std::string& name, const glm::uvec3& value) const {
+    void Shader::setUInt3(const std::string &name, const glm::uvec3 &value) const {
         glUniform3ui(getUniformLocation(name), value.x, value.y, value.z);
     }
 
-    void Shader::setUInt4(const std::string& name, const glm::uvec4& value) const {
+    void Shader::setUInt4(const std::string &name, const glm::uvec4 &value) const {
         glUniform4ui(getUniformLocation(name), value.x, value.y, value.z, value.w);
     }
 
-    void Shader::setIntArray(const std::string& name, int* values, uint32_t count) const {
+    void Shader::setIntArray(const std::string &name, int *values, uint32_t count) const {
         glUniform1iv(getUniformLocation(name), static_cast<GLsizei>(count), values);
     }
 
-    void Shader::setFloat(const std::string& name, float value) const {
+    void Shader::setFloat(const std::string &name, float value) const {
         glUniform1f(getUniformLocation(name), value);
     }
 
-    void Shader::setFloat2(const std::string& name, const glm::vec2& value) const {
+    void Shader::setFloat2(const std::string &name, const glm::vec2 &value) const {
         glUniform2f(getUniformLocation(name), value.x, value.y);
     }
 
-    void Shader::setFloat3(const std::string& name, const glm::vec3& value) const {
+    void Shader::setFloat3(const std::string &name, const glm::vec3 &value) const {
         glUniform3f(getUniformLocation(name), value.x, value.y, value.z);
     }
 
-    void Shader::setFloat4(const std::string& name, const glm::vec4& value) const {
+    void Shader::setFloat4(const std::string &name, const glm::vec4 &value) const {
         glUniform4f(getUniformLocation(name), value.x, value.y, value.z, value.w);
     }
 
-    void Shader::setMat3(const std::string& name, const glm::mat3& matrix) const {
+    void Shader::setMat3(const std::string &name, const glm::mat3 &matrix) const {
         glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
-    void Shader::setMat4(const std::string& name, const glm::mat4& matrix) const {
+    void Shader::setMat4(const std::string &name, const glm::mat4 &matrix) const {
         glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
