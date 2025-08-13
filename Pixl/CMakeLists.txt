@@ -57,6 +57,9 @@ set(SOURCES
         src/Pixl/Systems/TransformSystem.cpp
         src/Pixl/Utils/PrefabRegistery.cpp
         include/Pixl/Utils/PrefabRegistery.h
+        src/Pixl/Rendering/Objects/Texture.cpp
+        include/Pixl/Rendering/Objects/Texture.h
+        include/Pixl/Core/Resource/ResourceHandle.h
 )
 
 add_library(Pixl STATIC ${SOURCES})

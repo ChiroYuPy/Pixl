@@ -6,7 +6,7 @@
 #define PIXLENGINE_TEXTURELOADER_H
 
 #include "IResourceLoader.h"
-#include "Resource.h"
+#include "Pixl/Rendering/Objects/Texture.h"
 
 #include <glad/glad.h>
 #include <nlohmann/json.hpp>

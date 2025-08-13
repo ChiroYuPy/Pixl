@@ -8,44 +8,18 @@
 #include "Pixl/Core/Base.h"
 
 #include <string>
-#include <utility>
-#include <iostream>
-#include <functional>
-#include <typeindex>
 
 namespace Pixl {
 
-    // Classe de base simple pour toutes les ressources
-    class Resource {
+    class IResource {
     public:
-        virtual ~Resource() = default;
+        virtual ~IResource() = default;
+        virtual void cleanup() = 0;
+        [[nodiscard]] virtual bool isValid() const = 0;
 
-        virtual void use() const {}
-    };
-
-    // Exemple de ressource texture
-    class Texture : public Resource {
-    public:
-        int getWidth() const { return m_width; }
-        int getHeight() const { return m_height; }
-        const std::vector<uint8_t>& getData() const { return m_data; }
-
-    private:
-        friend class TextureLoader; // seul TextureLoader peut modifier ces membres
-
-        void setSize(int w, int h) { m_width = w; m_height = h; }
-        void setData(std::vector<uint8_t>&& data) { m_data = std::move(data); }
-
-        int m_width = 0;
-        int m_height = 0;
-        std::vector<uint8_t> m_data; // pixels RGBA8 par exemple
-
-        // Optionnel: paramètres de wrapping/filter
-        int m_wrapMode = 0;
-        int m_filter = 0;
-
-        void setWrapMode(int mode) { m_wrapMode = mode; }
-        void setFilter(int filter) { m_filter = filter; }
+        std::string path;
+        size_t refCount = 0;
+        bool persistent = false;
     };
 
 }

@@ -6,6 +6,7 @@
 #define PIXLENGINE_SHADER_H
 
 #include "Pixl/Core/Base.h"
+#include "Pixl/Core/Resource/Resource.h"
 
 #include <unordered_map>
 #include <string>
