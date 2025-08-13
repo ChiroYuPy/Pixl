@@ -4,8 +4,10 @@
 
 #include "Pixl/Rendering/GraphicsContext.h"
 
-#include "glad/glad.h"
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include <iostream>
 
 namespace Pixl {
 
@@ -21,6 +23,18 @@ namespace Pixl {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        glDebugMessageCallback([](GLenum source, GLenum type, GLuint id,
+                                  GLenum severity, GLsizei length,
+                                  const GLchar* message, const void* userParam) {
+            std::cerr << "[OpenGL Debug] Source: " << source
+                      << ", Type: " << type
+                      << ", Severity: " << severity
+                      << ", ID: " << id
+                      << "\nMessage: " << message << std::endl;
+        }, nullptr);
     }
 
     void GraphicsContext::SwapBuffers() {

@@ -26,7 +26,7 @@ namespace Pixl {
 
     class MaterialFactory {
     public:
-        static Ref<Material> createSolidColor();
+        static Ref<Material> createSolidColor(const glm::vec3 color = {1.f, 0.f, 0.f});
     };
 
 }

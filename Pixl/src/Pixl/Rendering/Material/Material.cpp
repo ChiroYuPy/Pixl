@@ -27,7 +27,7 @@ namespace Pixl {
         m_shader->unbind();
     }
 
-    Ref<Material> MaterialFactory::createSolidColor() {
+    Ref<Material> MaterialFactory::createSolidColor(const glm::vec3 color) {
         auto shader = MakeRef<Shader>();
 
         const std::string vertexSource = R"(
@@ -60,7 +60,8 @@ namespace Pixl {
             return nullptr;
         }
 
-        shader->setFloat3("u_color", {1.f, 0.f, 0.f});
+        shader->bind();
+        shader->setFloat3("u_color", color);
         return MakeRef<Material>(std::move(shader));
     }
 

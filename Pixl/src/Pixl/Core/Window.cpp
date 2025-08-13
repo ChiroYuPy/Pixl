@@ -57,9 +57,7 @@ namespace Pixl {
         --s_GLFWWindowCount;
 
         if (s_GLFWWindowCount == 0)
-        {
             glfwTerminate();
-        }
     }
 
     void Window::setupCallbacks() {
@@ -242,6 +240,7 @@ namespace Pixl {
     void Window::applyHints(WindowFlags flags, WindowMode mode) {
         glfwDefaultWindowHints();
 
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
         glfwWindowHint(GLFW_RESIZABLE,  (any(flags & WindowFlags::Resizable))   ? GLFW_TRUE : GLFW_FALSE);
         glfwWindowHint(GLFW_DECORATED,  (any(flags & WindowFlags::Decorated))   ? GLFW_TRUE : GLFW_FALSE);
         glfwWindowHint(GLFW_FLOATING,   (any(flags & WindowFlags::Floating))    ? GLFW_TRUE : GLFW_FALSE);

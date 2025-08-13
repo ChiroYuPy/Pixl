@@ -90,6 +90,7 @@ namespace Pixl {
 
     void Shader::bind() const {
         glUseProgram(m_rendererID);
+
     }
 
     void Shader::unbind() const {

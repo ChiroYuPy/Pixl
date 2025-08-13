@@ -42,7 +42,7 @@ namespace Pixl {
 
     void Renderer::endFrame() {
         auto stats = Pixl::Renderer::getStats();
-        std::cout << "Draw Calls: " << stats.drawCalls << ", Triangles: " << stats.triangles << std::endl;
+        // std::cout << "Draw Calls: " << stats.drawCalls << ", Triangles: " << stats.triangles << std::endl;
     }
 
     void Renderer::submit(const Ref<Material> &material, const Ref<Geometry> &geometry, const glm::mat4 &transform) {
