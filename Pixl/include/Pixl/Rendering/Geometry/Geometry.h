@@ -42,13 +42,14 @@ namespace Pixl {
 
     struct Vertex {
         float position[3];
-        float color[4];
         static VertexFormat* format;
     };
 
     class GeometryFactory {
     public:
         static Ref<Geometry> createCube(float size = 1.f);
+        static Ref<Geometry> createSphere();
+        static Ref<Geometry> createPlane();
     };
 
 }

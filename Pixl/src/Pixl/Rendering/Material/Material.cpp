@@ -4,7 +4,9 @@
 
 #include "Pixl/Rendering/Material/Material.h"
 #include "Pixl/Utils/Logger.h"
+#include "Pixl/Core/Application.h"
 #include <iostream>
+#include <utility>
 
 namespace Pixl {
 
@@ -18,8 +20,38 @@ namespace Pixl {
     }
 
     void Material::bind() const {
-        if (!m_shader) return;
-        m_shader->bind();
+        if (!m_shader) {
+            Logger::warn("Material::bind: No shader to use");
+            return;
+        }
+
+        for (const auto& [name, value] : m_floatValues)
+            m_shader->setFloat(name, value);
+
+        for (const auto& [name, value] : m_vec2Values)
+            m_shader->setFloat2(name, value);
+
+        for (const auto& [name, value] : m_vec3Values)
+            m_shader->setFloat3(name, value);
+
+        for (const auto& [name, value] : m_vec4Values)
+            m_shader->setFloat4(name, value);
+
+        for (const auto& [name, value] : m_mat3Values)
+            m_shader->setMat3(name, value);
+
+        for (const auto& [name, value] : m_mat4Values)
+            m_shader->setMat4(name, value);
+
+        for (const auto& [name, value] : m_intValues)
+            m_shader->setInt(name, value);
+
+        for (const auto& [name, texSlot] : m_textures) {
+            if (texSlot.texture) {
+                texSlot.texture->bind(texSlot.slot);
+                m_shader->setInt(name, texSlot.slot);
+            }
+        }
     }
 
     void Material::unbind() const {
@@ -27,42 +59,49 @@ namespace Pixl {
         m_shader->unbind();
     }
 
-    Ref<Material> MaterialFactory::createSolidColor(const glm::vec3 color) {
-        auto shader = MakeRef<Shader>();
+    Ref<Material> MaterialFactory::createSolidColor(const glm::vec3& color) {
+        auto& resourceService = Application::get().getResourceService();
 
-        const std::string vertexSource = R"(
-        #version 330 core
-
-        layout(location = 0) in vec3 a_position;
-
-        uniform mat4 u_viewProjection;
-        uniform mat4 u_transform;
-
-        void main() {
-            gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);
-        }
-        )";
-
-        const std::string fragmentSource = R"(
-        #version 330 core
-
-        out vec4 frag_color;
-
-        uniform vec3 u_color;
-
-        void main() {
-            frag_color = vec4(u_color, 1.0);
-        }
-        )";
-
-        if (!shader->loadFromSource(vertexSource, fragmentSource)) {
-            Logger::error("Failed to load shader from source");
+        auto shaderOpt = resourceService.getShader("shaders/ColorUnlitShader.json");
+        if (!shaderOpt.has_value()) {
+            Logger::error("MaterialFactory::createSolidColor: Failed to load ColorUnlitShader");
             return nullptr;
         }
 
-        shader->bind();
-        shader->setFloat3("u_color", color);
-        return MakeRef<Material>(std::move(shader));
+        auto material = MakeRef<Material>(shaderOpt.value());
+        if (!material || !material->getShader()) {
+            Logger::error("MaterialFactory::createSolidColor: Failed to create material");
+            return nullptr;
+        }
+
+        material->bind();
+        material->setFloat3("u_color", color);
+        material->unbind();
+
+        return material;
+    }
+
+    Ref<Material> MaterialFactory::createTextured(Ref<Texture> texture, const glm::vec3& tint) {
+        auto& resourceService = Application::get().getResourceService();
+
+        auto shaderOpt = resourceService.getShader("shaders/TexturedShader.json");
+        if (!shaderOpt.has_value()) {
+            Logger::error("MaterialFactory::createTextured: Failed to load TexturedShader");
+            return nullptr;
+        }
+
+        auto material = MakeRef<Material>(shaderOpt.value());
+        if (!material || !material->getShader()) {
+            Logger::error("MaterialFactory::createTextured: Failed to create material");
+            return nullptr;
+        }
+
+        material->bind();
+        material->setTexture("u_texture", texture, 0);
+        material->setFloat3("u_tint", tint);
+        material->unbind();
+
+        return material;
     }
 
 }

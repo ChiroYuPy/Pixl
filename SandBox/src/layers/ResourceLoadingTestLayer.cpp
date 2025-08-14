@@ -11,7 +11,7 @@ void ResourceLoadingTestLayer::onAttach() {
     auto texture = resourceService.getTexture("textures/albedo.json");
     if (texture) Pixl::Logger::info("texture loading success !");
 
-    auto shader = resourceService.getShader("shaders/basic.json");
+    auto shader = resourceService.getShader("shaders/ColorUnlitShader.json");
     if (shader) Pixl::Logger::info("shader loading success !");
 }
 

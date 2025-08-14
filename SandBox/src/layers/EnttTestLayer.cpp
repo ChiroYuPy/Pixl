@@ -18,13 +18,19 @@ void EnttTestLayer::onAttach() {
     std::uniform_real_distribution<float> distPos(-8.f, 8.f);
     std::uniform_real_distribution<float> distScale(1.0f, 2.f);
     std::uniform_real_distribution<float> distAngle(0.f, glm::two_pi<float>());
-
-    m_material = Pixl::MaterialFactory::createSolidColor();
-    m_geometry = Pixl::GeometryFactory::createCube(0.5f);
+    std::uniform_int_distribution<int> distShape(0, 2); // 0=cube,1=sphere,2=plane
 
     constexpr unsigned int objectCount = 16;
     for (int i = 0; i < objectCount; ++i) {
-        entt::entity entity = Pixl::PrefabRegistry::create(scene.getRegistry(), "cube");
+        // Choisir une forme aléatoire
+        int shapeType = distShape(gen);
+        entt::entity entity;
+        switch (shapeType) {
+            case 0: entity = Pixl::PrefabRegistry::create(scene.getRegistry(), "cube"); break;
+            case 1: entity = Pixl::PrefabRegistry::create(scene.getRegistry(), "sphere"); break;
+            case 2: entity = Pixl::PrefabRegistry::create(scene.getRegistry(), "plane"); break;
+        }
+
         auto* transform = scene.getComponent<Pixl::TransformComponent>(entity);
 
         transform->position = {distPos(gen), distPos(gen), distPos(gen)};

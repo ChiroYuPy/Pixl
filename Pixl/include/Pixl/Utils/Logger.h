@@ -5,10 +5,12 @@
 #ifndef PIXLENGINE_LOGGER_H
 #define PIXLENGINE_LOGGER_H
 
+
 #include <iostream>
 #include <chrono>
 #include <iomanip>
 #include <sstream>
+#include <string>
 
 namespace Pixl {
 
@@ -21,16 +23,69 @@ namespace Pixl {
 
     class Logger {
     public:
+        // Méthodes avec message simple
         static void info(const std::string& message);
         static void warn(const std::string& message);
         static void error(const std::string& message);
         static void debug(const std::string& message);
-        static void fatal(const std::string &message);
+        static void fatal(const std::string& message);
+
+        // Méthodes avec formatage (template variadic)
+        template<typename... Args>
+        static void info(const std::string& format, Args&&... args) {
+            log("INFO", COLOR_INFO, formatMessage(format, std::forward<Args>(args)...));
+        }
+
+        template<typename... Args>
+        static void warn(const std::string& format, Args&&... args) {
+            log("WARN", COLOR_WARN, formatMessage(format, std::forward<Args>(args)...));
+        }
+
+        template<typename... Args>
+        static void error(const std::string& format, Args&&... args) {
+            log("ERROR", COLOR_ERROR, formatMessage(format, std::forward<Args>(args)...));
+        }
+
+        template<typename... Args>
+        static void debug(const std::string& format, Args&&... args) {
+            log("DEBUG", COLOR_DEBUG, formatMessage(format, std::forward<Args>(args)...));
+        }
+
+        template<typename... Args>
+        static void fatal(const std::string& format, Args&&... args) {
+            log("FATAL", COLOR_FATAL, formatMessage(format, std::forward<Args>(args)...));
+        }
 
     private:
         static void log(const std::string& level, const std::string& color, const std::string& message);
-
         static std::string currentTime();
+
+        // Fonction de formatage
+        template<typename T>
+        static std::string toString(T&& value) {
+            std::ostringstream oss;
+            oss << std::forward<T>(value);
+            return oss.str();
+        }
+
+        template<typename... Args>
+        static std::string formatMessage(const std::string& format, Args&&... args) {
+            return formatMessageImpl(format, toString(std::forward<Args>(args))...);
+        }
+
+        static std::string formatMessageImpl(const std::string& format) {
+            return format;
+        }
+
+        template<typename... Args>
+        static std::string formatMessageImpl(const std::string& format, const std::string& arg, Args&&... args) {
+            size_t pos = format.find("{}");
+            if (pos != std::string::npos) {
+                std::string result = format.substr(0, pos) + arg + format.substr(pos + 2);
+                return formatMessageImpl(result, std::forward<Args>(args)...);
+            }
+            return format;
+        }
     };
 
 }

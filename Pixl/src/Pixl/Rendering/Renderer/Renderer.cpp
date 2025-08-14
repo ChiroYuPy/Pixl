@@ -60,29 +60,26 @@ namespace Pixl {
         uint32_t currentShaderID = 0;
 
         for (auto& cmd : s_renderQueue) {
-
             if (cmd.material->getShader()->getID() != currentShaderID) {
-                cmd.material->bind();
+                cmd.material->getShader()->bind();
                 currentShaderID = cmd.material->getShader()->getID();
-
-                const glm::mat4 proj = s_sceneData->proj;
-                const glm::mat4 view = s_sceneData->view;
-                cmd.material->getShader()->setMat4("u_viewProjection", proj * view);
             }
+
+            cmd.material->bind();
+
+            const glm::mat4 proj = s_sceneData->proj;
+            const glm::mat4 view = s_sceneData->view;
+            cmd.material->getShader()->setMat4("u_viewProjection", proj * view);
             cmd.material->getShader()->setMat4("u_transform", cmd.transform);
 
             cmd.geometry->bind();
 
             if (cmd.geometry->hasIndices()) {
-                uint32_t indexCount = cmd.geometry->getIndexCount();
-                RenderCommand::DrawIndexed(DrawMode::Triangles, indexCount, 0, 0);
-
-                s_stats.triangles += indexCount / 3;
+                RenderCommand::DrawIndexed(DrawMode::Triangles, cmd.geometry->getIndexCount(), 0, 0);
+                s_stats.triangles += cmd.geometry->getIndexCount() / 3;
             } else {
-                uint32_t vertexCount = cmd.geometry->getVertexCount();
-                RenderCommand::DrawArrays(DrawMode::Triangles, 0, vertexCount);
-
-                s_stats.triangles += vertexCount / 3;
+                RenderCommand::DrawArrays(DrawMode::Triangles, 0, cmd.geometry->getVertexCount());
+                s_stats.triangles += cmd.geometry->getVertexCount() / 3;
             }
 
             s_stats.drawCalls++;

@@ -22,6 +22,14 @@ namespace Pixl {
 
     private:
         static std::unordered_map<std::string, PrefabCreator> registry;
+
+        bool exists(const std::string &name);
+
+        void unregister(const std::string &name);
+
+        void clear();
+
+        std::vector<std::string> getRegisteredNames();
     };
 
 }
