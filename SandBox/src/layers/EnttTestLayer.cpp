@@ -20,7 +20,7 @@ void EnttTestLayer::onAttach() {
     std::uniform_real_distribution<float> distAngle(0.f, glm::two_pi<float>());
     std::uniform_int_distribution<int> distShape(0, 2); // 0=cube,1=sphere,2=plane
 
-    constexpr unsigned int objectCount = 16;
+    constexpr unsigned int objectCount = 0;
     for (int i = 0; i < objectCount; ++i) {
         // Choisir une forme aléatoire
         int shapeType = distShape(gen);
@@ -44,6 +44,14 @@ void EnttTestLayer::onAttach() {
 
         transform->isDirty = true;
     }
+
+    entt::entity entity = Pixl::PrefabRegistry::create(scene.getRegistry(), "plane");
+    auto* transform = scene.getComponent<Pixl::TransformComponent>(entity);
+    transform->position = {0, 0, 0};
+    transform->scale = {16, 0, 16};
+
+    auto* mesh = scene.getComponent<Pixl::MeshComponent>(entity);
+    mesh->material->setFloat3("u_color", {0.5f, 0.3f, 1.f});
 }
 
 void EnttTestLayer::onDetach() {

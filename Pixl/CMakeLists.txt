@@ -45,6 +45,7 @@ set(SOURCES
         src/Pixl/Utils/PrefabRegistery.cpp
         src/Pixl/Rendering/Objects/Texture.cpp
         src/Pixl/Core/Resource/Loaders/ShaderLoader.cpp
+        include/Pixl/Math/Vector2.h
 )
 
 add_library(Pixl STATIC ${SOURCES})

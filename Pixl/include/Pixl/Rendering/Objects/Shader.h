@@ -50,7 +50,7 @@ namespace Pixl {
         void setMat3(const std::string &name, const glm::mat3 &matrix) const;
         void setMat4(const std::string& name, const glm::mat4& matrix) const;
 
-        GL_ID getID() const { return m_rendererID; }
+        GLint getID() const { return m_rendererID; }
 
         // Implémentation de IResource
         void cleanup() final;
@@ -60,7 +60,7 @@ namespace Pixl {
         static uint32_t compileShader(uint32_t type, const std::string& source);
         int getUniformLocation(const std::string& name) const;
 
-        GL_ID m_rendererID = 0;
+        GLint m_rendererID = 0;
         mutable std::unordered_map<std::string, int> m_uniformLocationCache;
     };
 
