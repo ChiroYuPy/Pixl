@@ -5,10 +5,10 @@
 #ifndef PIXLENGINE_TRANSFORMSYSTEM_H
 #define PIXLENGINE_TRANSFORMSYSTEM_H
 
-#include "Pixl/Components/TransformComponent.h"
+#include "Pixl/Core/ECS/ISystem.h"
+#include "Pixl/Components.h"
 #include "Pixl/Core/Time/Time.h"
 #include "Pixl/Core/ECS/Scene.h"
-#include "Pixl/Core/ECS/ISystem.h"
 
 namespace Pixl {
 

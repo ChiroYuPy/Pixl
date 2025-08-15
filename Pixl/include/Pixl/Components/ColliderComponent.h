@@ -14,7 +14,7 @@ namespace Pixl {
     struct ColliderComponent {
         ColliderShape shape;
         glm::vec3 size;
-        float radius;
+        float radius = 1.f;
         float height;
     };
 

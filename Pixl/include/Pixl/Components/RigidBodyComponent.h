@@ -13,7 +13,6 @@ namespace Pixl {
         float mass = 1.0f;
         glm::vec3 velocity = {0, 0, 0};
         glm::vec3 acceleration = {0, 0, 0};
-        bool isKinematic = false;
     };
 
 }

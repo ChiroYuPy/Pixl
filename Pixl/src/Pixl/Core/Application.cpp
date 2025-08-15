@@ -10,6 +10,7 @@
 #include "Pixl/Systems/RenderSystem.h"
 #include "Pixl/Systems/TransformSystem.h"
 #include "Pixl/Utils/PrefabRegistery.h"
+#include "Pixl/Systems/PhysicsSystem.h"
 
 #include <filesystem>
 #include <ranges>
@@ -36,6 +37,7 @@ namespace Pixl {
         // default systems
         m_systemManager.add<TransformSystem>();
         m_systemManager.add<RenderSystem>();
+        m_systemManager.add<PhysicsSystem>();
 
         // resources
         m_resourceService = MakeScope<ResourceService>();

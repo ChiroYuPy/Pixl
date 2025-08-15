@@ -23,14 +23,12 @@ namespace Pixl {
 
     class Logger {
     public:
-        // Méthodes avec message simple
         static void info(const std::string& message);
         static void warn(const std::string& message);
         static void error(const std::string& message);
         static void debug(const std::string& message);
         static void fatal(const std::string& message);
 
-        // Méthodes avec formatage (template variadic)
         template<typename... Args>
         static void info(const std::string& format, Args&&... args) {
             log("INFO", COLOR_INFO, formatMessage(format, std::forward<Args>(args)...));
@@ -60,7 +58,6 @@ namespace Pixl {
         static void log(const std::string& level, const std::string& color, const std::string& message);
         static std::string currentTime();
 
-        // Fonction de formatage
         template<typename T>
         static std::string toString(T&& value) {
             std::ostringstream oss;

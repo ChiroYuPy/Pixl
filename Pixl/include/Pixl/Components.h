@@ -6,5 +6,9 @@
 #define PIXLENGINE_COMPONENTS_H
 
 #include "Pixl/Components/TransformComponent.h"
+#include "Pixl/Components/MeshComponent.h"
+#include "Pixl/Components/ColliderComponent.h"
+#include "Pixl/Components/RigidBodyComponent.h"
+#include "Pixl/Components/CameraProjectionComponent.h"
 
 #endif //PIXLENGINE_COMPONENTS_H

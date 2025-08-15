@@ -6,7 +6,7 @@
 #define PIXLENGINE_RENDERSYSTEM_H
 
 #include "Pixl/Core/ECS/ISystem.h"
-#include "Pixl/Components/TransformComponent.h"
+#include "Pixl/Components.h"
 #include "Pixl/Rendering/Objects/Shader.h"
 #include "Pixl/Rendering/Geometry/Geometry.h"
 
@@ -14,8 +14,6 @@ namespace Pixl {
 
     class RenderSystem : public ISystem {
     public:
-        RenderSystem();
-
         void update(Scene& scene, Time deltaTime) override;
     };
 

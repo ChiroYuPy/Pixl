@@ -3,55 +3,135 @@
 //
 
 #include "layers/EnttTestLayer.h"
-#include "Pixl/Components/TransformComponent.h"
-#include "Pixl/Components/MeshComponent.h"
 #include "Pixl/Utils/PrefabRegistery.h"
+#include "Pixl/Components.h"
 
 #include <random>
 
 void EnttTestLayer::onAttach() {
     auto& scene = Pixl::Application::get().createScene("TestScene");
 
+    constexpr int gridSize = 6;
+    constexpr float spacing = 2.2f;
+    constexpr float ballRadius = 0.45f;
+    constexpr float bigBallRadius = 1.2f;
+
+    float offset = (gridSize - 1) * spacing * 0.5f;
+
     std::random_device rd;
     std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> colorDist(0.2f, 1.0f);
 
-    std::uniform_real_distribution<float> distPos(-8.f, 8.f);
-    std::uniform_real_distribution<float> distScale(1.0f, 2.f);
-    std::uniform_real_distribution<float> distAngle(0.f, glm::two_pi<float>());
-    std::uniform_int_distribution<int> distShape(0, 2); // 0=cube,1=sphere,2=plane
+    int ballIndex = 0;
+    const int totalBalls = gridSize * gridSize * gridSize;
 
-    constexpr unsigned int objectCount = 0;
-    for (int i = 0; i < objectCount; ++i) {
-        // Choisir une forme aléatoire
-        int shapeType = distShape(gen);
-        entt::entity entity;
-        switch (shapeType) {
-            case 0: entity = Pixl::PrefabRegistry::create(scene.getRegistry(), "cube"); break;
-            case 1: entity = Pixl::PrefabRegistry::create(scene.getRegistry(), "sphere"); break;
-            case 2: entity = Pixl::PrefabRegistry::create(scene.getRegistry(), "plane"); break;
+    for (int x = 0; x < gridSize; ++x) {
+        for (int y = 0; y < gridSize; ++y) {
+            for (int z = 0; z < gridSize; ++z) {
+                entt::entity entity = Pixl::PrefabRegistry::create(scene.getRegistry(), "sphere");
+
+                auto* transform = scene.getComponent<Pixl::TransformComponent>(entity);
+
+                transform->position = {
+                        x * spacing - offset,
+                        y * spacing + 8.0f,
+                        z * spacing - offset
+                };
+
+                float scale = ballRadius * 2.0f;
+                transform->scale = {scale, scale, scale};
+
+                std::uniform_real_distribution<float> rotDist(0.0f, 2.0f * glm::pi<float>());
+                glm::vec3 axis = glm::normalize(glm::vec3(
+                        colorDist(gen) - 0.5f,
+                        colorDist(gen) - 0.5f,
+                        colorDist(gen) - 0.5f
+                ));
+                transform->rotation = glm::angleAxis(rotDist(gen), axis);
+
+                transform->isDirty = true;
+
+                auto& rigidBody = scene.addComponent<Pixl::RigidBodyComponent>(entity);
+                std::uniform_real_distribution<float> massDist(0.8f, 1.2f);
+
+                auto& collider = scene.addComponent<Pixl::ColliderComponent>(entity);
+                collider.radius = ballRadius;
+
+                auto* mesh = scene.getComponent<Pixl::MeshComponent>(entity);
+                if (mesh && mesh->material) {
+                    glm::vec3 color;
+
+                    float hue = (float(ballIndex) / float(totalBalls)) * 360.0f;
+
+                    auto hsvToRgb = [](float h, float s, float v) -> glm::vec3 {
+                        float c = v * s;
+                        float x = c * (1.0f - abs(fmod(h / 60.0f, 2.0f) - 1.0f));
+                        float m = v - c;
+
+                        glm::vec3 rgb;
+                        if (h < 60) rgb = {c, x, 0};
+                        else if (h < 120) rgb = {x, c, 0};
+                        else if (h < 180) rgb = {0, c, x};
+                        else if (h < 240) rgb = {0, x, c};
+                        else if (h < 300) rgb = {x, 0, c};
+                        else rgb = {c, 0, x};
+
+                        return rgb + glm::vec3(m);
+                    };
+
+                    color = hsvToRgb(hue, 0.8f + colorDist(gen) * 0.2f, 0.9f + colorDist(gen) * 0.1f);
+
+                    if (ballIndex % 3 == 0) {
+                        color = glm::vec3(
+                                (float(x) / float(gridSize - 1)) * 0.8f + 0.2f,
+                                (float(y) / float(gridSize - 1)) * 0.8f + 0.2f,
+                                (float(z) / float(gridSize - 1)) * 0.8f + 0.2f
+                        );
+                    }
+
+                    mesh->material->setFloat3("u_color", color);
+                }
+
+                ballIndex++;
+            }
         }
-
-        auto* transform = scene.getComponent<Pixl::TransformComponent>(entity);
-
-        transform->position = {distPos(gen), distPos(gen), distPos(gen)};
-
-        float scaleValue = distScale(gen);
-        transform->scale = {scaleValue, scaleValue, scaleValue};
-
-        float angle = distAngle(gen);
-        glm::vec3 axis = glm::normalize(glm::vec3(distPos(gen), distPos(gen), distPos(gen)));
-        transform->rotation = glm::angleAxis(angle, axis);
-
-        transform->isDirty = true;
     }
 
-    entt::entity entity = Pixl::PrefabRegistry::create(scene.getRegistry(), "plane");
-    auto* transform = scene.getComponent<Pixl::TransformComponent>(entity);
-    transform->position = {0, 0, 0};
-    transform->scale = {16, 0, 16};
+    entt::entity bigBall = Pixl::PrefabRegistry::create(scene.getRegistry(), "sphere");
+    auto* bigTransform = scene.getComponent<Pixl::TransformComponent>(bigBall);
 
-    auto* mesh = scene.getComponent<Pixl::MeshComponent>(entity);
-    mesh->material->setFloat3("u_color", {0.5f, 0.3f, 1.f});
+    bigTransform->position = {
+            0.0f,
+            (gridSize - 1) * spacing + 15.0f,
+            0.0f
+    };
+
+    float bigScale = bigBallRadius * 2.0f;
+    bigTransform->scale = {bigScale, bigScale, bigScale};
+
+    bigTransform->rotation = glm::quat(1, 0, 0, 0);
+    bigTransform->isDirty = true;
+
+    auto& bigRigidBody = scene.addComponent<Pixl::RigidBodyComponent>(bigBall);
+
+    auto& bigCollider = scene.addComponent<Pixl::ColliderComponent>(bigBall);
+    bigCollider.radius = bigBallRadius;
+
+    auto* bigMesh = scene.getComponent<Pixl::MeshComponent>(bigBall);
+    if (bigMesh && bigMesh->material) {
+        bigMesh->material->setFloat3("u_color", {1.0f, 0.84f, 0.0f});
+    }
+
+    entt::entity groundEntity = Pixl::PrefabRegistry::create(scene.getRegistry(), "plane");
+    auto* groundTransform = scene.getComponent<Pixl::TransformComponent>(groundEntity);
+    groundTransform->position = {0, -0.1f, 0};
+    groundTransform->scale = {40, 0, 40};
+
+    auto* groundMesh = scene.getComponent<Pixl::MeshComponent>(groundEntity);
+    if (groundMesh && groundMesh->material) {
+        groundMesh->material->setFloat3("u_color", {0.7f, 0.7f, 0.75f});
+    }
+
 }
 
 void EnttTestLayer::onDetach() {

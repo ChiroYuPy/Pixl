@@ -9,8 +9,6 @@
 
 namespace Pixl {
 
-    RenderSystem::RenderSystem() {}
-
     void RenderSystem::update(Scene &scene, Time deltaTime) {
         Pixl::RenderCommand::Clear();
         auto &registry = scene.getRegistry();

@@ -46,6 +46,9 @@ set(SOURCES
         src/Pixl/Rendering/Objects/Texture.cpp
         src/Pixl/Core/Resource/Loaders/ShaderLoader.cpp
         include/Pixl/Math/Vector2.h
+        include/Pixl/Math/Vector3.h
+        src/Pixl/Systems/PhysicsSystem.cpp
+        include/Pixl/Systems/PhysicsSystem.h
 )
 
 add_library(Pixl STATIC ${SOURCES})
