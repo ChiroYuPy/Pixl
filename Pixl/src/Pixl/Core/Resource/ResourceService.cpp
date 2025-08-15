@@ -13,10 +13,12 @@ namespace Pixl {
         // Init loaders
         m_textureLoader = std::make_shared<TextureLoader>(m_basePath);
         m_shaderLoader = std::make_shared<ShaderLoader>(m_basePath);
+        m_materialLoader = std::make_shared<MaterialLoader>();
 
         // Init managers
         m_textureManager = std::make_unique<ResourceManager<Texture>>(m_textureLoader);
         m_shaderManager = std::make_unique<ResourceManager<Shader>>(m_shaderLoader);
+        m_materialManager = std::make_unique<ResourceManager<Material>>(m_materialLoader);
     }
 
     // === TEXTURE METHODS ===
@@ -70,6 +72,32 @@ namespace Pixl {
             if (makePersistent) {
                 makeShaderPersistent(relativePath, true);
             }
+            return true;
+        }
+        return false;
+    }
+
+    // === MATERIAL METHODS ===
+
+    std::optional<Ref<Material>> ResourceService::getMaterial(const std::string &relativePath) {
+        std::string absolutePath = getAbsolutePath(relativePath);
+        return m_materialManager->get(absolutePath);
+    }
+
+    void ResourceService::releaseMaterial(const std::string &relativePath) {
+        std::string absolutePath = getAbsolutePath(relativePath);
+        m_materialManager->release(absolutePath);
+    }
+
+    void ResourceService::makeMaterialPersistent(const std::string &relativePath, bool persistent) {
+        std::string absolutePath = getAbsolutePath(relativePath);
+        m_materialManager->makePersistent(absolutePath, persistent);
+    }
+
+    bool ResourceService::preloadMaterial(const std::string &relativePath, bool makePersistent) {
+        auto material = getMaterial(relativePath);
+        if (material) {
+            makeMaterialPersistent(relativePath, makePersistent);
             return true;
         }
         return false;

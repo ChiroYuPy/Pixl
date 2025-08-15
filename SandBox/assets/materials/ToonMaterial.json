@@ -1,0 +1,12 @@
+{
+  "shader": "shaders/ToonShader.json",
+  "textures": {
+    "albedo": "textures/albedo.png"
+  },
+  "floats": {
+    "u_smoothness": 0.5
+  },
+  "vec3s": {
+    "u_color": [1.0, 1.0, 1.0]
+  }
+}

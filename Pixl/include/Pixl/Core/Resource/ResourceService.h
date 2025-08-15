@@ -10,6 +10,8 @@
 #include "Pixl/Core/Resource/ResourceManager.h"
 #include "Pixl/Rendering/Objects/Texture.h"
 #include "Pixl/Core/Resource/Loaders/ShaderLoader.h"
+#include "Pixl/Core/Resource/Loaders/MaterialLoader.h"
+#include "Pixl/Rendering/Material/Material.h"
 
 #include <string>
 #include <filesystem>
@@ -32,6 +34,12 @@ namespace Pixl {
         void makeShaderPersistent(const std::string &relativePath, bool persistent = true);
         bool preloadShader(const std::string &relativePath, bool makePersistent = false);
 
+        // === MATERIALS ===
+        std::optional<Ref<Material>> getMaterial(const std::string &relativePath);
+        void releaseMaterial(const std::string &relativePath);
+        void makeMaterialPersistent(const std::string &relativePath, bool persistent = true);
+        bool preloadMaterial(const std::string &relativePath, bool makePersistent = false);
+
         // === STATS ===
         void printCacheStats() const;
         void cleanupNonPersistent();
@@ -41,12 +49,16 @@ namespace Pixl {
         std::string getAbsolutePath(const std::string &relativePath) const;
 
         // Texture management
-        Ref<TextureLoader> m_textureLoader;
-        Scope<ResourceManager<Texture>> m_textureManager;
+        std::shared_ptr<TextureLoader> m_textureLoader;
+        std::unique_ptr<ResourceManager<Texture>> m_textureManager;
 
         // Shader management
-        Ref<ShaderLoader> m_shaderLoader;
-        Scope<ResourceManager<Shader>> m_shaderManager;
+        std::shared_ptr<ShaderLoader> m_shaderLoader;
+        std::unique_ptr<ResourceManager<Shader>> m_shaderManager;
+
+        // Material management
+        std::shared_ptr<MaterialLoader> m_materialLoader;
+        std::unique_ptr<ResourceManager<Material>> m_materialManager;
 
         std::string m_basePath;
     };

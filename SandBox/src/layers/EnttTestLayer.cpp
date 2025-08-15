@@ -5,10 +5,19 @@
 #include "layers/EnttTestLayer.h"
 #include "Pixl/Utils/PrefabRegistery.h"
 #include "Pixl/Components.h"
+#include "Pixl/Utils/Logger.h"
 
 #include <random>
 
 void EnttTestLayer::onAttach() {
+    auto& resourceService = Pixl::Application::get().getResourceService();
+    auto toonMaterialOpt = resourceService.getMaterial("materials/ToonMaterial.json");
+    if (!toonMaterialOpt.has_value()) {
+        Pixl::Logger::error("ToonMaterial not loaded!");
+        return;
+    }
+    auto toonMaterial = toonMaterialOpt.value();
+
     auto& scene = Pixl::Application::get().createScene("TestScene");
 
     constexpr int gridSize = 6;
@@ -58,16 +67,15 @@ void EnttTestLayer::onAttach() {
                 collider.radius = ballRadius;
 
                 auto* mesh = scene.getComponent<Pixl::MeshComponent>(entity);
-                if (mesh && mesh->material) {
-                    glm::vec3 color;
-
+                if (mesh) {
+                    // Crée une nouvelle instance de Material à partir du shader du ToonMaterial
+                    mesh->material = MakeRef<Pixl::Material>(toonMaterial->getShader());
+                    // Si besoin, copier manuellement les propriétés du ToonMaterial ici
                     float hue = (float(ballIndex) / float(totalBalls)) * 360.0f;
-
                     auto hsvToRgb = [](float h, float s, float v) -> glm::vec3 {
                         float c = v * s;
                         float x = c * (1.0f - abs(fmod(h / 60.0f, 2.0f) - 1.0f));
                         float m = v - c;
-
                         glm::vec3 rgb;
                         if (h < 60) rgb = {c, x, 0};
                         else if (h < 120) rgb = {x, c, 0};
@@ -75,20 +83,9 @@ void EnttTestLayer::onAttach() {
                         else if (h < 240) rgb = {0, x, c};
                         else if (h < 300) rgb = {x, 0, c};
                         else rgb = {c, 0, x};
-
                         return rgb + glm::vec3(m);
                     };
-
-                    color = hsvToRgb(hue, 0.8f + colorDist(gen) * 0.2f, 0.9f + colorDist(gen) * 0.1f);
-
-                    if (ballIndex % 3 == 0) {
-                        color = glm::vec3(
-                                (float(x) / float(gridSize - 1)) * 0.8f + 0.2f,
-                                (float(y) / float(gridSize - 1)) * 0.8f + 0.2f,
-                                (float(z) / float(gridSize - 1)) * 0.8f + 0.2f
-                        );
-                    }
-
+                    glm::vec3 color = hsvToRgb(hue, 0.8f + colorDist(gen) * 0.2f, 0.9f + colorDist(gen) * 0.1f);
                     mesh->material->setFloat3("u_color", color);
                 }
 

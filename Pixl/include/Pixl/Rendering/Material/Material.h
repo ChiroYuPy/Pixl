@@ -11,7 +11,7 @@
 
 namespace Pixl {
 
-    class Material {
+    class Material : public IResource {
     public:
         explicit Material(Ref<Shader> shader);
         ~Material() = default;
@@ -26,7 +26,7 @@ namespace Pixl {
 
         Ref<Shader> getShader() const { return m_shader; }
 
-        bool isValid() const { return m_shader && m_shader->isValid(); }
+        bool isValid() const override { return m_shader && m_shader->isValid(); }
 
         void setFloat(const std::string& name, float value) { m_floatValues[name] = value; }
         void setFloat2(const std::string& name, const glm::vec2& value) { m_vec2Values[name] = value; }
@@ -40,6 +40,9 @@ namespace Pixl {
         void setTexture(const std::string& name, const Ref<Texture>& texture, int slot = 0) {
             m_textures[name] = { texture, slot };
         }
+
+        void cleanup() override;
+
 
     private:
         Ref<Shader> m_shader;

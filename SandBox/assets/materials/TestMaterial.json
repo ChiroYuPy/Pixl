@@ -1,0 +1,13 @@
+{
+  "shader": "shaders/ColorUnlitShader",
+  "textures": {
+    "albedo": "textures/albedo.png"
+  },
+  "floats": {
+    "roughness": 0.5
+  },
+  "vec3s": {
+    "color": [1.0, 0.5, 0.2]
+  }
+}
+

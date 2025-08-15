@@ -1,0 +1,7 @@
+{
+  "vertex": "shaders/ToonShader.vert",
+  "fragment": "shaders/ToonShader.frag",
+  "name": "ToonShader",
+  "defines": []
+}
+

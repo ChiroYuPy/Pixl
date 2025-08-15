@@ -59,6 +59,18 @@ namespace Pixl {
         m_shader->unbind();
     }
 
+    void Material::cleanup() {
+        m_floatValues.clear();
+        m_vec2Values.clear();
+        m_vec3Values.clear();
+        m_vec4Values.clear();
+        m_mat3Values.clear();
+        m_mat4Values.clear();
+        m_intValues.clear();
+        m_textures.clear();
+        m_shader.reset();
+    }
+
     Ref<Material> MaterialFactory::createSolidColor(const glm::vec3& color) {
         auto& resourceService = Application::get().getResourceService();
 

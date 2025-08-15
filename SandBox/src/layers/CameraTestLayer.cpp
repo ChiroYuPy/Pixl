@@ -5,7 +5,7 @@
 #include "layers/CameraTestLayer.h"
 
 void CameraTestLayer::onAttach() {
-    Pixl::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
+    Pixl::RenderCommand::SetClearColor({0.2f, 0.2f, 0.2f, 1.0f});
 
     float ar = Pixl::Application::get().getWindow().getAspectRatio();
     camera = Pixl::MakeRef<Pixl::PerspectiveCamera>(90.f, ar, 0.1f, 10000.f);

@@ -36,7 +36,6 @@ set(SOURCES
         src/Pixl/Rendering/Objects/VertexFormat.cpp
         src/Pixl/Rendering/Geometry/Geometry.cpp
         src/Pixl/Rendering/Material/Material.cpp
-        src/Pixl/Core/Resource/FileTextureLoader.cpp
         src/Pixl/Core/Resource/Loaders/TextureLoader.cpp
         src/Pixl/Core/Resource/ResourceService.cpp
         src/Pixl/Systems/RenderSystem.cpp
@@ -45,10 +44,8 @@ set(SOURCES
         src/Pixl/Utils/PrefabRegistery.cpp
         src/Pixl/Rendering/Objects/Texture.cpp
         src/Pixl/Core/Resource/Loaders/ShaderLoader.cpp
-        include/Pixl/Math/Vector2.h
-        include/Pixl/Math/Vector3.h
+        src/Pixl/Core/Resource/Loaders/MaterialLoader.cpp
         src/Pixl/Systems/PhysicsSystem.cpp
-        include/Pixl/Systems/PhysicsSystem.h
 )
 
 add_library(Pixl STATIC ${SOURCES})
